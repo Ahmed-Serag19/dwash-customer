@@ -1,1 +1,3 @@
-export const ar = {};
+export const ar = {
+  login: "تسجيل الدخول",
+};
