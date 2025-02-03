@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { i18n } = useTranslation();
+  const isRegister = location.pathname === "/register";
 
   return (
     <main className="flex items-center h-screen justify-center w-full flex-col md:flex-row">
@@ -21,11 +22,20 @@ const Login = () => {
       </div>
       <div
         dir={i18n.language === "en" ? "ltr" : "rtl"}
-        className="relative w-full md:w-1/2 xl:flex-auto flex-1 h-full flex flex-col justify-center items-center xl:w-3/5"
+        className="relative w-full md:w-1/2 xl:flex-auto flex-1 h-full flex flex-col justify-center items-center xl:w-3/5 bg-stone-100 md:bg-transparent"
       >
         <AuthForm
-          apiInit={apiEndpoints.LoginInitiate}
-          apiFinalize={apiEndpoints.LoginFinalize}
+          apiInit={
+            isRegister
+              ? apiEndpoints.RegisterInitiate
+              : apiEndpoints.LoginInitiate
+          }
+          apiFinalize={
+            isRegister
+              ? apiEndpoints.RegisterFinalize
+              : apiEndpoints.LoginFinalize
+          }
+          isRegister={isRegister}
         />
 
         <div className="absolute bottom-5 right-5">

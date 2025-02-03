@@ -56,17 +56,17 @@ const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   return (
-    <div className="relative font-[500] w-full text-primary  xl:flex-auto flex-1 h-full flex flex-col justify-center items-center xl:w-3/5 gap-16">
-      <div className="font-semibold text-2xl lg:text-4xl mb-6">
+    <div className="relative font-[500] w-full text-primary xl:flex-auto flex-1 flex flex-col justify-center items-center xl:w-3/5  gap-7 md:gap-10">
+      <div className="font-semibold text-3xl lg:text-4xl mb-6">
         {isRegister ? t("register") : t("login")}
       </div>
 
       {!isOTP ? (
         <form
           onSubmit={handleSubmit(handlePhoneSubmit)}
-          className="w-4/5 space-y-10"
+          className="w-11/12 space-y-8 md:space-y-12 border p-8 rounded-md border-stone-300"
         >
-          <div>
+          <div className="mt-10">
             <label
               htmlFor="phoneNumber"
               className="block text-lg font-[500] mb-2"
@@ -81,35 +81,37 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 required: t("phoneRequired"),
                 pattern: { value: phoneRegex, message: t("invalidPhone") },
               })}
-              className={`w-full px-5 py-6 text-primary text-lg sm:py-7 placeholder:text-primary placeholder:text-lg border ${
+              className={`w-full px-5 py-6 text-primary  sm:py-7 placeholder:text-primary placeholder:text-lg border ${
                 errors.phoneNumber ? "border-red-500" : "border-primary"
               } rounded-lg focus:outline-none focus:border-primary focus:ring-0`}
             />
             {errors.phoneNumber && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-md mt-1">
                 {errors.phoneNumber.message}
               </p>
             )}
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 pb-10">
             <Button
               type="submit"
               variant="primary"
-              className="w-full text-lg"
+              className="w-full text-lg py-6"
               disabled={loading}
               size="lg"
             >
               {loading ? t("loading") : isRegister ? t("register") : t("login")}
             </Button>
             {isRegister ? (
-              <p>
+              <p className="text-black">
                 {t("alreadyHaveAccount")}{" "}
-                <Link to="/login">{t("LoginNow")} </Link>
+                <Link to="/login" className=" text-primary font-bold">
+                  {t("LoginNow")}{" "}
+                </Link>
               </p>
             ) : (
-              <p className="text-black ">
+              <p className="text-black">
                 {t("dontHaveAccount")}{" "}
-                <Link className=" text-primary font-bold" to="/login">
+                <Link className=" text-primary font-bold" to="/register">
                   {t("createAnAccount")}{" "}
                 </Link>
               </p>

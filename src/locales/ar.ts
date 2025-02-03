@@ -15,5 +15,5 @@ export const ar = {
   dontHaveAccount: "ليس لديك حساب؟",
   createAnAccount: "انشئ حساب الأن",
   LoginNow: "سجل دخول الأن",
-  AlreadyHaveAccount: "لديك حساب بالفعل؟",
+  alreadyHaveAccount: "لديك حساب بالفعل؟",
 };

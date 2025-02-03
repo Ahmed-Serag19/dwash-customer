@@ -15,6 +15,6 @@ export const en = {
   loginError: "Login failed, try again",
   dontHaveAccount: "Dont have an account?",
   createAnAccount: "Create an account now",
-  loginNow: "Login now",
+  LoginNow: "Login now",
   alreadyHaveAccount: "Already Have an account?",
 };
