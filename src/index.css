@@ -48,8 +48,8 @@ body {
 .bg-logo {
   background-image: url("@/assets/images/Group 55.webp");
   background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center top;
+  background-size: contain;
+  /* background-position: center center; */
   border-top-right-radius: 10%;
   border-bottom-right-radius: 10%;
   height: 100%;
@@ -61,12 +61,18 @@ body {
   z-index: -1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1440px) {
+  .bg-logo {
+    background-size: cover;
+    background-position: center center;
+  }
+}
+@media (max-width: 767px) {
   .bg-logo {
     border-top-right-radius: 0%;
     border-bottom-right-radius: 10%;
     border-bottom-left-radius: 10%;
-    background-position: center center;
+    background-position: center top;
     background-size: cover;
   }
 }
