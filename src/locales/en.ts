@@ -1,1 +1,20 @@
-export const en = { login: "Login" };
+export const en = {
+  login: "Login",
+  register: "Register",
+  phoneNumber: "Phone Number",
+  phoneRequired: "Phone number is required",
+  invalidPhone:
+    "Invalid phone number. Must start with 05 and contain 10 digits.",
+  otpSent: "OTP sent successfully",
+  loading: "Loading...",
+  enterOTP: "Enter the 6-digit OTP",
+  invalidOTP: "Invalid OTP format",
+  verify: "Verify",
+  loginSuccess: "Login successful",
+  otpError: "Failed to verify OTP",
+  loginError: "Login failed, try again",
+  dontHaveAccount: "Dont have an account?",
+  createAnAccount: "Create an account now",
+  loginNow: "Login now",
+  alreadyHaveAccount: "Already Have an account?",
+};
