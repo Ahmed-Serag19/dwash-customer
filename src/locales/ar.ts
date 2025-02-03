@@ -6,7 +6,7 @@ export const ar = {
   invalidPhone: "رقم جوال غير صحيح، يجب أن يبدأ بـ 05 ويحتوي على 10 أرقام.",
   otpSent: "تم إرسال رمز التحقق",
   loading: "جارٍ التحميل...",
-  enterOTP: "أدخل رمز التحقق المكون من 6 أرقام",
+  enterOTP: "رمز التحقق",
   invalidOTP: "رمز التحقق غير صالح",
   verify: "تحقق",
   loginSuccess: "تم تسجيل الدخول بنجاح",
@@ -16,4 +16,9 @@ export const ar = {
   createAnAccount: "انشئ حساب الأن",
   LoginNow: "سجل دخول الأن",
   alreadyHaveAccount: "لديك حساب بالفعل؟",
+  home: "الرئيسية",
+  services: "خدماتنا",
+  contact: "تواصل معنا",
+  orders: "طلباتي",
+  carLogo: "شعار السيارة",
 };

@@ -91,32 +91,32 @@ const AuthForm: React.FC<AuthFormProps> = ({
               </p>
             )}
           </div>
-          <div className="space-y-4 pb-10">
+          <div className="space-y-4">
             <Button
               type="submit"
               variant="primary"
-              className="w-full text-lg py-6"
+              className="w-full text-lg py-6 rounded-3xl"
               disabled={loading}
               size="lg"
             >
               {loading ? t("loading") : isRegister ? t("register") : t("login")}
             </Button>
-            {isRegister ? (
-              <p className="text-black">
-                {t("alreadyHaveAccount")}{" "}
-                <Link to="/login" className=" text-primary font-bold">
-                  {t("LoginNow")}{" "}
-                </Link>
-              </p>
-            ) : (
-              <p className="text-black">
-                {t("dontHaveAccount")}{" "}
-                <Link className=" text-primary font-bold" to="/register">
-                  {t("createAnAccount")}{" "}
-                </Link>
-              </p>
-            )}
           </div>
+          {isRegister ? (
+            <p className="text-black">
+              {t("alreadyHaveAccount")}{" "}
+              <Link to="/login" className=" text-primary font-bold">
+                {t("LoginNow")}{" "}
+              </Link>
+            </p>
+          ) : (
+            <p className="text-black">
+              {t("dontHaveAccount")}{" "}
+              <Link className=" text-primary font-bold" to="/register">
+                {t("createAnAccount")}{" "}
+              </Link>
+            </p>
+          )}
         </form>
       ) : (
         <OTPInput phoneNumber={phoneNumber} apiFinalize={apiFinalize} />

@@ -7,7 +7,7 @@ export const en = {
     "Invalid phone number. Must start with 05 and contain 10 digits.",
   otpSent: "OTP sent successfully",
   loading: "Loading...",
-  enterOTP: "Enter the 6-digit OTP",
+  enterOTP: "OTP Number",
   invalidOTP: "Invalid OTP format",
   verify: "Verify",
   loginSuccess: "Login successful",
@@ -17,4 +17,9 @@ export const en = {
   createAnAccount: "Create an account now",
   LoginNow: "Login now",
   alreadyHaveAccount: "Already Have an account?",
+  home: "Home",
+  services: "Services",
+  contact: "Contact Us",
+  orders: "My Orders",
+  carLogo: "Car Logo",
 };

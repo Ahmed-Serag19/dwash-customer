@@ -45,22 +45,44 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, apiFinalize }) => {
   };
 
   return (
-    <div className="w-80 space-y-4">
-      <p className="text-gray-700 text-sm font-medium">{t("enterOTP")}</p>
-      <InputOTP
-        maxLength={6}
-        value={otp}
-        onChange={setOtp}
-        className="flex justify-center"
-      >
-        <InputOTPGroup>
-          {[...Array(6)].map((_, index) => (
-            <InputOTPSlot key={index} index={index} />
-          ))}
+    <div className="w-11/12 space-y-8 border p-8 rounded-md border-stone-300">
+      <p className="text-primary text-lg font-medium">{t("enterOTP")}</p>
+      <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+        <InputOTPGroup dir="ltr" className="flex justify-around gap-5 w-full">
+          <InputOTPSlot
+            index={0}
+            className="rounded-lg border border-primary p-6"
+          />
+          <InputOTPSlot
+            index={1}
+            className="rounded-lg border border-primary p-6"
+          />
+          <InputOTPSlot
+            index={2}
+            className="rounded-lg border border-primary p-6"
+          />
+          <InputOTPSlot
+            index={3}
+            className="rounded-lg border border-primary p-6"
+          />
+          <InputOTPSlot
+            index={4}
+            className="rounded-lg border border-primary p-6"
+          />
+          <InputOTPSlot
+            index={5}
+            className="rounded-lg border border-primary p-6"
+          />
         </InputOTPGroup>
       </InputOTP>
 
-      <Button onClick={handleOTPSubmit} className="w-full" disabled={loading}>
+      <Button
+        onClick={handleOTPSubmit}
+        className="w-full text-xl rounded-3xl py-6"
+        variant="primary"
+        disabled={loading}
+        size="lg"
+      >
         {loading ? t("loading") : t("verify")}
       </Button>
     </div>
