@@ -22,18 +22,44 @@ const NavbarComponent = () => {
         {/* Navigation Links */}
         <ul className="hidden md:flex gap-6 text-lg font-medium">
           <li>
-            <NavLink to="/" className={(isAcitve) => "text-primary"}>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? "text-primary " : "hover:text-gray-500"
+              }
+            >
               {t("home")}
             </NavLink>
           </li>
           <li>
-            <NavLink to="/services">{t("services")}</NavLink>
+            <NavLink
+              to="/about"
+              className={({ isActive }) =>
+                isActive ? "text-primary " : "hover:text-gray-500"
+              }
+            >
+              {t("services")}
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/contact">{t("contact")}</NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                isActive ? "text-primary " : "hover:text-gray-500"
+              }
+            >
+              {t("contact")}
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/orders">{t("orders")}</NavLink>
+            <NavLink
+              to="/orders"
+              className={({ isActive }) =>
+                isActive ? "text-primary " : "hover:text-gray-500"
+              }
+            >
+              {t("orders")}
+            </NavLink>
           </li>
         </ul>
 
