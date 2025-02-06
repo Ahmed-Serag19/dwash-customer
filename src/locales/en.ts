@@ -23,4 +23,5 @@ export const en = {
   orders: "My Orders",
   carLogo: "Car Logo",
   registerError: "Registration failed. Please try again.",
+  serviceProviders: "Service Providers",
 };
