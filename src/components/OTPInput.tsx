@@ -8,6 +8,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
+import { Input } from "./ui/input";
 
 interface OTPProps {
   phoneNumber: string;
@@ -45,36 +46,49 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, apiFinalize }) => {
   };
 
   return (
-    <div className="w-11/12 space-y-8 border p-8 rounded-md border-stone-300">
-      <p className="text-primary text-lg font-medium">{t("enterOTP")}</p>
-      <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-        <InputOTPGroup dir="ltr" className="flex justify-around gap-5 w-full">
-          <InputOTPSlot
-            index={0}
-            className="rounded-lg border border-primary p-6"
-          />
-          <InputOTPSlot
-            index={1}
-            className="rounded-lg border border-primary p-6"
-          />
-          <InputOTPSlot
-            index={2}
-            className="rounded-lg border border-primary p-6"
-          />
-          <InputOTPSlot
-            index={3}
-            className="rounded-lg border border-primary p-6"
-          />
-          <InputOTPSlot
-            index={4}
-            className="rounded-lg border border-primary p-6"
-          />
-          <InputOTPSlot
-            index={5}
-            className="rounded-lg border border-primary p-6"
-          />
-        </InputOTPGroup>
-      </InputOTP>
+    <div className="w-11/12 space-y-8 z-10 border p-8 rounded-md border-stone-500 md:border-0 md:p-3 md:border-transparent">
+      <div>
+        <label htmlFor="phoneNumber" className="block text-xl font-[500] mb-2">
+          {t("phoneNumber")}
+        </label>
+        <Input
+          disabled
+          type="tel"
+          placeholder={phoneNumber}
+          className={`w-full px-5 py-6 text-primary disabled:border-primary disabled:text-primary sm:py-7 placeholder:text-primary placeholder:text-lg border rounded-lg focus:outline-none focus:border-primary focus:ring-0`}
+        />
+      </div>
+      <div>
+        <p className="text-primary text-xl font-medium my-3">{t("enterOTP")}</p>
+        <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+          <InputOTPGroup dir="ltr" className="flex justify-around gap-5 w-full">
+            <InputOTPSlot
+              index={0}
+              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
+            />
+            <InputOTPSlot
+              index={1}
+              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
+            />
+            <InputOTPSlot
+              index={2}
+              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
+            />
+            <InputOTPSlot
+              index={3}
+              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
+            />
+            <InputOTPSlot
+              index={4}
+              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
+            />
+            <InputOTPSlot
+              index={5}
+              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
+            />
+          </InputOTPGroup>
+        </InputOTP>
+      </div>
 
       <Button
         onClick={handleOTPSubmit}

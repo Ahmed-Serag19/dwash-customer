@@ -60,13 +60,24 @@ body {
   right: 0;
   z-index: -1;
 }
-
+.mobile-bg {
+  background-image: url("@/assets/images/bg-image.webp");
+  opacity: 0.1;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.hero-bg {
+  background: no-repeat url("@/assets/images/Untitled design (3).png");
+  background-size: contain;
+}
 @media (max-width: 1440px) {
   .bg-logo {
     background-size: cover;
     background-position: center center;
   }
 }
+
 @media (max-width: 767px) {
   .bg-logo {
     border-top-right-radius: 0%;

@@ -22,4 +22,5 @@ export const en = {
   contact: "Contact Us",
   orders: "My Orders",
   carLogo: "Car Logo",
+  registerError: "Registration failed. Please try again.",
 };

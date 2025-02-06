@@ -9,7 +9,7 @@ const NavbarComponent = () => {
   const isArabic = i18n.language === "ar";
 
   return (
-    <header className="shadow-xl py-1">
+    <header className="shadow-xl py-1 z-10">
       <nav
         dir={!isArabic ? "ltr" : "rtl"}
         className={`mx-auto px-4 py-3 flex items-center justify-around w-full`}
@@ -25,7 +25,9 @@ const NavbarComponent = () => {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                isActive ? "text-primary " : "hover:text-gray-500"
+                isActive
+                  ? "text-primary "
+                  : "hover:text-blue-500 transition duration-300"
               }
             >
               {t("home")}
@@ -35,7 +37,9 @@ const NavbarComponent = () => {
             <NavLink
               to="/about"
               className={({ isActive }) =>
-                isActive ? "text-primary " : "hover:text-gray-500"
+                isActive
+                  ? "text-primary "
+                  : "hover:text-blue-500 transition duration-300"
               }
             >
               {t("services")}
@@ -45,7 +49,9 @@ const NavbarComponent = () => {
             <NavLink
               to="/contact"
               className={({ isActive }) =>
-                isActive ? "text-primary " : "hover:text-gray-500"
+                isActive
+                  ? "text-primary "
+                  : "hover:text-blue-500 transition duration-300"
               }
             >
               {t("contact")}
@@ -55,7 +61,9 @@ const NavbarComponent = () => {
             <NavLink
               to="/orders"
               className={({ isActive }) =>
-                isActive ? "text-primary " : "hover:text-gray-500"
+                isActive
+                  ? "text-primary "
+                  : "hover:text-blue-500 transition duration-300"
               }
             >
               {t("orders")}

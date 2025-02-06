@@ -46,10 +46,13 @@ const AuthForm: React.FC<AuthFormProps> = ({
         setPhoneNumber(data.phoneNumber);
         setIsOTP(true);
       } else {
-        toast.error(response.data.messageEn || t("loginError"));
+        toast.error(
+          response.data.messageEn ||
+            (isRegister ? t("registerError") : t("loginError"))
+        );
       }
     } catch {
-      toast.error(t("loginError"));
+      toast.error(isRegister ? t("registerError") : t("loginError"));
     } finally {
       setLoading(false);
     }
@@ -57,19 +60,20 @@ const AuthForm: React.FC<AuthFormProps> = ({
 
   return (
     <div className="relative font-[500] w-full text-primary xl:flex-auto flex-1 flex flex-col justify-center items-center xl:w-3/5  gap-7 md:gap-10">
-      <div className="font-semibold text-3xl lg:text-4xl mb-6">
+      <div className="mobile-bg absolute top-0 right-0 left-0 bottom-0 md:hidden "></div>
+      <div className="font-semibold text-3xl lg:text-4xl mb-6 z-10">
         {isRegister ? t("register") : t("login")}
       </div>
 
       {!isOTP ? (
         <form
           onSubmit={handleSubmit(handlePhoneSubmit)}
-          className="w-11/12 space-y-8 md:space-y-12 border p-8 rounded-md border-stone-300"
+          className="w-11/12 space-y-8 md:space-y-12 border z-10 p-8 rounded-md border-stone-500 md:border-0 md:p-3 md:border-transparent"
         >
-          <div className="mt-10">
+          <div className="mt-10 ">
             <label
               htmlFor="phoneNumber"
-              className="block text-lg font-[500] mb-2"
+              className="block text-xl font-[500] mb-2"
             >
               {t("phoneNumber")}
             </label>
