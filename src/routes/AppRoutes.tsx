@@ -1,3 +1,4 @@
+import ServiceProvider from "@/components/ServiceProvider";
 import MainLayout from "@/layout/MainLayout";
 import About from "@/pages/About";
 import Homepage from "@/pages/Homepage";
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
       { index: true, element: <Homepage /> },
       { path: "home", element: <Homepage /> },
       { path: "about", element: <About /> },
+      { path: "service-provider", element: <ServiceProvider /> },
     ],
   },
   { path: "/login", element: <Login /> },

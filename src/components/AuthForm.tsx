@@ -36,10 +36,16 @@ const AuthForm: React.FC<AuthFormProps> = ({
   const handlePhoneSubmit = async (data: { phoneNumber: string }) => {
     setLoading(true);
     try {
-      const response = await axios.post(apiInit, {
-        number: data.phoneNumber,
-        language,
-      });
+      const token = sessionStorage.getItem("accessToken"); // Get the token
+      const response = await axios.post(
+        `${apiInit}?number=${data.phoneNumber}&language=${language}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.data.success) {
         toast.success(t("otpSent"));
@@ -57,7 +63,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
       setLoading(false);
     }
   };
-
   return (
     <div className="relative font-[500] w-full text-primary xl:flex-auto flex-1 flex flex-col justify-center items-center xl:w-3/5  gap-7 md:gap-10">
       <div className="mobile-bg absolute top-0 right-0 left-0 bottom-0 md:hidden "></div>

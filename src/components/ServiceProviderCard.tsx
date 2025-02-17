@@ -1,9 +1,17 @@
 import ServiceProviderImage from "@/assets/images/service-provider.png";
 import { FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ServiceProviderCard = () => {
+  const navigate = useNavigate();
+  const toSp = () => {
+    navigate("/service-provider");
+  };
   return (
-    <main className="flex flex-col rounded-md max-w-md justify-center items-center self-center">
+    <main
+      className="flex flex-col rounded-md max-w-md justify-center items-center self-center hover:cursor-pointer"
+      onClick={toSp}
+    >
       <div className="rounded-lg ">
         <img
           src={ServiceProviderImage}
