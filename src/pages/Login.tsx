@@ -3,9 +3,11 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import AuthForm from "@/components/AuthForm";
 import { apiEndpoints } from "@/constants/endPoints";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import CarLogo from "@/assets/images/navbar-logo.png";
 
 const Login = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const isRegister = location.pathname === "/register";
 
   return (
@@ -42,6 +44,12 @@ const Login = () => {
           <LanguageSwitcher />
         </div>
       </div>
+      <Link
+        to={"/"}
+        className="absolute top-10 right-10  rounded-md hover:bg-stone-50 duration-300 transition"
+      >
+        <img src={CarLogo} alt={t("carLogo")} className="h-11 w-auto" />
+      </Link>
     </main>
   );
 };

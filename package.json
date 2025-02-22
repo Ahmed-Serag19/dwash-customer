@@ -25,6 +25,7 @@
     "react-i18next": "^15.2.0",
     "react-icons": "^5.4.0",
     "react-router-dom": "^7.0.2",
+    "react-scroll": "^1.9.3",
     "react-toastify": "^11.0.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
@@ -35,6 +36,7 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/react-i18next": "^7.8.3",
+    "@types/react-scroll": "^1.8.10",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.17.0",

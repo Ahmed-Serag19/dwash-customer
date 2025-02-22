@@ -4,4 +4,7 @@ export const apiEndpoints = {
   LoginFinalize: `${baseUrl}/auth/login/finalize`,
   RegisterInitiate: `${baseUrl}/auth/signUp/initiate`,
   RegisterFinalize: `${baseUrl}/auth/signUp/finalize`,
+  getFreelancers: (size: number) =>
+    `${baseUrl}/public/getFreelancers?page=0&size=${size}&type=1`,
+  getServices: `${baseUrl}/public/getServices`,
 };

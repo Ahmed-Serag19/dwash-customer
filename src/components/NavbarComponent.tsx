@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { ShoppingCart, User } from "lucide-react";
 import CarLogo from "@/assets/images/navbar-logo.png";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { Link as ScrollLink } from "react-scroll";
 
 const NavbarComponent = () => {
   const { t, i18n } = useTranslation();
@@ -34,20 +35,18 @@ const NavbarComponent = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-primary "
-                  : "hover:text-blue-500 transition duration-300"
-              }
+            <ScrollLink
+              to="services"
+              smooth={true}
+              duration={700}
+              className="text-primary hover:text-blue-900 transition duration-300 cursor-pointer"
             >
               {t("services")}
-            </NavLink>
+            </ScrollLink>
           </li>
           <li>
             <NavLink
-              to="/contact"
+              to="/"
               className={({ isActive }) =>
                 isActive
                   ? "text-primary "
@@ -72,11 +71,11 @@ const NavbarComponent = () => {
         </ul>
 
         {/* Icons & Login */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 cursor-pointer">
           <Link to="/cart">
             <ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
           </Link>
-          <Link to="/profile">
+          <Link to="/">
             <User className="h-6 w-6 text-black hover:text-primary" />
           </Link>
 

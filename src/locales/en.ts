@@ -24,4 +24,9 @@ export const en = {
   carLogo: "Car Logo",
   registerError: "Registration failed. Please try again.",
   serviceProviders: "Service Providers",
+  noMoreFreelancers: "No more service providers to show",
+  seeMore: "Show more",
+  price: "Price",
+  bookNow: "Book now",
+  SAR: "SAR",
 };

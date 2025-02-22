@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import OTPInput from "@/components/OTPInput";
 import { Link } from "react-router-dom";
 
@@ -57,8 +57,13 @@ const AuthForm: React.FC<AuthFormProps> = ({
             (isRegister ? t("registerError") : t("loginError"))
         );
       }
-    } catch {
-      toast.error(isRegister ? t("registerError") : t("loginError"));
+    } catch (error: any) {
+      console.log(error);
+      toast.error(
+        i18n.language === "ar"
+          ? error.response.data.messageAr
+          : error.response.data.messageEn
+      );
     } finally {
       setLoading(false);
     }
