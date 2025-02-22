@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import OTPInput from "@/components/OTPInput";
 import { Link } from "react-router-dom";
 
