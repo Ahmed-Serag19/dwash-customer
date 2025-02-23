@@ -5,6 +5,7 @@ import Cart from "@/pages/Cart";
 import Homepage from "@/pages/Homepage";
 import Login from "@/pages/Login";
 import Orders from "@/pages/Orders";
+import Profile from "@/pages/Profile";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { path: "about", element: <About /> },
       { path: "orders", element: <Orders /> },
       { path: "cart", element: <Cart /> },
+      { path: "profile", element: <Profile /> },
       { path: "service-provider/:id", element: <ServiceProvider /> },
     ],
   },

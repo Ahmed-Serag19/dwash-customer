@@ -7,4 +7,8 @@ export const apiEndpoints = {
   getFreelancers: (size: number) =>
     `${baseUrl}/public/getFreelancers?page=0&size=${size}&type=1`,
   getServices: `${baseUrl}/public/getServices`,
+  getProfile: `${baseUrl}/consumer/getProfile`,
+  editProfile: `${baseUrl}/consumer/editProfile`,
+  getCart: `${baseUrl}/consumer/getCartItems`,
+  addToCart: `${baseUrl}/consumer/addToCart`,
 };

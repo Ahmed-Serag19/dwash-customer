@@ -59,7 +59,7 @@ const ServiceProvider: React.FC = () => {
           </p>
         </div>
       </div>
-      <div className="py-10 px-10">
+      <div className="py-10 px-10 relative">
         {services?.length > 0 ? (
           services.map((service) => (
             <ServiceCard key={service.serviceId} service={service} />

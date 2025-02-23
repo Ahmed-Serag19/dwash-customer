@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
+import { useNavigate } from "react-router-dom";
 
 interface OTPProps {
   phoneNumber: string;
@@ -19,7 +20,7 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, apiFinalize }) => {
   const { t } = useTranslation();
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleOTPSubmit = async () => {
     if (otp.length !== 6) {
       toast.error(t("invalidOTP"));
@@ -34,11 +35,18 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, apiFinalize }) => {
       });
 
       if (response.data.success) {
-        toast.success(t("loginSuccess"));
+        const token = response.data.content?.token;
+        if (token) {
+          sessionStorage.setItem("accessToken", token);
+          toast.success(t("loginSuccess"));
+          navigate("/");
+        } else {
+          toast.error(t("tokenMissing"));
+        }
       } else {
         toast.error(response.data.messageEn || t("otpError"));
       }
-    } catch {
+    } catch (error) {
       toast.error(t("otpError"));
     } finally {
       setLoading(false);
