@@ -76,6 +76,18 @@ export const ar = {
   invalidDiscount: "كود الخصم غير صالح.",
   currentOrders: "الطلبات الحالية",
   closedOrders: "الطلبات السابقة",
+  phone: "الهاتف",
+  time: "الوقت",
+  status: "الحالة",
+  serviceType: "نوع الخدمة",
+  extras: "الإضافات",
+  cancelOrder: "إلغاء الطلب",
+  addReview: "إضافة تقييم",
+  reviewModalTitle: "إضافة تقييم",
+  appraisalLabel: "التقييم",
+  descriptionLabel: "الوصف",
+  reviewAdded: "تم اضافة التقييم",
+  submit: "إرسال",
   noDescription:
     "            تعد خدمات غسيل السيارات من الخدمات الأساسية التي يحتاجها أصحاب السيارات للحفاظ على نظافة ومظهر سياراتهم،",
 };

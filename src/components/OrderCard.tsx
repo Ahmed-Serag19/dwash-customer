@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import StarRating from "./StarRating";
 
 interface OrderCardProps {
   order: {
+    reviewed: boolean;
     invoiceId: number;
     brandNameAr: string;
     brandNameEn: string;
@@ -23,15 +26,26 @@ interface OrderCardProps {
     };
     totalAmount: number;
     request: {
-      statusName: React.ReactNode | Iterable<React.ReactNode>;
+      statusName: string;
       id: number;
     };
   };
   isClosed: boolean;
   onCancel?: () => void;
+  onAddReview?: (
+    requestId: number,
+    appraisal: number,
+    description: string
+  ) => void;
 }
 
-const OrderCard: React.FC<OrderCardProps> = ({ order, isClosed, onCancel }) => {
+const OrderCard: React.FC<OrderCardProps> = ({
+  order,
+  isClosed,
+  onCancel,
+  onAddReview,
+}) => {
+  const { t } = useTranslation();
   const {
     brandNameAr,
     brandNameEn,
@@ -40,6 +54,8 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isClosed, onCancel }) => {
     timeTo,
     itemDto,
     totalAmount,
+    request,
+    reviewed,
   } = order;
   const {
     itemNameAr,
@@ -50,6 +66,17 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isClosed, onCancel }) => {
     itemExtraDtos,
   } = itemDto;
 
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [appraisal, setAppraisal] = useState(0);
+  const [description, setDescription] = useState("");
+
+  const handleAddReview = () => {
+    if (onAddReview) {
+      onAddReview(request.id, appraisal, description);
+      setIsReviewModalOpen(false);
+    }
+  };
+
   return (
     <div className="border p-4 rounded-lg shadow-md flex flex-col gap-3">
       <h3 className="text-lg font-bold">
@@ -59,48 +86,50 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isClosed, onCancel }) => {
       {/* Display user phone number if available */}
       {userPhoneNumber && (
         <p>
-          <span className="font-semibold">Phone:</span> {userPhoneNumber}
+          <span className="font-semibold">{t("phone")}:</span> {userPhoneNumber}
         </p>
       )}
 
       {/* Display time range if available */}
       {!isClosed && fromTime && timeTo && (
         <p>
-          <span className="font-semibold">Time:</span> {fromTime} - {timeTo}
+          <span className="font-semibold">{t("time")}:</span> {fromTime} -{" "}
+          {timeTo}
         </p>
       )}
 
       {/* Display status */}
       <p>
-        <span className="font-semibold">Status:</span>{" "}
+        <span className="font-semibold">{t("status")}:</span>{" "}
         <span
           className={`${
-            order.request.statusName === "COMPLETED"
+            request.statusName === "COMPLETED" ||
+            request.statusName === "ACCEPTED"
               ? "text-green-500"
               : "text-red-500"
           } font-semibold`}
         >
-          {order.request.statusName}
+          {request.statusName}
         </span>
       </p>
 
       {/* Display service details */}
       <p>
-        <span className="font-semibold">Service:</span> {itemNameEn} (
+        <span className="font-semibold">{t("service")}:</span> {itemNameEn} (
         {itemNameAr})
       </p>
       <p>
-        <span className="font-semibold">Service Type:</span> {serviceTypeEn} (
-        {serviceTypeAr})
+        <span className="font-semibold">{t("serviceType")}:</span>{" "}
+        {serviceTypeEn} ({serviceTypeAr})
       </p>
       <p>
-        <span className="font-semibold">Price:</span> {itemPrice}
+        <span className="font-semibold">{t("price")}:</span> {itemPrice}
       </p>
 
       {/* Display extras if available */}
       {itemExtraDtos.length > 0 && (
         <div>
-          <p>Extras:</p>
+          <p>{t("extras")}:</p>
           <ul>
             {itemExtraDtos.map((extra, index) => (
               <li key={index}>
@@ -114,7 +143,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isClosed, onCancel }) => {
 
       {/* Display total amount */}
       <p>
-        <span className="font-semibold">Total:</span> {totalAmount}
+        <span className="font-semibold">{t("total")}:</span> {totalAmount}
       </p>
 
       {/* Display cancel button for current orders */}
@@ -123,8 +152,58 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isClosed, onCancel }) => {
           onClick={onCancel}
           className="mt-2 bg-red-500 text-white px-4 py-2 rounded"
         >
-          Cancel Order
+          {t("cancelOrder")}
         </button>
+      )}
+
+      {/* Display add review button for completed orders */}
+      {request.statusName === "COMPLETED" && !reviewed && (
+        <button
+          onClick={() => setIsReviewModalOpen(true)}
+          className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          {t("addReview")}
+        </button>
+      )}
+
+      {/* Review Modal */}
+      {isReviewModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h3 className="text-lg font-bold">{t("reviewModalTitle")}</h3>
+            <div className="mt-4">
+              <label className="block font-semibold">
+                {t("appraisalLabel")}:
+              </label>
+              <StarRating rating={appraisal} onRatingChange={setAppraisal} />
+            </div>
+            <div className="mt-4">
+              <label className="block font-semibold">
+                {t("descriptionLabel")}:
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full p-2 border rounded"
+                rows={4}
+              />
+            </div>
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                onClick={() => setIsReviewModalOpen(false)}
+                className="bg-gray-300 px-4 py-2 rounded"
+              >
+                {t("cancel")}
+              </button>
+              <button
+                onClick={handleAddReview}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                {t("submit")}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

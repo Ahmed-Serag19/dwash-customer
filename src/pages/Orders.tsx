@@ -19,22 +19,27 @@ interface OrderData {
   invoiceId: number;
   brandNameAr: string;
   brandNameEn: string;
-  userPhoneNumber: string;
-  fromTime?: string;
-  timeTo?: string;
+  userPhoneNumber: string | null;
+  fromTime: string | null;
+  timeTo: string | null;
   statusName: string;
-  itemNameAr: string;
-  itemNameEn: string;
-  serviceTypeAr: string;
-  serviceTypeEn: string;
-  itemPrice: number;
-  itemExtraNameAr?: string;
-  itemExtraNameEn?: string;
-  itemExtraPrice?: number;
+  reviewed: boolean; // Ensure this is included
+  itemDto: {
+    itemNameAr: string;
+    itemNameEn: string;
+    serviceTypeAr: string;
+    serviceTypeEn: string;
+    itemPrice: number;
+    itemExtraDtos: Array<{
+      itemExtraNameAr: string;
+      itemExtraNameEn: string;
+      itemExtraPrice: number;
+    }>;
+  };
   totalAmount: number;
   request: {
-    statusName: string;
     id: number;
+    statusName: string;
   };
 }
 
@@ -54,11 +59,7 @@ const Orders: React.FC = () => {
   const fetchOrders = async (type: "current" | "closed", page: number) => {
     setIsLoading(true);
     try {
-      const url = `http://149.102.134.28:8080/api/consumer/getOrders?page=${
-        page - 1
-      }&size=${pageSize}`;
-
-      const response = await axios.get(url, {
+      const response = await axios.get(apiEndpoints.getOrders(page, pageSize), {
         headers: {
           Authorization: `Bearer ${token}`,
           accept: "*/*",
@@ -100,6 +101,36 @@ const Orders: React.FC = () => {
       setIsLoading(false);
     }
   };
+  const handleAddReview = async (
+    requestId: number,
+    appraisal: number,
+    description: string
+  ) => {
+    try {
+      const response = await axios.post(
+        apiEndpoints.addReview(requestId),
+        { appraisal, description },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success(t("reviewAdded"));
+        fetchOrders(activeTab, currentPage); // Refresh orders
+      } else {
+        toast.error(response.data.messageEn || t("unknownError"));
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(t("reviewFailed"));
+      }
+    }
+  };
+
   useEffect(() => {
     fetchOrders(activeTab, currentPage);
   }, [activeTab, currentPage]);
@@ -225,6 +256,7 @@ const Orders: React.FC = () => {
                       key={order.invoiceId}
                       order={order}
                       isClosed={true}
+                      onAddReview={handleAddReview}
                     />
                   ))}
                 </div>

@@ -15,7 +15,9 @@ export const apiEndpoints = {
   getSlots: `${baseUrl}/consumer/getSlot`,
   validateDiscount: `${baseUrl}/consumer/validateDiscount`,
   makePayment: `${baseUrl}/payment/consumer/card/makePayment`,
-  getOrders: `${baseUrl}/consumer/getOrders?page=0&size=16`,
+  getOrders: (page: number, pageSize: number) =>
+    `${baseUrl}/consumer/getOrders?page=${page - 1}&size=${pageSize}`,
   cancelOrder: (id: number) =>
     `${baseUrl}/consumer/cancelOrder?requestId=${id}`,
+  addReview: (id: number) => `${baseUrl}/consumer/addReview?requestId=${id}`,
 };
