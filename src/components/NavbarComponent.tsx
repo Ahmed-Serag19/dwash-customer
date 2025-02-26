@@ -85,7 +85,7 @@ const NavbarComponent = () => {
               <Link to="/cart" className="relative">
                 <ShoppingCart className="h-6 w-6 text-black" />
                 {cart && cart.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                  <span className="absolute -top-2 -right-3 bg-primary text-white text-xs px-2 py-0.5 rounded-full">
                     {cart.length}
                   </span>
                 )}

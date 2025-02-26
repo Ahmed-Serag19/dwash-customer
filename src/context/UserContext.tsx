@@ -41,6 +41,7 @@ interface UserContextType {
 }
 
 interface CartItem {
+  itemDto: any;
   invoiceId: number;
   brandId: number;
   brandNameAr: string;
@@ -103,7 +104,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (response.data.success) {
-        setCart(response.data.content); // ✅ Store cart items
+        setCart(response.data.content);
       } else {
         console.error("Error fetching cart:", response.data.messageEn);
       }

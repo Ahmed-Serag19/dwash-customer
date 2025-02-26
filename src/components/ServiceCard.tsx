@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
+import { useUser } from "@/context/UserContext";
 
 interface ServiceCardProps {
   service: Service;
@@ -17,7 +18,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExtras, setSelectedExtras] = useState<number[]>([]);
   const token = sessionStorage.getItem("accessToken");
-
+  const { getCart } = useUser();
   // Handle Extra Service Selection
   const handleExtraServiceToggle = (id: number) => {
     setSelectedExtras((prev) =>
@@ -52,6 +53,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
       if (response.data.success) {
         toast.success(t("addedToCart"));
         setIsModalOpen(false);
+        getCart();
       } else {
         toast.error(t("errorAddingToCart"));
       }
@@ -71,7 +73,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
           </h1>
           <div className="flex items-center gap-1">
             <span className="text-lg font-[500]">
-              {service.avgAppraisal || 4.5}
+              {service.avgAppraisal || 0}
             </span>
             <FaStar className="text-xl" color="#fdca01" />
           </div>

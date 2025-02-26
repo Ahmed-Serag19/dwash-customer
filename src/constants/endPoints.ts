@@ -11,4 +11,11 @@ export const apiEndpoints = {
   editProfile: `${baseUrl}/consumer/editProfile`,
   getCart: `${baseUrl}/consumer/getCartItems`,
   addToCart: `${baseUrl}/consumer/addToCart`,
+  deleteFromCart: `${baseUrl}/consumer/deleteItem`,
+  getSlots: `${baseUrl}/consumer/getSlot`,
+  validateDiscount: `${baseUrl}/consumer/validateDiscount`,
+  makePayment: `${baseUrl}/payment/consumer/card/makePayment`,
+  getOrders: `${baseUrl}/consumer/getOrders?page=0&size=16`,
+  cancelOrder: (id: number) =>
+    `${baseUrl}/consumer/cancelOrder?requestId=${id}`,
 };
