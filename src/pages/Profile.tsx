@@ -87,9 +87,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get(
-          "http://149.102.134.28:8080/api/public/cities"
-        );
+        const response = await axios.get(apiEndpoints.getCities);
         if (response.data.success) setCities(response.data.content);
       } catch (error) {
         toast.error("Failed to load cities");
@@ -103,7 +101,7 @@ const Profile = () => {
       const fetchDistricts = async () => {
         try {
           const response = await axios.get(
-            `http://149.102.134.28:8080/api/public/districts?cityId=${selectedCityId}`
+            apiEndpoints.getDistrict(selectedCityId)
           );
           if (response.data.success) {
             setDistricts(response.data.content);

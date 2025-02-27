@@ -12,8 +12,8 @@ import { useTranslation } from "react-i18next";
 import { apiEndpoints } from "@/constants/endPoints";
 import { toast } from "react-toastify";
 import i18n from "@/i18n";
-import OrderCard from "@/components/OrderCard"; // Custom component for order cards
-import CancelOrderModal from "@/components/CancelOrderModal"; // Custom modal for cancel confirmation
+import OrderCard from "@/components/OrderCard";
+import CancelOrderModal from "@/components/CancelOrderModal";
 
 interface OrderData {
   invoiceId: number;
@@ -23,7 +23,8 @@ interface OrderData {
   fromTime: string | null;
   timeTo: string | null;
   statusName: string;
-  reviewed: boolean; // Ensure this is included
+  reviewed: boolean;
+  reservationDate: string;
   itemDto: {
     itemNameAr: string;
     itemNameEn: string;
@@ -51,7 +52,7 @@ const Orders: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"current" | "closed">("current");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null); // For cancel modal
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
   const token = sessionStorage.getItem("accessToken");
 
   const pageSize = 8;
@@ -70,7 +71,6 @@ const Orders: React.FC = () => {
         const orders = response.data.content.data;
         const pages = Math.ceil(response.data.content.totalElements / pageSize);
 
-        // Separate current and closed orders based on status
         const current = orders.filter(
           (order: OrderData) =>
             order.request.statusName !== "REJECTED" &&
@@ -120,7 +120,7 @@ const Orders: React.FC = () => {
 
       if (response.data.success) {
         toast.success(t("reviewAdded"));
-        fetchOrders(activeTab, currentPage); // Refresh orders
+        fetchOrders(activeTab, currentPage);
       } else {
         toast.error(response.data.messageEn || t("unknownError"));
       }
@@ -135,7 +135,6 @@ const Orders: React.FC = () => {
     fetchOrders(activeTab, currentPage);
   }, [activeTab, currentPage]);
 
-  // Handle order cancellation
   const handleCancelOrder = async (orderId: number) => {
     try {
       const response = await axios.put(
@@ -150,7 +149,7 @@ const Orders: React.FC = () => {
       );
       if (response.data.success) {
         toast.success(t("orderCancelled"));
-        fetchOrders("current", currentPage); // Refresh current orders
+        fetchOrders("current", currentPage);
       } else {
         toast.error(response.data.messageEn || t("unknownError"));
       }
@@ -159,7 +158,7 @@ const Orders: React.FC = () => {
         toast.error(t("cancellationFailed"));
       }
     } finally {
-      setSelectedOrderId(null); // Close modal
+      setSelectedOrderId(null);
     }
   };
 

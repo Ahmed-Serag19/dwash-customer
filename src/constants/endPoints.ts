@@ -15,6 +15,11 @@ export const apiEndpoints = {
   getSlots: `${baseUrl}/consumer/getSlot`,
   validateDiscount: `${baseUrl}/consumer/validateDiscount`,
   makePayment: `${baseUrl}/payment/consumer/card/makePayment`,
+  getCities: `${baseUrl}/public/cities`,
+  getBrandReviews: (id: string | undefined) =>
+    `${baseUrl}/public/getReviewsBrand?page=0&size=8&brandId=${id}`,
+  getDistrict: (selectedCityId: number) =>
+    `${baseUrl}/public/districts?cityId=${selectedCityId}`,
   getOrders: (page: number, pageSize: number) =>
     `${baseUrl}/consumer/getOrders?page=${page - 1}&size=${pageSize}`,
   cancelOrder: (id: number) =>

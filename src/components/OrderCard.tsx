@@ -4,6 +4,7 @@ import StarRating from "./StarRating";
 
 interface OrderCardProps {
   order: {
+    reservationDate: any;
     reviewed: boolean;
     invoiceId: number;
     brandNameAr: string;
@@ -45,7 +46,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
   onCancel,
   onAddReview,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     brandNameAr,
     brandNameEn,
@@ -78,7 +79,10 @@ const OrderCard: React.FC<OrderCardProps> = ({
   };
 
   return (
-    <div className="border p-4 rounded-lg shadow-md flex flex-col gap-3">
+    <div
+      dir={i18n.language === "ar" ? "rtl" : "ltr"}
+      className="border p-4 rounded-lg shadow-md flex flex-col gap-3"
+    >
       <h3 className="text-lg font-bold">
         {brandNameEn} ({brandNameAr})
       </h3>
@@ -86,28 +90,35 @@ const OrderCard: React.FC<OrderCardProps> = ({
       {/* Display user phone number if available */}
       {userPhoneNumber && (
         <p>
-          <span className="font-semibold">{t("phone")}:</span> {userPhoneNumber}
+          <span className="font-semibold text-primary">{t("phone")}:</span>{" "}
+          {userPhoneNumber}
         </p>
       )}
 
       {/* Display time range if available */}
       {!isClosed && fromTime && timeTo && (
         <p>
-          <span className="font-semibold">{t("time")}:</span> {fromTime} -{" "}
-          {timeTo}
+          <span className="font-semibold text-primary">{t("time")}:</span>{" "}
+          {fromTime} - {timeTo}
+        </p>
+      )}
+      {order.reservationDate && (
+        <p>
+          <span className="font-semibold text-primary">{t("date")}:</span>{" "}
+          {order.reservationDate}
         </p>
       )}
 
       {/* Display status */}
       <p>
-        <span className="font-semibold">{t("status")}:</span>{" "}
+        <span className="font-semibold text-primary">{t("status")}:</span>{" "}
         <span
           className={`${
             request.statusName === "COMPLETED" ||
             request.statusName === "ACCEPTED"
               ? "text-green-500"
               : "text-red-500"
-          } font-semibold`}
+          } font-semibold `}
         >
           {request.statusName}
         </span>
@@ -115,21 +126,22 @@ const OrderCard: React.FC<OrderCardProps> = ({
 
       {/* Display service details */}
       <p>
-        <span className="font-semibold">{t("service")}:</span> {itemNameEn} (
-        {itemNameAr})
+        <span className="font-semibold text-primary">{t("service")}:</span>{" "}
+        {itemNameEn} ({itemNameAr})
       </p>
       <p>
-        <span className="font-semibold">{t("serviceType")}:</span>{" "}
+        <span className="font-semibold text-primary">{t("serviceType")}:</span>{" "}
         {serviceTypeEn} ({serviceTypeAr})
       </p>
       <p>
-        <span className="font-semibold">{t("price")}:</span> {itemPrice}
+        <span className="font-semibold text-primary">{t("price")}:</span>{" "}
+        {itemPrice}
       </p>
 
       {/* Display extras if available */}
       {itemExtraDtos.length > 0 && (
         <div>
-          <p>{t("extras")}:</p>
+          <p className="font-semibold text-primary">{t("extras")}:</p>
           <ul>
             {itemExtraDtos.map((extra, index) => (
               <li key={index}>
@@ -143,7 +155,8 @@ const OrderCard: React.FC<OrderCardProps> = ({
 
       {/* Display total amount */}
       <p>
-        <span className="font-semibold">{t("total")}:</span> {totalAmount}
+        <span className="font-semibold text-primary">{t("total")}:</span>{" "}
+        {totalAmount}
       </p>
 
       {/* Display cancel button for current orders */}

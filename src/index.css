@@ -71,6 +71,18 @@ body {
   background: no-repeat url("@/assets/images/Untitled design (3).png");
   background-size: contain;
 }
+.special-top-border {
+  border-bottom-right-radius: 0%;
+}
+.special-border-2 {
+  border-top-left-radius: 0%;
+  border-top-right-radius: 0%;
+}
+.special-border {
+  border-top-left-radius: 0%;
+  border-bottom-right-radius: 20%;
+  border: transparent;
+}
 @media (max-width: 1440px) {
   .bg-logo {
     background-size: cover;

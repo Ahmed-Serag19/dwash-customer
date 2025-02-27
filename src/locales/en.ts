@@ -85,4 +85,6 @@ export const en = {
   reviewAdded: "Review Added",
   descriptionLabel: "Description",
   submit: "Submit",
+  profile: "My profile",
+  date: "Date",
 };
