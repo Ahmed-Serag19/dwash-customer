@@ -75,12 +75,16 @@ const Orders: React.FC = () => {
           (order: OrderData) =>
             order.request.statusName !== "REJECTED" &&
             order.request.statusName !== "COMPLETED" &&
+            order.request.statusName !== "CANCELLED_BY_ADMIN" &&
+            order.request.statusName !== "COMPLETED_BY_ADMIN" &&
             order.request.statusName !== "CANCELLED"
         );
         const closed = orders.filter(
           (order: OrderData) =>
             order.request.statusName === "REJECTED" ||
             order.request.statusName === "COMPLETED" ||
+            order.request.statusName === "COMPLETED_BY_ADMIN" ||
+            order.request.statusName === "CANCELLED_BY_ADMIN" ||
             order.request.statusName === "CANCELLED"
         );
 

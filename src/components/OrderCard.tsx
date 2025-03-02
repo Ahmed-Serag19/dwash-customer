@@ -19,7 +19,8 @@ interface OrderCardProps {
       serviceTypeAr: string;
       serviceTypeEn: string;
       itemPrice: number;
-      itemExtraDtos: Array<{
+      itemExtraDtos?: Array<{
+        // Make this optional
         itemExtraNameAr: string;
         itemExtraNameEn: string;
         itemExtraPrice: number;
@@ -71,12 +72,62 @@ const OrderCard: React.FC<OrderCardProps> = ({
   const [appraisal, setAppraisal] = useState(0);
   const [description, setDescription] = useState("");
 
+  // Safely handle itemExtraDtos (default to an empty array if null/undefined)
+  const extras = itemExtraDtos ?? [];
+
   const handleAddReview = () => {
     if (onAddReview) {
       onAddReview(request.id, appraisal, description);
       setIsReviewModalOpen(false);
     }
   };
+
+  type StatusName =
+    | "WAITING"
+    | "COMPLETED"
+    | "COMPLETED_BY_ADMIN"
+    | "CANCELLED"
+    | "CANCELLED_BY_ADMIN"
+    | "REJECTED"
+    | "ACCEPTED";
+
+  const statusTranslations: Record<StatusName, { en: string; ar: string }> = {
+    WAITING: {
+      en: "Waiting",
+      ar: "في الانتظار",
+    },
+    COMPLETED: {
+      en: "Completed",
+      ar: "مكتمل",
+    },
+    COMPLETED_BY_ADMIN: {
+      en: "Completed by Admin",
+      ar: "مكتمل بواسطة الأدمن",
+    },
+    CANCELLED: {
+      en: "Cancelled",
+      ar: "ملغى",
+    },
+    CANCELLED_BY_ADMIN: {
+      en: "Cancelled by Admin",
+      ar: "ملغى بواسطة الأدمن",
+    },
+    REJECTED: {
+      en: "Rejected",
+      ar: "مرفوض",
+    },
+    ACCEPTED: {
+      en: "Accepted",
+      ar: "مقبول",
+    },
+  };
+  statusTranslations[request.statusName as StatusName]?.[
+    i18n.language as "en" | "ar"
+  ] || request.statusName;
+  const translatedStatus =
+    statusTranslations[request.statusName as StatusName]?.[
+      i18n.language as "en" | "ar"
+    ] || request.statusName;
 
   return (
     <div
@@ -114,13 +165,13 @@ const OrderCard: React.FC<OrderCardProps> = ({
         <span className="font-semibold text-primary">{t("status")}:</span>{" "}
         <span
           className={`${
-            request.statusName === "COMPLETED" ||
+            request.statusName.includes("COMPLETED") ||
             request.statusName === "ACCEPTED"
               ? "text-green-500"
               : "text-red-500"
           } font-semibold `}
         >
-          {request.statusName}
+          {translatedStatus}
         </span>
       </p>
 
@@ -139,11 +190,12 @@ const OrderCard: React.FC<OrderCardProps> = ({
       </p>
 
       {/* Display extras if available */}
-      {itemExtraDtos.length > 0 && (
+
+      {extras.length > 0 && (
         <div>
           <p className="font-semibold text-primary">{t("extras")}:</p>
           <ul>
-            {itemExtraDtos.map((extra, index) => (
+            {extras.map((extra, index) => (
               <li key={index}>
                 {extra.itemExtraNameEn} ({extra.itemExtraNameAr}) -{" "}
                 {extra.itemExtraPrice}
@@ -158,6 +210,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
         <span className="font-semibold text-primary">{t("total")}:</span>{" "}
         {totalAmount}
       </p>
+      {extras.length === 0 && <div className="min-h-12"></div>}
 
       {/* Display cancel button for current orders */}
       {!isClosed && onCancel && (

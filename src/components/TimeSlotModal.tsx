@@ -46,7 +46,7 @@ const TimeSlotModal = ({
   }, [brandId, token]);
 
   const handleSlotSelection = (slotId: number) => {
-    setSelectedSlot(slotId); // ✅ Updates the local selection
+    setSelectedSlot(slotId);
   };
 
   const confirmSelection = () => {
@@ -54,7 +54,7 @@ const TimeSlotModal = ({
       toast.error(t("pleaseSelectSlot"));
       return;
     }
-    setSelectedSlotId(selectedSlot); // ✅ Pass selected slot to parent component
+    setSelectedSlotId(selectedSlot);
     toast.success(t("slotSelected"));
     onClose();
   };

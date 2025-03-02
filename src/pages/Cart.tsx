@@ -22,11 +22,39 @@ const Cart = () => {
   const [discountAmount, setDiscountAmount] = useState<number>(0);
   const [discountType, setDiscountType] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // Filter the cart to show only the selected item with a time slot
+  const selectedItem = cart?.find(
+    (item) =>
+      item.brandId === selectedBrandId && item.invoiceId === selectedInvoiceId
+  );
+
+  // Calculate subtotal for the selected item
+  const subtotal = selectedItem
+    ? (selectedItem?.itemDto?.itemPrice || 0) +
+      (selectedItem?.itemDto?.itemExtraDtos?.reduce(
+        (sum: number, extra: { itemExtraPrice: number }) =>
+          sum + (extra.itemExtraPrice || 0),
+        0
+      ) || 0)
+    : 0;
+
+  // Calculate discount value
+  const discountValue =
+    discountType === "PERCENTAGE"
+      ? (subtotal * discountAmount) / 100
+      : discountType === "AMOUNT"
+      ? discountAmount
+      : 0;
+
+  // Calculate final total
+  const finalTotal = subtotal - discountValue;
+
   useEffect(() => {
-    if (cart && cart.length > 0) {
+    if (cart && cart.length > 0 && !selectedBrandId) {
       setSelectedBrandId(cart[0].brandId);
     }
-  }, [cart]);
+  }, [cart, selectedBrandId]);
 
   const handleApplyDiscount = async () => {
     if (!discountCode) {
@@ -58,27 +86,6 @@ const Cart = () => {
       console.error("Error validating discount:", error);
     }
   };
-
-  const subtotal = (cart ?? []).reduce(
-    (sum, item) =>
-      sum +
-      item.itemDto.itemPrice +
-      item.itemDto.itemExtraDtos.reduce(
-        (extraSum: any, extra: { itemExtraPrice: any }) =>
-          extraSum + extra.itemExtraPrice,
-        0
-      ),
-    0
-  );
-
-  const discountValue =
-    discountType === "PERCENTAGE"
-      ? (subtotal * discountAmount) / 100
-      : discountType === "AMOUNT"
-      ? discountAmount
-      : 0;
-
-  const finalTotal = subtotal - discountValue;
 
   const handlePayment = async () => {
     if (!selectedInvoiceId || !selectedSlotId) {
@@ -115,7 +122,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 max-w-7xl">
       <h1 className="text-2xl font-bold mb-6">{t("yourCart")}</h1>
 
       <div className="space-y-4">
@@ -150,73 +157,78 @@ const Cart = () => {
         )}
       </div>
 
-      {/* ✅ Discount Input */}
-      <div className="mt-4 space-y-2 p-4 border rounded-lg flex justify-between items-center bg-gray-100">
-        <div className="flex gap-2 items-center">
-          <label className="font-semibold">{t("discountCode")}</label>
-          <input
-            type="text"
-            placeholder={t("code")}
-            className="border p-2 rounded-lg w-40"
-            value={discountCode}
-            onChange={(e) => setDiscountCode(e.target.value)}
-          />
-        </div>
-        <div>
-          <button
-            onClick={handleApplyDiscount}
-            className="px-5 py-1.5 text-md bg-primary text-white rounded-lg"
-          >
-            {t("activate")}
-          </button>
-        </div>
-      </div>
-
-      {/* ✅ Price Summary */}
-      <div className="mt-4 space-y-2 p-4 border rounded-lg bg-gray-100">
-        <div className="flex justify-between">
-          <span className="font-medium">{t("subtotal")}</span>
-          <span>
-            {subtotal.toFixed(2)} {t("SAR")}
-          </span>
-        </div>
-
-        <div className="flex justify-between">
-          <div className="flex gap-3">
-            <span>{t("discount")}</span>
-            <span>
-              {discountType === "PERCENTAGE" ? (
-                <span>{discountAmount}%</span>
-              ) : (
-                <div className="flex gap-1">
-                  <span>{discountAmount}</span>
-                  <span>{t("SAR")}</span>
-                </div>
-              )}
-            </span>
+      {/* Show the total cost section only if a time slot is selected */}
+      {selectedSlotId && selectedItem && (
+        <>
+          {/* ✅ Discount Input */}
+          <div className="mt-4 space-y-2 p-4 border rounded-lg flex justify-between items-center bg-gray-100">
+            <div className="flex gap-2 items-center">
+              <label className="font-semibold">{t("discountCode")}</label>
+              <input
+                type="text"
+                placeholder={t("code")}
+                className="border p-2 rounded-lg w-40"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value)}
+              />
+            </div>
+            <div>
+              <button
+                onClick={handleApplyDiscount}
+                className="px-5 py-1.5 text-md bg-primary text-white rounded-lg"
+              >
+                {t("activate")}
+              </button>
+            </div>
           </div>
-          <span>
-            -{discountValue.toFixed(2)} {t("SAR")}
-          </span>
-        </div>
 
-        <div className="flex justify-between border-t pt-2 text-lg font-bold">
-          <span>{t("total")}</span>
-          <span className="text-primary">
-            {finalTotal.toFixed(2)} {t("SAR")}
-          </span>
-        </div>
-      </div>
+          {/* ✅ Price Summary */}
+          <div className="mt-4 space-y-2 p-4 border rounded-lg bg-gray-100">
+            <div className="flex justify-between">
+              <span className="font-medium">{t("subtotal")}</span>
+              <span>
+                {subtotal.toFixed(2)} {t("SAR")}
+              </span>
+            </div>
 
-      {/* ✅ Confirm Booking Button */}
-      <div className="mt-6 flex justify-end">
-        <button
-          onClick={handlePayment}
-          className="bg-primary px-6 py-2 text-white font-semibold rounded-lg"
-        >
-          {t("confirmBooking")}
-        </button>
-      </div>
+            <div className="flex justify-between">
+              <div className="flex gap-3">
+                <span>{t("discount")}</span>
+                <span>
+                  {discountType === "PERCENTAGE" ? (
+                    <span>{discountAmount}%</span>
+                  ) : (
+                    <div className="flex gap-1">
+                      <span>{discountAmount}</span>
+                      <span>{t("SAR")}</span>
+                    </div>
+                  )}
+                </span>
+              </div>
+              <span>
+                -{discountValue.toFixed(2)} {t("SAR")}
+              </span>
+            </div>
+
+            <div className="flex justify-between border-t pt-2 text-lg font-bold">
+              <span>{t("total")}</span>
+              <span className="text-primary">
+                {finalTotal.toFixed(2)} {t("SAR")}
+              </span>
+            </div>
+          </div>
+
+          {/* ✅ Confirm Booking Button */}
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={handlePayment}
+              className="bg-primary px-6 py-2 text-white font-semibold rounded-lg"
+            >
+              {t("confirmBooking")}
+            </button>
+          </div>
+        </>
+      )}
 
       {/* ✅ Full-Screen Booking Time Slot Modal */}
       {isBookingModalOpen && selectedInvoiceId && selectedBrandId && (

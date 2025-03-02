@@ -5,15 +5,28 @@ import { useState } from "react";
 interface CartCardProps {
   item: any;
   onDelete: (invoiceId: number, itemId: number) => void;
-  onBook: (invoiceId: number, brandId: number) => void; // ✅ Trigger modal in `Cart.tsx`
+  onBook: (invoiceId: number, brandId: number) => void;
 }
 
 const CartCard: React.FC<CartCardProps> = ({ item, onDelete, onBook }) => {
   const { t, i18n } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  const calculateTotalPrice = () => {
+    const basePrice = item.itemDto.itemPrice || 0;
+    const extrasTotal =
+      item.itemDto.itemExtraDtos?.reduce(
+        (sum: number, extra: { itemExtraPrice: number }) =>
+          sum + (extra.itemExtraPrice || 0),
+        0
+      ) || 0;
+    return basePrice + extrasTotal;
+  };
+
+  const totalPrice = calculateTotalPrice();
+
   return (
-    <div className="rounded-lg border  border-gray-300 bg-white p-8 drop-shadow-lg flex justify-between">
+    <div className="rounded-lg border border-gray-300 bg-white p-8 drop-shadow-lg flex justify-between">
       <div className="flex flex-col">
         <h1 className="text-xl text-primary font-semibold">
           {i18n.language === "ar"
@@ -25,12 +38,14 @@ const CartCard: React.FC<CartCardProps> = ({ item, onDelete, onBook }) => {
             ? item.itemDto.serviceTypeAr
             : item.itemDto.serviceTypeEn}
         </p>
+
+        {/* Base Price */}
         <p className="text-primary font-semibold">
           {item.itemDto.itemPrice} {t("SAR")}
         </p>
 
         {/* Extra Services */}
-        {item.itemDto.itemExtraDtos.length > 0 && (
+        {item?.itemDto?.itemExtraDtos?.length > 0 && (
           <div className="mt-2">
             <h3 className="text-sm font-semibold">{t("extraServices")}</h3>
             <ul className="list-disc pl-4 text-sm">
@@ -52,6 +67,13 @@ const CartCard: React.FC<CartCardProps> = ({ item, onDelete, onBook }) => {
             </ul>
           </div>
         )}
+
+        {/* Total Price */}
+        <div className="mt-4 border-t pt-2 text-primary">
+          <p className="text-lg font-semibold">
+            {t("total")}: {totalPrice.toFixed(2)} {t("SAR")}
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-col justify-between items-end">
@@ -86,7 +108,6 @@ const CartCard: React.FC<CartCardProps> = ({ item, onDelete, onBook }) => {
   );
 };
 
-// Delete Confirmation Modal
 const ConfirmDeleteModal: React.FC<{
   onConfirm: () => void;
   onCancel: () => void;

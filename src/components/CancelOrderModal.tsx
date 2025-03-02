@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface CancelOrderModalProps {
   isOpen: boolean;
@@ -12,21 +13,21 @@ const CancelOrderModal: React.FC<CancelOrderModalProps> = ({
   onConfirm,
 }) => {
   if (!isOpen) return null;
-
+  const { t } = useTranslation();
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg">
-        <h3 className="text-lg font-bold">Confirm Cancellation</h3>
-        <p>Are you sure you want to cancel this order?</p>
-        <div className="mt-4 flex justify-end gap-2">
-          <button onClick={onClose} className="bg-gray-300 px-4 py-2 rounded">
-            No
+        <h3 className="text-xl font-bold text-center py-3">{t("confirm")}</h3>
+        <p className="py-3">{t("confirmCancel")}</p>
+        <div className="mt-4 flex justify-center gap-4">
+          <button onClick={onClose} className="bg-gray-300 w-16 py-1 rounded">
+            {t("no")}
           </button>
           <button
             onClick={onConfirm}
-            className="bg-red-500 text-white px-4 py-2 rounded"
+            className="bg-red-500 text-white w-16 py-1 rounded"
           >
-            Yes
+            {t("yes")}
           </button>
         </div>
       </div>

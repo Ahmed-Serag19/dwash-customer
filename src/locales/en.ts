@@ -86,5 +86,9 @@ export const en = {
   descriptionLabel: "Description",
   submit: "Submit",
   profile: "My profile",
+  itemRemoved: "Removed from cart",
+  confirmCancel: "Confirm Cancelling order?",
+  yes: "Yes",
+  no: "No",
   date: "Date",
 };

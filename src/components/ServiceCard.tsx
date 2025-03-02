@@ -61,7 +61,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
       toast.error(t("errorAddingToCart"));
     }
   };
-
   return (
     <div className="max-w-3xl rounded-lg border my-12 min-h-32 border-gray-200 bg-white p-4 drop-shadow-xl shadow-2xl flex justify-between">
       <div className="flex flex-col">
@@ -71,12 +70,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
               ? service.servicesNameAr
               : service.servicesNameEn}
           </h1>
-          <div className="flex items-center gap-1">
+          {/* <div className="flex items-center gap-1">
             <span className="text-lg font-[500]">
               {service.avgAppraisal || 0}
             </span>
             <FaStar className="text-xl" color="#fdca01" />
-          </div>
+          </div> */}
         </div>
         <p className="text-neutral-600 font-[500] pt-3">
           {i18n.language === "ar"
