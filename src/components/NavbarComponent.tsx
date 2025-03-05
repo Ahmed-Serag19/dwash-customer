@@ -31,7 +31,11 @@ const NavbarComponent = () => {
       >
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={CarLogo} alt={t("carLogo")} className="h-11 w-auto" />
+          <img
+            src={CarLogo}
+            alt={t("carLogo")}
+            className="h-8 sm:h-11 w-auto"
+          />
         </Link>
 
         {/* Navigation Links */}
@@ -77,12 +81,14 @@ const NavbarComponent = () => {
         {/* Icons & Login */}
         <div className="flex items-center gap-4 cursor-pointer">
           {/* Dropdown Button for Tablet View */}
-          <button
-            onClick={toggleDropdown}
-            className="md:hidden focus:outline-none"
-          >
-            <Menu className="h-6 w-6 text-black" />
-          </button>
+          {user && isAuthenticated && (
+            <button
+              onClick={toggleDropdown}
+              className="md:hidden focus:outline-none"
+            >
+              <Menu className="h-6 w-6 text-black" />
+            </button>
+          )}
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
@@ -161,7 +167,7 @@ const NavbarComponent = () => {
           {!user && !isAuthenticated && (
             <Link
               to="/login"
-              className="border border-primary text-primary px-6 py-1 rounded-xl font-medium hover:bg-primary hover:text-white transition"
+              className="border border-primary text-primary px-2 sm:px-6 py-1 rounded-xl font-medium hover:bg-primary hover:text-white transition"
             >
               {t("login")}
             </Link>
@@ -170,7 +176,7 @@ const NavbarComponent = () => {
             <Link
               to="/"
               onClick={handleLogout}
-              className="border border-primary text-primary px-6 py-1 rounded-xl font-medium hover:bg-red-400 hover:border-transparent hover:text-white transition hidden md:block"
+              className="border border-primary text-primary px-2 sm:px-6 py-1 rounded-xl font-medium hover:bg-red-400 hover:border-transparent hover:text-white transition hidden md:block"
             >
               {t("logout")}
             </Link>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaStar } from "react-icons/fa";
+// import { FaStar } from "react-icons/fa";
 import { Service } from "@/interfaces";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
