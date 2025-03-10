@@ -182,7 +182,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
 import { useUser } from "@/context/UserContext";
-import ServiceCardModal from "@/components/ServiceCardModal"; // Import the Modal component
+import ServiceCardModal from "@/components/ServiceCardModal";
 
 interface ServiceCardProps {
   service: Service;
@@ -205,7 +205,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
     );
   };
 
-  // Handle Booking Button (Opens Modal)
   const handleBooking = () => {
     if (!token) {
       navigate("/register");
@@ -215,7 +214,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
     setIsModalOpen(true);
   };
 
-  // Handle Adding to Cart
   const handleAddToCart = async () => {
     try {
       const response = await axios.post(
@@ -268,7 +266,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
         </button>
       </div>
 
-      {/* Fullscreen Booking Modal Using React Portal */}
       <ServiceCardModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -277,7 +274,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
           {t("selectExtras")}
         </h2>
 
-        {/* Extra Services List */}
         <div className="space-y-3 px-4">
           {service.extraServices && service.extraServices.length > 0 ? (
             service.extraServices.map((extra) => (
@@ -311,7 +307,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
           )}
         </div>
 
-        {/* Modal Actions */}
         <div className="mt-6 flex justify-between px-4">
           <button
             onClick={() => setIsModalOpen(false)}
