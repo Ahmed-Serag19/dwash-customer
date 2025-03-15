@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /private
+Sitemap: https://dw.stg.dussur.sa/sitemap.xml

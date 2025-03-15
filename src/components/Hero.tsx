@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import HeroImage from "@/assets/images/Untitled design (3).png";
+import HeroImage from "@/assets/images/Untitled design (3).webp";
 const Hero = () => {
   const { t } = useTranslation();
   return (
