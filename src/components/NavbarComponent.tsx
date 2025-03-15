@@ -6,6 +6,7 @@ import CarLogo from "@/assets/images/navbar-logo.png";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { Link as ScrollLink } from "react-scroll";
 import { useUser } from "@/context/UserContext";
+import { toast } from "react-toastify";
 
 const NavbarComponent = () => {
   const { t, i18n } = useTranslation();
@@ -17,6 +18,7 @@ const NavbarComponent = () => {
   const handleLogout = () => {
     logout();
     navigate("/");
+    toast.success(t("loggedOut"));
   };
 
   const toggleDropdown = () => {

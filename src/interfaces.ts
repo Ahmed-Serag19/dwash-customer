@@ -40,3 +40,68 @@ export interface ExtraService {
   extraDescriptionsEn: string;
   extraPrice: number;
 }
+
+export interface UserAddress {
+  userAddressId: number;
+  cityAr: string;
+  cityEn: string;
+  districtAr: string;
+  districtEn: string;
+  latitude: string;
+  longitude: string;
+}
+
+export interface User {
+  userAddressDto: any;
+  id: number;
+  username: string;
+  email: string;
+  mobile: string;
+  nameAr: string;
+  nameEn: string;
+  userType: string;
+  status: number;
+  agreementAccept: number;
+  userAddress?: UserAddress;
+  cityId: string;
+  districtId: string;
+  latitude?: string;
+  longitude?: string;
+}
+
+export interface UserContextType {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  cart: CartItem[] | null;
+  getUser: () => Promise<void>;
+  logout: () => void;
+  getCart: () => Promise<void>;
+}
+
+export interface CartItem {
+  itemDto: any;
+  invoiceId: number;
+  brandId: number;
+  brandNameAr: string;
+  brandNameEn: string;
+  status: string;
+  totalAmount: number;
+  reviewed: boolean;
+  item: {
+    invoiceItemId: number;
+    invoiceId: number;
+    itemNameAr: string;
+    itemNameEn: string;
+    serviceTypeAr: string;
+    serviceTypeEn: string;
+    itemPrice: number;
+    extras: {
+      itemExtraId: number;
+      itemExtraNameAr: string;
+      itemExtraNameEn: string;
+      invoiceItemId: number;
+      itemExtraPrice: number;
+    }[];
+  };
+}

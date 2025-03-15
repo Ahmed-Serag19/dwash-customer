@@ -26,19 +26,7 @@ const Login = () => {
         dir={i18n.language === "en" ? "ltr" : "rtl"}
         className="relative w-full md:w-1/2 xl:flex-auto flex-1 h-full flex flex-col justify-center items-center xl:w-3/5 bg-stone-100 md:bg-transparent"
       >
-        <AuthForm
-          apiInit={
-            isRegister
-              ? apiEndpoints.RegisterInitiate
-              : apiEndpoints.LoginInitiate
-          }
-          apiFinalize={
-            isRegister
-              ? apiEndpoints.RegisterFinalize
-              : apiEndpoints.LoginFinalize
-          }
-          isRegister={isRegister}
-        />
+        <AuthForm isRegister={isRegister} />
 
         <div className="absolute bottom-5 right-5">
           <LanguageSwitcher />

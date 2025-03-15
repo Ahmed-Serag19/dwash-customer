@@ -91,4 +91,6 @@ export const en = {
   yes: "Yes",
   no: "No",
   date: "Date",
+  registerSuccess: "Registered Successfully",
+  loggedOut: "Logged out Successfully",
 };

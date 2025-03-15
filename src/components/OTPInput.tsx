@@ -10,17 +10,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
 import { useNavigate } from "react-router-dom";
+import { apiEndpoints } from "@/constants/endPoints";
+import { useUser } from "@/context/UserContext";
 
 interface OTPProps {
   phoneNumber: string;
-  apiFinalize: string;
+  isRegister?: boolean;
 }
 
-const OTPInput: React.FC<OTPProps> = ({ phoneNumber, apiFinalize }) => {
+const OTPInput: React.FC<OTPProps> = ({ phoneNumber, isRegister }) => {
   const { t } = useTranslation();
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const { getUser } = useUser();
   const navigate = useNavigate();
+
   const handleOTPSubmit = async () => {
     if (otp.length !== 6) {
       toast.error(t("invalidOTP"));
@@ -29,17 +33,25 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, apiFinalize }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post(apiFinalize, {
-        number: phoneNumber,
-        confirmationCode: otp,
-      });
+      const apiUrl = isRegister
+        ? apiEndpoints.RegisterFinalize(otp, phoneNumber)
+        : apiEndpoints.LoginFinalize(otp, phoneNumber);
 
+      const response = await axios.post(apiUrl, {});
+      console.log(response);
       if (response.data.success) {
         const token = response.data.content?.token;
         if (token) {
           sessionStorage.setItem("accessToken", token);
-          toast.success(t("loginSuccess"));
-          navigate("/");
+          getUser();
+          {
+            isRegister
+              ? toast.success(t("registerSuccess"))
+              : toast.success(t("loginSuccess"));
+          }
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
         } else {
           toast.error(t("tokenMissing"));
         }
@@ -63,37 +75,20 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, apiFinalize }) => {
           disabled
           type="tel"
           placeholder={phoneNumber}
-          className={`w-full px-5 py-6 text-primary disabled:border-primary disabled:text-primary sm:py-7 placeholder:text-primary placeholder:text-lg border rounded-lg focus:outline-none focus:border-primary focus:ring-0`}
+          className="w-full px-5 py-6 text-primary disabled:border-primary disabled:text-primary sm:py-7 placeholder:text-primary placeholder:text-lg border rounded-lg focus:outline-none focus:border-primary focus:ring-0"
         />
       </div>
       <div>
         <p className="text-primary text-xl font-medium my-3">{t("enterOTP")}</p>
         <InputOTP maxLength={6} value={otp} onChange={setOtp}>
           <InputOTPGroup dir="ltr" className="flex justify-around gap-5 w-full">
-            <InputOTPSlot
-              index={0}
-              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
-            />
-            <InputOTPSlot
-              index={1}
-              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
-            />
-            <InputOTPSlot
-              index={2}
-              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
-            />
-            <InputOTPSlot
-              index={3}
-              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
-            />
-            <InputOTPSlot
-              index={4}
-              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
-            />
-            <InputOTPSlot
-              index={5}
-              className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
-            />
+            {[...Array(6)].map((_, index) => (
+              <InputOTPSlot
+                key={index}
+                index={index}
+                className="rounded-lg border border-primary p-4 sm:p-6 sm:text-lg"
+              />
+            ))}
           </InputOTPGroup>
         </InputOTP>
       </div>

@@ -1,9 +1,13 @@
-const baseUrl = "http://149.102.134.28:8080/api";
+const baseUrl = "https://api.stg.2025.dwash.cood2.dussur.sa/api";
 export const apiEndpoints = {
-  LoginInitiate: `${baseUrl}/auth/login/initiate`,
-  LoginFinalize: `${baseUrl}/auth/login/finalize`,
-  RegisterInitiate: `${baseUrl}/auth/signUp/initiate`,
-  RegisterFinalize: `${baseUrl}/auth/signUp/finalize`,
+  LoginInitiate: (number: string | null, language: string | null) =>
+    `${baseUrl}/auth/login/initiate?number=${number}&language=${language}`,
+  LoginFinalize: (confirmationCode: string | null, number: string | null) =>
+    `${baseUrl}/auth/login/finalize?confirmationCode=${confirmationCode}&number=${number}`,
+  RegisterInitiate: (number: string | null, language: string | null) =>
+    `${baseUrl}/auth/signUp/initiate?number=${number}&language=${language}`,
+  RegisterFinalize: (confirmationCode: string | null, number: string | null) =>
+    `${baseUrl}/auth/signUp/finalize?confirmationCode=${confirmationCode}&number=${number}`,
   getFreelancers: (size: number) =>
     `${baseUrl}/public/getFreelancers?page=0&size=${size}&type=1`,
   getServices: `${baseUrl}/public/getServices`,
