@@ -59,7 +59,7 @@ const NavbarComponent = () => {
               to="services"
               smooth={true}
               duration={700}
-              className="text-primary hover:text-blue-900 transition duration-300 cursor-pointer"
+              className=" hover:text-primary transition duration-300 cursor-pointer"
             >
               {t("services")}
             </ScrollLink>

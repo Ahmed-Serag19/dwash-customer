@@ -51,24 +51,6 @@ export interface UserAddress {
   longitude: string;
 }
 
-export interface User {
-  userAddressDto: any;
-  id: number;
-  username: string;
-  email: string;
-  mobile: string;
-  nameAr: string;
-  nameEn: string;
-  userType: string;
-  status: number;
-  agreementAccept: number;
-  userAddress?: UserAddress;
-  cityId: string;
-  districtId: string;
-  latitude?: string;
-  longitude?: string;
-}
-
 export interface UserContextType {
   user: User | null;
   token: string | null;
@@ -116,4 +98,38 @@ export interface District {
   districtId: number;
   districtNameAr: string;
   districtNameEn: string;
+}
+
+export interface UserAddress {
+  userAddressId: number;
+  addressTitle: string;
+  cityId: number;
+  districtId: number;
+  latitude: string;
+  longitude: string;
+  cityAr: string;
+  cityEn: string;
+  districtAr: string;
+  districtEn: string;
+}
+
+export interface AddressFormData {
+  addressTitle: string;
+  cityId: number;
+  districtId: number;
+  latitude: string;
+  longitude: string;
+}
+
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  mobile: string;
+  nameAr: string;
+  nameEn: string;
+  userType: string;
+  status: number;
+  agreementAccept: number;
+  userAddressDto: UserAddress[];
 }

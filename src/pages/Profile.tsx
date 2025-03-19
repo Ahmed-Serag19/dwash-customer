@@ -1,45 +1,14 @@
-import { useState } from "react";
 import { useUser } from "@/context/UserContext";
-import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { useProfileForm } from "@/hooks/useProfileForm";
+import PersonalInfoForm from "@/components/profile/personal-info-form";
+import AddressManagement from "@/components/profile/address-management";
 import LoadingIndicator from "@/components/ui/loading-indicator";
-import axios from "axios";
-import { apiEndpoints } from "@/constants/endPoints";
-import ProfileForm from "@/components/profile/profile-form";
 
 const Profile = () => {
   const { user, token, getUser } = useUser();
-  const [editMode, setEditMode] = useState(false);
   const { t } = useTranslation();
-  const {
-    formMethods,
-    loading,
-    cities,
-    districts,
-    loadingLocation,
-    handleGetLocation,
-  } = useProfileForm(user);
 
-  const onSubmit = async (data: any) => {
-    try {
-      const response = await axios.put(apiEndpoints.editProfile, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.data.success) {
-        toast.success(t("profileUpdated"));
-        setEditMode(false);
-        getUser();
-      } else {
-        toast.error(t("updateFailed"));
-      }
-    } catch (error) {
-      toast.error(t("generalError"));
-    }
-  };
-
-  if (loading) return <LoadingIndicator message={t("loading")} />;
+  if (!user) return <LoadingIndicator message={t("loading")} />;
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
@@ -47,17 +16,23 @@ const Profile = () => {
         {t("title")}
       </h2>
 
-      <ProfileForm
-        formMethods={formMethods}
-        onSubmit={onSubmit}
-        editMode={editMode}
-        setEditMode={setEditMode}
-        user={user}
-        cities={cities}
-        districts={districts}
-        loadingLocation={loadingLocation}
-        handleGetLocation={handleGetLocation}
-      />
+      {/* Personal Information Form */}
+      <div className="mb-10">
+        <h3 className="text-xl font-semibold mb-4">{t("personalInfo")}</h3>
+        <PersonalInfoForm user={user} token={token} onSuccess={getUser} />
+      </div>
+
+      {/* Address Management */}
+      <div>
+        <h3 className="text-2xl text-primary text-center py-5 font-semibold mb-4">
+          {t("addresses")}
+        </h3>
+        <AddressManagement
+          addresses={user.userAddressDto || []}
+          token={token}
+          onSuccess={getUser}
+        />
+      </div>
     </div>
   );
 };
