@@ -238,7 +238,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
   };
 
   return (
-    <div className="max-w-3xl rounded-lg border my-12 min-h-32 border-gray-200 bg-white p-4 drop-shadow-xl shadow-2xl flex justify-between">
+    <div className="max-w-4xl rounded-lg border my-12 min-h-32 border-gray-200 bg-white p-4 drop-shadow-xl shadow-2xl flex justify-between items-center gap-5">
       <div className="flex flex-col">
         <h1 className="text-2xl text-primary font-[500]">
           {i18n.language === "ar"

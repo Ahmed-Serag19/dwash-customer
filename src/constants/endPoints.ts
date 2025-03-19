@@ -29,4 +29,9 @@ export const apiEndpoints = {
   cancelOrder: (id: number) =>
     `${baseUrl}/consumer/cancelOrder?requestId=${id}`,
   addReview: (id: number) => `${baseUrl}/consumer/addReview?requestId=${id}`,
+  addAddress: `${baseUrl}/consumer/addAddress`,
+  editAddress: (addressId: number) =>
+    `${baseUrl}/consumer/editAddress/${addressId}`,
+  deleteAddress: (addressId: number) =>
+    `${baseUrl}/consumer/deleteAddress/${addressId}`,
 };

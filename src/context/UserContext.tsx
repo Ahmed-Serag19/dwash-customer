@@ -13,7 +13,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = !!user && !!token;
 
   const getUser = async () => {
-    const storedToken = sessionStorage.getItem("accessToken"); // ✅ Fetch latest token from session storage
+    const storedToken = sessionStorage.getItem("accessToken");
     if (!storedToken) return;
 
     try {
@@ -23,7 +23,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (response.data.success) {
         setUser(response.data.content);
-        setToken(storedToken); // ✅ Update token state immediately
+        setToken(storedToken);
       } else {
         console.error("Error fetching user:", response.data.messageEn);
         logout();
