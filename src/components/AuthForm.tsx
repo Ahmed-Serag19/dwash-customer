@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import OTPInput from "@/components/OTPInput";
 import { Link } from "react-router-dom";
-import { apiEndpoints } from "@/constants/endPoints"; // ✅ Imported here
+import { apiEndpoints } from "@/constants/endPoints";
 
 interface AuthFormProps {
   isRegister?: boolean;
@@ -69,11 +69,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ isRegister }) => {
       setLoading(false);
     }
   };
-
-  // ✅ Determine the finalization API dynamically
-  const apiFinalize = isRegister
-    ? apiEndpoints.RegisterFinalize
-    : apiEndpoints.LoginFinalize;
 
   return (
     <div className="relative font-[500] w-full text-primary xl:flex-auto flex-1 flex flex-col justify-center items-center xl:w-3/5 gap-7 md:gap-10">

@@ -6,18 +6,7 @@ import { apiEndpoints } from "@/constants/endPoints";
 import { toast } from "react-toastify";
 import { MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
-interface City {
-  cityId: number;
-  cityNameAr: string;
-  cityNameEn: string;
-}
-
-interface District {
-  districtId: number;
-  districtNameAr: string;
-  districtNameEn: string;
-}
+import { City, District } from "@/interfaces";
 
 const Profile = () => {
   const { user, token, getUser } = useUser();
@@ -133,7 +122,7 @@ const Profile = () => {
     }
   };
 
-  if (loading) return <p className="text-center text-lg">Loading...</p>;
+  if (loading) return <p className="text-center text-lg">{t("loading")}</p>;
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">

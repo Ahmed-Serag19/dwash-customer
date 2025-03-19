@@ -105,3 +105,15 @@ export interface CartItem {
     }[];
   };
 }
+
+export interface City {
+  cityId: number;
+  cityNameAr: string;
+  cityNameEn: string;
+}
+
+export interface District {
+  districtId: number;
+  districtNameAr: string;
+  districtNameEn: string;
+}

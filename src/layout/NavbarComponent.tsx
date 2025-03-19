@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, User, Menu } from "lucide-react";
 import CarLogo from "@/assets/images/navbar-logo.png";
-import LanguageSwitcher from "./LanguageSwitcher";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 import { Link as ScrollLink } from "react-scroll";
 import { useUser } from "@/context/UserContext";
 import { toast } from "react-toastify";

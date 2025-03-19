@@ -1,7 +1,6 @@
 import MotorCycle from "@/assets/images/Group 115.webp";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import AuthForm from "@/components/AuthForm";
-import { apiEndpoints } from "@/constants/endPoints";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import CarLogo from "@/assets/images/navbar-logo.png";
