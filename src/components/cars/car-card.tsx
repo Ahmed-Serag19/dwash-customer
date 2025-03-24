@@ -3,8 +3,8 @@ import type { Car } from "@/interfaces";
 
 interface CarCardProps {
   car: Car;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const CarCard = ({ car, onEdit, onDelete }: CarCardProps) => {
@@ -16,8 +16,8 @@ const CarCard = ({ car, onEdit, onDelete }: CarCardProps) => {
   const brandName = isRTL ? car.carBrandAr : car.carBrandEn;
 
   return (
-    <div className="p-4 border rounded-lg flex">
-      <div className="flex justify-between items-start mb-4 flex-col flex-1 gap-10">
+    <div className="p-4 border rounded-lg flex flex-col md:flex-row gap-10">
+      <div className="flex justify-between items-center md:items-start mb-4 flex-col flex-1 gap-10 ">
         <h4 className="text-2xl font-medium text-primary">
           {brandName} {modelName}
         </h4>
@@ -39,19 +39,23 @@ const CarCard = ({ car, onEdit, onDelete }: CarCardProps) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-5 text-lg justify-center">
-        <button
-          onClick={onEdit}
-          className="bg-green-500 text-white px-10 py-2 rounded-2xl"
-        >
-          {t("edit")}
-        </button>
-        <button
-          onClick={onDelete}
-          className="bg-red-500 text-white px-10 py-2 rounded-2xl"
-        >
-          {t("delete")}
-        </button>
+      <div className="flex flex-col gap-5 justify-center max-md:items-center">
+        {onEdit && onDelete && (
+          <>
+            <button
+              onClick={onEdit}
+              className="bg-green-500 text-white max-md:w-2/3 px-4 text-lg md:px-10 py-2 rounded-2xl"
+            >
+              {t("edit")}
+            </button>
+            <button
+              onClick={onDelete}
+              className="bg-red-500 text-white max-md:w-2/3 px-4 text-lg md:px-10 py-2 rounded-2xl"
+            >
+              {t("delete")}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

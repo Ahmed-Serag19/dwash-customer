@@ -178,4 +178,20 @@ export const en = {
   beige: "Beige",
   addNewCar: "Add New Car",
   yourCars: "Your Cars",
+  slogan: "Your car... shining like new, every single day!",
+  sloganSecondary:
+    "Professional, high-quality car wash services – giving your car the care it truly deserves.",
+  deliveryDetails: "Address Details",
+  selectDeliveryAddress: "Select Address ",
+  selectCar: "Select Car",
+  selectAddress: "Select an address",
+  confirmSelection: "Confirm Selection",
+  confirmedDetails: "Confirmed Details",
+  deliveryAddress: "Delivery Address",
+  selectedCar: "Selected Car",
+  missingAddressOrCar: "Missing Information",
+  pleaseAddAddress: "Please add an address in your profile before proceeding.",
+  pleaseAddCar: "Please add a car in your profile before proceeding.",
+  pleaseSelectAddressAndCar:
+    "Please select an address and car before proceeding.",
 };

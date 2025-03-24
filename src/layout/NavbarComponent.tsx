@@ -140,6 +140,14 @@ const NavbarComponent = () => {
                         {t("cart")}
                       </Link>
                     </li>
+                    <li onClick={toggleDropdown}>
+                      <Link
+                        to="/my-cars"
+                        className="block cursor-pointer hover:text-primary"
+                      >
+                        {t("myCars")}
+                      </Link>
+                    </li>
                     <li>
                       {!user && !isAuthenticated && (
                         <Link to="/login">{t("login")}</Link>

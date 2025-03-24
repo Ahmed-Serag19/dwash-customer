@@ -121,6 +121,16 @@ export interface AddressFormData {
   longitude: string;
 }
 
+interface UserCar {
+  carId: number;
+  carModelAr: string;
+  carModelEn: string;
+  carBrandAr: string;
+  carBrandEn: string;
+  carPlateNo: string;
+  color?: string;
+}
+
 export interface User {
   id: number;
   username: string;
@@ -132,6 +142,7 @@ export interface User {
   status: number;
   agreementAccept: number;
   userAddressDto: UserAddress[];
+  userCarDto: UserCar[];
 }
 
 export interface CarBrand {

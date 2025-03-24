@@ -1,3 +1,5 @@
+"use client";
+
 import { useUser } from "@/context/UserContext";
 import CartCard from "@/components/CartCard";
 import { useTranslation } from "react-i18next";
@@ -7,6 +9,7 @@ import { useState, useEffect } from "react";
 import TimeSlotModal from "@/components/TimeSlotModal";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import SelectionCard from "@/components/cart/selection-card";
 
 const Cart = () => {
   const { cart, getCart, token } = useUser();
@@ -22,6 +25,13 @@ const Cart = () => {
   const [discountAmount, setDiscountAmount] = useState<number>(0);
   const [discountType, setDiscountType] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // New state for address and car selection
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
+    null
+  );
+  const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
+  const [selectionConfirmed, setSelectionConfirmed] = useState(false);
 
   // Filter the cart to show only the selected item with a time slot
   const selectedItem = cart?.find(
@@ -87,9 +97,20 @@ const Cart = () => {
     }
   };
 
+  const handleSelectionConfirmed = (addressId: number, carId: number) => {
+    setSelectedAddressId(addressId);
+    setSelectedCarId(carId);
+    setSelectionConfirmed(true);
+  };
+
   const handlePayment = async () => {
     if (!selectedInvoiceId || !selectedSlotId) {
       toast.error(t("pleaseSelectSlot"));
+      return;
+    }
+
+    if (!selectedAddressId || !selectedCarId) {
+      toast.error(t("pleaseSelectAddressAndCar"));
       return;
     }
 
@@ -101,6 +122,8 @@ const Cart = () => {
           invoiceId: selectedInvoiceId,
           slotId: selectedSlotId,
           discountCode: discountCode || null,
+          userAddress: selectedAddressId,
+          userCar: selectedCarId,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -120,7 +143,8 @@ const Cart = () => {
       console.error("Payment error:", error);
     }
   };
-
+  console.log(selectedAddressId);
+  console.log(selectedCarId);
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <h1 className="text-2xl font-bold mb-6">{t("yourCart")}</h1>
@@ -157,8 +181,13 @@ const Cart = () => {
         )}
       </div>
 
+      {/* Show the address and car selection after a time slot is selected */}
+      {!selectedSlotId && !selectedItem && (
+        <SelectionCard onSelectionConfirmed={handleSelectionConfirmed} />
+      )}
+
       {/* Show the total cost section only if a time slot is selected */}
-      {selectedSlotId && selectedItem && (
+      {!selectedSlotId && !selectedItem && (
         <>
           {/* ✅ Discount Input */}
           <div className="mt-4 space-y-2 p-4 border rounded-lg flex justify-between items-center bg-gray-100">
@@ -222,7 +251,12 @@ const Cart = () => {
           <div className="mt-6 flex justify-end">
             <button
               onClick={handlePayment}
-              className="bg-primary px-6 py-2 text-white font-semibold rounded-lg"
+              disabled={!selectionConfirmed}
+              className={`px-6 py-2 text-white font-semibold rounded-lg ${
+                !selectionConfirmed
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-primary"
+              }`}
             >
               {t("confirmBooking")}
             </button>

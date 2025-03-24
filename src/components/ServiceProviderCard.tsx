@@ -50,7 +50,7 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
               : freelancer.brandDescriptionsAr || t("noDescription")}
           </p>
           <p className="text-2xl pt-3 border-stone-900 border-b-2 w-fit">
-            معرفة المزيد
+            {t("seeMore")}
           </p>
         </div>
       </div>
