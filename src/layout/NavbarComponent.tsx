@@ -65,18 +65,32 @@ const NavbarComponent = () => {
             </ScrollLink>
           </li>
           {user && (
-            <li>
-              <NavLink
-                to="/orders"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-primary "
-                    : "hover:text-blue-500 transition duration-300"
-                }
-              >
-                {t("orders")}
-              </NavLink>
-            </li>
+            <>
+              <li>
+                <NavLink
+                  to="/orders"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-primary "
+                      : "hover:text-blue-500 transition duration-300"
+                  }
+                >
+                  {t("orders")}
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/my-cars"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-primary "
+                      : "hover:text-blue-500 transition duration-300"
+                  }
+                >
+                  {t("myCars")}
+                </NavLink>
+              </li>
+            </>
           )}
         </ul>
 

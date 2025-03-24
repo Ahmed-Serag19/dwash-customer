@@ -133,3 +133,37 @@ export interface User {
   agreementAccept: number;
   userAddressDto: UserAddress[];
 }
+
+export interface CarBrand {
+  carBrandId: number;
+  brandAr: string;
+  brandEn: string;
+}
+
+export interface CarModel {
+  carModelId: number;
+  modelAr: string;
+  modelEn: string;
+}
+
+export interface Car {
+  carId: number;
+  carBrandId?: number;
+  carModelId?: number;
+  carBrandAr?: string;
+  carBrandEn?: string;
+  carModelAr?: string;
+  carModelEn?: string;
+  carModel: string;
+  carColor: string;
+  carPlateNo: string;
+}
+
+export interface CarFormData {
+  carId?: number;
+  carBrandId?: number;
+  carModelId?: number;
+  carModel: string;
+  carColor: string;
+  carPlateNo: string;
+}

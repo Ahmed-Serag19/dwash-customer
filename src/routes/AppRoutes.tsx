@@ -1,6 +1,7 @@
 import ServiceProvider from "@/components/ServiceProvider";
 import MainLayout from "@/layout/MainLayout";
 import About from "@/pages/About";
+import Cars from "@/pages/Cars";
 import Cart from "@/pages/Cart";
 import Homepage from "@/pages/Homepage";
 import Login from "@/pages/Login";
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       { path: "cart", element: <Cart /> },
       { path: "profile", element: <Profile /> },
       { path: "service-provider/:id", element: <ServiceProvider /> },
+      { path: "my-cars", element: <Cars /> },
     ],
   },
   { path: "/login", element: <Login /> },

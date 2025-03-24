@@ -29,10 +29,23 @@ export const apiEndpoints = {
   cancelOrder: (id: number) =>
     `${baseUrl}/consumer/cancelOrder?requestId=${id}`,
   addReview: (id: number) => `${baseUrl}/consumer/addReview?requestId=${id}`,
+
+  //Address Management
   getAddresses: `${baseUrl}/consumer/allAddresses`,
   addAddress: `${baseUrl}/consumer/addAddress`,
   editAddress: (addressId: number) =>
     `${baseUrl}/consumer/editAddress/${addressId}`,
   deleteAddress: (addressId: number) =>
     `${baseUrl}/consumer/deleteAddress/${addressId}`,
+
+  // Car management endpoints
+  getAllCars: `${baseUrl}/consumer/allCars`,
+  addCar: `${baseUrl}/consumer/addCar`,
+  editCar: (carId: number) => `${baseUrl}/consumer/editCar/${carId}`,
+  deleteCar: (carId: number) => `${baseUrl}/consumer/deleteCar/${carId}`,
+
+  // Car data endpoints
+  getCarBrands: `${baseUrl}/public/carBrand`,
+  getCarModels: (brandId: number) =>
+    `${baseUrl}/public/carModel?brandId=${brandId}`,
 };
