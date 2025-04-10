@@ -1,5 +1,3 @@
-"use client";
-
 import { useUser } from "@/context/UserContext";
 import CartCard from "@/components/CartCard";
 import { useTranslation } from "react-i18next";
