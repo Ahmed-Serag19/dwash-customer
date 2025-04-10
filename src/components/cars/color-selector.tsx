@@ -1,47 +1,74 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
+import { apiEndpoints } from "@/constants/endPoints";
 
-interface ColorSelectorProps {
-  selectedColor: string;
-  onChange: (color: string) => void;
+interface Color {
+  carColorId: number;
+  colorAr: string;
+  colorEn: string;
 }
 
-const ColorSelector = ({ selectedColor, onChange }: ColorSelectorProps) => {
-  const { t } = useTranslation();
+interface ColorSelectorProps {
+  selectedColorId: number;
+  onChange: (colorId: number) => void;
+}
 
-  const colorOptions = [
-    { value: "white", label: t("white") },
-    { value: "silver", label: t("silver") },
-    { value: "gray", label: t("gray") },
-    { value: "black", label: t("black") },
-    { value: "red", label: t("red") },
-    { value: "orange", label: t("orange") },
-    { value: "yellow", label: t("yellow") },
-    { value: "gold", label: t("gold") },
-    { value: "green", label: t("green") },
-    { value: "lightblue", label: t("lightBlue") },
-    { value: "blue", label: t("blue") },
-    { value: "navy", label: t("navy") },
-    { value: "purple", label: t("purple") },
-    { value: "pink", label: t("pink") },
-    { value: "brown", label: t("brown") },
-    { value: "beige", label: t("beige") },
-  ];
+const ColorSelector = ({ selectedColorId, onChange }: ColorSelectorProps) => {
+  const { t, i18n } = useTranslation();
+  const [colors, setColors] = useState<Color[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Map color IDs to actual hex values for display
+  const colorValueMap: Record<number, string> = {
+    3: "#ffffff", // White
+    4: "#000000", // Black
+    1: "#808080", // Gray
+    2: "#c0c0c0", // Silver
+    5: "#0000ff", // Blue
+    6: "#ff0000", // Red
+    7: "#a52a2a", // Brown
+    8: "#f5f5dc", // Beige
+    9: "#008000", // Green
+    10: "#ffa500", // Orange
+  };
+
+  useEffect(() => {
+    const fetchColors = async () => {
+      try {
+        const response = await axios.get(apiEndpoints.getCarColor);
+        if (response.data.success) {
+          setColors(response.data.content || []);
+        }
+      } catch (error) {
+        console.error("Error fetching colors:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchColors();
+  }, []);
+
+  if (loading) {
+    return <div>{t("loading")}</div>;
+  }
 
   return (
     <div className="flex flex-wrap gap-3 max-w-lg px-5">
-      {colorOptions.map((color) => (
+      {colors.map((color) => (
         <button
-          key={color.value}
+          key={color.carColorId}
           type="button"
-          className={`w-10 h-10 rounded-full border-[1px] border-primary ${
-            selectedColor === color.value
+          className={`xl:w-10 xl:h-10 md:h-7 md:w-7 h-5 w-5 rounded-full border-[1px] border-primary ${
+            selectedColorId === color.carColorId
               ? "ring-2 ring-offset-2 ring-primary"
               : ""
           }`}
-          style={{ backgroundColor: color.value }}
-          onClick={() => onChange(color.value)}
-          title={color.label}
-          aria-label={color.label}
+          style={{ backgroundColor: colorValueMap[color.carColorId] }}
+          onClick={() => onChange(color.carColorId)}
+          title={i18n.language === "ar" ? color.colorAr : color.colorEn}
+          aria-label={i18n.language === "ar" ? color.colorAr : color.colorEn}
         />
       ))}
     </div>

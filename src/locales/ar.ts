@@ -32,6 +32,7 @@ export const ar = {
   price: "السعر",
   SAR: "ر.س",
   bookNow: "تخصيص",
+  editCar: "تعديل السيارة",
   logout: "تسجيل الخروج",
   youMustLogin: "يجب عليك تسجيل الدخول أولاً",
   addedToCart: "تمت إضافة الخدمة إلى السلة بنجاح!",

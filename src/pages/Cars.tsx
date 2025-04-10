@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -6,45 +6,18 @@ import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
 import CarForm from "@/components/cars/car-form";
 import CarCard from "@/components/cars/car-card";
+import EditCarModal from "@/components/cars/edit-car-modal";
 import ConfirmationModal from "@/components/ui/confirmation-modal";
 import LoadingIndicator from "@/components/ui/loading-indicator";
 import type { Car } from "@/interfaces";
 
 export default function Cars() {
-  const { token } = useUser();
+  const { token, cars, getCars } = useUser();
   const { t } = useTranslation();
-  const [cars, setCars] = useState<Car[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [carToDelete, setCarToDelete] = useState<Car | null>(null);
+  const [carToEdit, setCarToEdit] = useState<Car | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [editingCar, setEditingCar] = useState<Car | null>(null);
-
-  // Fetch all cars on component mount
-  useEffect(() => {
-    fetchCars();
-  }, []);
-
-  const fetchCars = async () => {
-    if (!token) return;
-
-    setLoading(true);
-    try {
-      const response = await axios.get(apiEndpoints.getAllCars, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.data.success) {
-        setCars(response.data.content || []);
-      } else {
-        toast.error(t("failedToLoadCars"));
-      }
-    } catch (error) {
-      console.error("Error fetching cars:", error);
-      toast.error(t("generalError"));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleAddCar = async (data: any) => {
     if (!token) {
@@ -52,6 +25,7 @@ export default function Cars() {
       return;
     }
 
+    setLoading(true);
     try {
       const response = await axios.post(apiEndpoints.addCar, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -59,13 +33,15 @@ export default function Cars() {
 
       if (response.data.success) {
         toast.success(t("carAdded"));
-        fetchCars();
+        await getCars();
       } else {
         toast.error(t("addFailed"));
       }
     } catch (error) {
       console.error("Error adding car:", error);
       toast.error(t("generalError"));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,6 +51,7 @@ export default function Cars() {
       return;
     }
 
+    setLoading(true);
     try {
       const response = await axios.put(apiEndpoints.editCar(carId), data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -82,14 +59,15 @@ export default function Cars() {
 
       if (response.data.success) {
         toast.success(t("carUpdated"));
-        setEditingCar(null);
-        fetchCars();
+        await getCars();
       } else {
         toast.error(t("updateFailed"));
       }
     } catch (error) {
       console.error("Error updating car:", error);
       toast.error(t("generalError"));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,6 +77,7 @@ export default function Cars() {
       return;
     }
 
+    setLoading(true);
     try {
       const response = await axios.delete(
         apiEndpoints.deleteCar(carToDelete.carId),
@@ -111,19 +90,16 @@ export default function Cars() {
         toast.success(t("carDeleted"));
         setCarToDelete(null);
         setIsConfirmModalOpen(false);
-        fetchCars();
+        await getCars();
       } else {
         toast.error(t("deleteFailed"));
       }
     } catch (error) {
       console.error("Error deleting car:", error);
       toast.error(t("generalError"));
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const openDeleteConfirmation = (car: Car) => {
-    setCarToDelete(car);
-    setIsConfirmModalOpen(true);
   };
 
   if (loading && cars.length === 0) {
@@ -136,35 +112,45 @@ export default function Cars() {
         {t("myCars")}
       </h2>
 
-      {/* Car Form */}
+      {/* Add Car Form */}
       <div className="mb-10">
         <h3 className="text-2xl font-semibold mb-6 text-primary">
           {t("addNewCar")}
         </h3>
-        <CarForm
-          onSubmit={handleAddCar}
-          editingCar={editingCar}
-          onEdit={(carId, data) => handleEditCar(carId, data)}
-          onCancelEdit={() => setEditingCar(null)}
-        />
+        <CarForm onSubmit={handleAddCar} />
       </div>
 
       {/* Car List */}
       {cars.length > 0 && (
-        <h3 className="text-2xl font-semibold mb-6 text-primary">
-          {t("yourCars")}
-        </h3>
+        <>
+          <h3 className="text-2xl font-semibold mb-6 text-primary">
+            {t("yourCars")}
+          </h3>
+          <div className="grid grid-cols-1 gap-4 mb-6">
+            {cars.map((car) => (
+              <CarCard
+                key={car.carId}
+                car={car}
+                onEdit={() => setCarToEdit(car)}
+                onDelete={() => {
+                  setCarToDelete(car);
+                  setIsConfirmModalOpen(true);
+                }}
+              />
+            ))}
+          </div>
+        </>
       )}
-      <div className="grid grid-cols-1 gap-4 mb-6">
-        {cars.map((car) => (
-          <CarCard
-            key={car.carId}
-            car={car}
-            onEdit={() => setEditingCar(car)}
-            onDelete={() => openDeleteConfirmation(car)}
-          />
-        ))}
-      </div>
+
+      {/* Edit Car Modal */}
+      {carToEdit && (
+        <EditCarModal
+          isOpen={!!carToEdit}
+          onClose={() => setCarToEdit(null)}
+          car={carToEdit}
+          onSave={handleEditCar}
+        />
+      )}
 
       {/* Delete Confirmation Modal */}
       <ConfirmationModal

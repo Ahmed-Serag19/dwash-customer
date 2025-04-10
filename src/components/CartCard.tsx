@@ -26,9 +26,9 @@ const CartCard: React.FC<CartCardProps> = ({ item, onDelete, onBook }) => {
   const totalPrice = calculateTotalPrice();
 
   return (
-    <div className="rounded-lg border border-gray-300 bg-white p-8 drop-shadow-lg flex justify-between">
+    <div className="rounded-lg flex-col md:flex-row border border-gray-300 bg-white p-8 drop-shadow-lg flex justify-between">
       <div className="flex flex-col">
-        <h1 className="text-xl text-primary font-semibold">
+        <h1 className="md:text-xl text-primary font-semibold">
           {i18n.language === "ar"
             ? item.itemDto.itemNameAr
             : item.itemDto.itemNameEn}
@@ -70,13 +70,13 @@ const CartCard: React.FC<CartCardProps> = ({ item, onDelete, onBook }) => {
 
         {/* Total Price */}
         <div className="mt-4 border-t pt-2 text-primary">
-          <p className="text-lg font-semibold">
+          <p className="md:text-lg font-semibold">
             {t("total")}: {totalPrice.toFixed(2)} {t("SAR")}
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col justify-between items-end">
+      <div className="flex mt-7 md:mt-0 md:flex-col justify-between items-center md:items-end">
         {/* Delete Button */}
         <button
           onClick={() => setIsDeleteModalOpen(true)}

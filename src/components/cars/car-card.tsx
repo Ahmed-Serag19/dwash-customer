@@ -22,18 +22,18 @@ const CarCard = ({ car, onEdit, onDelete }: CarCardProps) => {
           {brandName} {modelName}
         </h4>
         <div className="grid grid-cols-2 gap-10">
-          <div>
+          <div className="flex flex-col gap-3">
             <p className="text-lg font-medium text-primary">
               {t("carPlateNo")}
             </p>
             <p className="font-medium text-lg">{car.carPlateNo}</p>
           </div>
-          <div>
-            <p className="text-sm font-medium text-primary">{t("carColor")}</p>
+          <div className="flex flex-col gap-3 justify-center items-center">
+            <p className="text-md font-medium text-primary">{t("carColor")}</p>
             <div className="flex items-center gap-2">
               <div
                 className="w-8 h-8 rounded-full"
-                style={{ backgroundColor: car.carColor }}
+                style={{ backgroundColor: car.carColorEn }}
               />
             </div>
           </div>
@@ -44,13 +44,13 @@ const CarCard = ({ car, onEdit, onDelete }: CarCardProps) => {
           <>
             <button
               onClick={onEdit}
-              className="bg-green-500 text-white max-md:w-2/3 px-4 text-lg md:px-10 py-2 rounded-2xl"
+              className="bg-green-500 text-white max-md:w-2/3 px-4 text-md md:px-10 py-2 rounded-2xl"
             >
               {t("edit")}
             </button>
             <button
               onClick={onDelete}
-              className="bg-red-500 text-white max-md:w-2/3 px-4 text-lg md:px-10 py-2 rounded-2xl"
+              className="bg-red-500 text-white max-md:w-2/3 px-4 text-md md:px-10 py-2 rounded-2xl"
             >
               {t("delete")}
             </button>

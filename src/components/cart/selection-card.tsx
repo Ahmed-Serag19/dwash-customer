@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useUser } from "@/context/UserContext";
 import AddressSelector from "./address-selector";
@@ -22,6 +22,15 @@ const SelectionCard = ({ onSelectionConfirmed }: SelectionCardProps) => {
   );
 
   const [isConfirmed, setIsConfirmed] = useState(false);
+
+  useEffect(() => {
+    if (user?.userAddressDto?.length) {
+      setSelectedAddressId(user.userAddressDto[0].userAddressId);
+    }
+    if (user?.userCarDto?.length) {
+      setSelectedCarId(user.userCarDto[0].carId);
+    }
+  }, [user]);
 
   const handleConfirmSelection = () => {
     if (selectedAddressId && selectedCarId) {

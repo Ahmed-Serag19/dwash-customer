@@ -59,6 +59,9 @@ export interface UserContextType {
   getUser: () => Promise<void>;
   logout: () => void;
   getCart: () => Promise<void>;
+  getCars: () => Promise<void>;
+  refreshUserData: () => Promise<void>;
+  cars: Car[];
 }
 
 export interface CartItem {
@@ -158,6 +161,7 @@ export interface CarModel {
 }
 
 export interface Car {
+  carColorId: number;
   carId: number;
   carBrandId?: number;
   carModelId?: number;
@@ -166,7 +170,8 @@ export interface Car {
   carModelAr?: string;
   carModelEn?: string;
   carModel: string;
-  carColor: string;
+  carColorAr: string;
+  carColorEn: string;
   carPlateNo: string;
 }
 

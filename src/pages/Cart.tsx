@@ -18,6 +18,7 @@ const Cart = () => {
   );
   const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null);
   const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const [discountCode, setDiscountCode] = useState<string>("");
   const [discountAmount, setDiscountAmount] = useState<number>(0);
@@ -30,7 +31,8 @@ const Cart = () => {
   );
   const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
   const [selectionConfirmed, setSelectionConfirmed] = useState(false);
-
+  console.log(selectedSlotId);
+  console.log(selectedBrandId);
   // Filter the cart to show only the selected item with a time slot
   const selectedItem = cart?.find(
     (item) =>
@@ -112,11 +114,13 @@ const Cart = () => {
       return;
     }
 
+    setIsProcessingPayment(true);
+
     try {
       const response = await axios.post(
         apiEndpoints.makePayment,
         {
-          paymentMethodId: 1,
+          paymentMethodId: 2,
           invoiceId: selectedInvoiceId,
           slotId: selectedSlotId,
           discountCode: discountCode || null,
@@ -127,22 +131,35 @@ const Cart = () => {
       );
 
       if (response.data.success) {
-        toast.success(t("paymentSuccessful"));
-        getCart();
-        setDiscountAmount(0);
-        setDiscountType(null);
-        setDiscountCode("");
-        navigate("/orders");
+        axios.delete(
+          `${apiEndpoints.deleteFromCart}?invoiceId=${selectedInvoiceId}&itemId=${selectedInvoiceId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        // Redirect to payment page if redirect_url exists
+
+        if (response.data.content?.redirect_url) {
+          window.location.href = response.data.content.redirect_url;
+        } else {
+          toast.success(t("paymentSuccessful"));
+          getCart();
+          setDiscountAmount(0);
+          setDiscountType(null);
+          setDiscountCode("");
+          navigate("/orders");
+        }
       } else {
         toast.error(t("paymentFailed"));
       }
     } catch (error) {
       toast.error(t("paymentFailed"));
       console.error("Payment error:", error);
+    } finally {
+      setIsProcessingPayment(false);
     }
   };
-  console.log(selectedAddressId);
-  console.log(selectedCarId);
+
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <h1 className="text-2xl font-bold mb-6">{t("yourCart")}</h1>
@@ -180,14 +197,14 @@ const Cart = () => {
       </div>
 
       {/* Show the address and car selection after a time slot is selected */}
-      {!selectedSlotId && !selectedItem && (
+      {selectedSlotId && selectedItem && (
         <SelectionCard onSelectionConfirmed={handleSelectionConfirmed} />
       )}
 
       {/* Show the total cost section only if a time slot is selected */}
-      {!selectedSlotId && !selectedItem && (
+      {selectedSlotId && selectedItem && (
         <>
-          {/* ✅ Discount Input */}
+          {/* Discount Input */}
           <div className="mt-4 space-y-2 p-4 border rounded-lg flex justify-between items-center bg-gray-100">
             <div className="flex gap-2 items-center">
               <label className="font-semibold">{t("discountCode")}</label>
@@ -209,7 +226,7 @@ const Cart = () => {
             </div>
           </div>
 
-          {/* ✅ Price Summary */}
+          {/* Price Summary */}
           <div className="mt-4 space-y-2 p-4 border rounded-lg bg-gray-100">
             <div className="flex justify-between">
               <span className="font-medium">{t("subtotal")}</span>
@@ -245,24 +262,24 @@ const Cart = () => {
             </div>
           </div>
 
-          {/* ✅ Confirm Booking Button */}
+          {/* Confirm Booking Button */}
           <div className="mt-6 flex justify-end">
             <button
               onClick={handlePayment}
-              disabled={!selectionConfirmed}
+              disabled={!selectionConfirmed || isProcessingPayment}
               className={`px-6 py-2 text-white font-semibold rounded-lg ${
-                !selectionConfirmed
+                !selectionConfirmed || isProcessingPayment
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-primary"
               }`}
             >
-              {t("confirmBooking")}
+              {isProcessingPayment ? t("processing") : t("confirmBooking")}
             </button>
           </div>
         </>
       )}
 
-      {/* ✅ Full-Screen Booking Time Slot Modal */}
+      {/* Full-Screen Booking Time Slot Modal */}
       {isBookingModalOpen && selectedInvoiceId && selectedBrandId && (
         <TimeSlotModal
           brandId={selectedBrandId}

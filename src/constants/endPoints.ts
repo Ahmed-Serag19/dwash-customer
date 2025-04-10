@@ -18,7 +18,7 @@ export const apiEndpoints = {
   deleteFromCart: `${baseUrl}/consumer/deleteItem`,
   getSlots: `${baseUrl}/consumer/getSlot`,
   validateDiscount: `${baseUrl}/consumer/validateDiscount`,
-  makePayment: `${baseUrl}/payment/consumer/card/makePayment`,
+  makePayment: `${baseUrl}/payment/consumer/card/payment/initiate`,
   getCities: `${baseUrl}/public/cities`,
   getBrandReviews: (id: string | undefined) =>
     `${baseUrl}/public/getReviewsBrand?page=0&size=8&brandId=${id}`,
@@ -48,4 +48,6 @@ export const apiEndpoints = {
   getCarBrands: `${baseUrl}/public/carBrand`,
   getCarModels: (brandId: number) =>
     `${baseUrl}/public/carModel?brandId=${brandId}`,
+
+  getCarColor: `${baseUrl}/public/getCarColor`,
 };

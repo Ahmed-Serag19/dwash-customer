@@ -239,31 +239,33 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
 
   return (
     <div className="max-w-4xl rounded-lg border my-12 min-h-32 border-gray-200 bg-white p-4 drop-shadow-xl shadow-2xl flex justify-between items-center gap-5">
-      <div className="flex flex-col">
-        <h1 className="text-2xl text-primary font-[500]">
-          {i18n.language === "ar"
-            ? service.servicesNameAr
-            : service.servicesNameEn}
-        </h1>
-        <p className="text-neutral-600 font-[500] pt-3">
-          {i18n.language === "ar"
-            ? service.servicesDescriptionsAr
-            : service.servicesDescriptionsEn}
-        </p>
-      </div>
-      <div className="flex flex-col gap-2">
-        <p className="flex gap-3">
-          <span className="text-primary font-[500]">{t("price")}</span>
-          <span>
-            {service.servicesPrice} {t("SAR")}
-          </span>
-        </p>
-        <button
-          onClick={handleBooking}
-          className="bg-primary px-10 py-1.5 rounded-xl text-white"
-        >
-          {t("bookNow")}
-        </button>
+      <div className="flex justify-between items-center gap-5 lg:flex-row flex-col">
+        <div className="flex flex-col">
+          <h1 className="lg:text-2xl text-lg text-primary font-[500]">
+            {i18n.language === "ar"
+              ? service.servicesNameAr
+              : service.servicesNameEn}
+          </h1>
+          <p className="text-neutral-600 font-[500] pt-3">
+            {i18n.language === "ar"
+              ? service.servicesDescriptionsAr
+              : service.servicesDescriptionsEn}
+          </p>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="flex gap-3">
+            <span className="text-primary font-[500]">{t("price")}</span>
+            <span className="font-semibold ">
+              {service.servicesPrice} {t("SAR")}
+            </span>
+          </p>
+          <button
+            onClick={handleBooking}
+            className="bg-primary px-10 py-1.5 rounded-xl text-white"
+          >
+            {t("bookNow")}
+          </button>
+        </div>
       </div>
 
       <ServiceCardModal

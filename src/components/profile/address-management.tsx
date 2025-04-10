@@ -7,6 +7,7 @@ import AddressCard from "./address-card";
 import AddressModal from "./address-modal";
 import ConfirmationModal from "./confirmation-modal";
 import type { UserAddress, AddressFormData } from "@/interfaces";
+import { useUser } from "@/context/UserContext";
 
 interface AddressManagementProps {
   addresses: UserAddress[];
@@ -19,6 +20,7 @@ const AddressManagement = ({
   token,
   onSuccess,
 }: AddressManagementProps) => {
+  const { refreshUserData } = useUser();
   const { t } = useTranslation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<UserAddress | null>(
@@ -44,6 +46,7 @@ const AddressManagement = ({
         toast.success(t("addressAdded"));
         setIsAddModalOpen(false);
         onSuccess();
+        refreshUserData();
       } else {
         toast.error(t("addFailed"));
       }
@@ -74,6 +77,7 @@ const AddressManagement = ({
         toast.success(t("addressUpdated"));
         setEditingAddress(null);
         onSuccess();
+        refreshUserData();
       } else {
         toast.error(t("updateFailed"));
       }
@@ -101,6 +105,7 @@ const AddressManagement = ({
         setAddressToDelete(null);
         setIsConfirmModalOpen(false);
         onSuccess();
+        refreshUserData();
       } else {
         toast.error(t("deleteFailed"));
       }

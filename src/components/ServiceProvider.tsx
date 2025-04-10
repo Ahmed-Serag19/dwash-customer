@@ -78,7 +78,7 @@ const ServiceProvider: React.FC = () => {
     <main>
       <div className="object-cover w-full relative">
         <img src={BgLogo} alt="service provider logo" className="w-full" />
-        <div className="absolute lg:top-28 lg:left-40 top-10 2xl:left-52 2xl:top-32 left-20 text-center">
+        <div className="md:absolute lg:top-28 lg:left-40 md:top-10 2xl:left-52 2xl:top-32 md:left-20 text-center relative mt-10 md:mt-0">
           <h1 className="xl:text-4xl font-semibold md:text-3xl text-xl">
             {i18n.language === "ar"
               ? freelancer?.brandNameAr

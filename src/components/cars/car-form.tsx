@@ -5,21 +5,20 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
 import ColorSelector from "./color-selector";
-import type { CarBrand, CarModel, Car, CarFormData } from "@/interfaces";
+import type { CarBrand, CarModel } from "@/interfaces";
+
+interface CarFormData {
+  carModelId: number;
+  carBrandId: number;
+  carPlateNo: string;
+  carColorId: number;
+}
 
 interface CarFormProps {
   onSubmit: (data: CarFormData) => Promise<void>;
-  editingCar: Car | null;
-  onEdit: (carId: number, data: CarFormData) => Promise<void>;
-  onCancelEdit: () => void;
 }
 
-const CarForm = ({
-  onSubmit,
-  editingCar,
-  onEdit,
-  onCancelEdit,
-}: CarFormProps) => {
+const CarForm = ({ onSubmit }: CarFormProps) => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const [carBrands, setCarBrands] = useState<CarBrand[]>([]);
@@ -38,14 +37,12 @@ const CarForm = ({
     defaultValues: {
       carBrandId: 0,
       carModelId: 0,
-      carModel: "",
-      carColor: "#000000", // Default black
+      carColorId: 0,
       carPlateNo: "",
     },
   });
 
   const selectedBrandId = watch("carBrandId");
-  const selectedColor = watch("carColor");
 
   // Fetch car brands on component mount
   useEffect(() => {
@@ -90,34 +87,11 @@ const CarForm = ({
     }
   }, [selectedBrandId, t]);
 
-  // Set form values when editing a car
-  useEffect(() => {
-    if (editingCar) {
-      setValue("carBrandId", editingCar.carBrandId || 0);
-      setValue("carModelId", editingCar.carModelId || 0);
-      setValue("carModel", editingCar.carModel || "");
-      setValue("carColor", editingCar.carColor || "#000000");
-      setValue("carPlateNo", editingCar.carPlateNo || "");
-    } else {
-      reset({
-        carBrandId: 0,
-        carModelId: 0,
-        carModel: "",
-        carColor: "#000000",
-        carPlateNo: "",
-      });
-    }
-  }, [editingCar, setValue, reset]);
-
   const handleFormSubmit = async (data: CarFormData) => {
     setLoading(true);
     try {
-      if (editingCar) {
-        await onEdit(editingCar.carId, data);
-      } else {
-        await onSubmit(data);
-        reset();
-      }
+      await onSubmit(data);
+      reset();
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
@@ -146,7 +120,7 @@ const CarForm = ({
                 className="w-full px-4 py-2 border rounded-lg appearance-none pr-10"
                 onChange={(e) => {
                   field.onChange(Number(e.target.value));
-                  setValue("carModelId", 0); // Reset model when brand changes
+                  setValue("carModelId", 0);
                 }}
               >
                 <option value="0">{t("selectCarBrand")}</option>
@@ -185,23 +159,7 @@ const CarForm = ({
               <select
                 {...field}
                 className="w-full px-4 py-2 border rounded-lg appearance-none pr-10"
-                onChange={(e) => {
-                  const modelId = Number(e.target.value);
-                  field.onChange(modelId);
-
-                  // Set the model name based on the selected ID
-                  const selectedModel = carModels.find(
-                    (model) => model.carModelId === modelId
-                  );
-                  if (selectedModel) {
-                    setValue(
-                      "carModel",
-                      currentLang === "ar"
-                        ? selectedModel.modelAr
-                        : selectedModel.modelEn
-                    );
-                  }
-                }}
+                onChange={(e) => field.onChange(Number(e.target.value))}
                 disabled={!selectedBrandId || selectedBrandId === 0}
               >
                 <option value="0">{t("selectCarModel")}</option>
@@ -231,10 +189,22 @@ const CarForm = ({
         <label className="block mb-2 text-lg font-medium text-primary">
           {t("carColor")}
         </label>
-        <ColorSelector
-          selectedColor={selectedColor}
-          onChange={(color) => setValue("carColor", color)}
+        <Controller
+          name="carColorId"
+          control={control}
+          rules={{ required: t("carColorRequired") }}
+          render={({ field }) => (
+            <ColorSelector
+              selectedColorId={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
+        {errors.carColorId && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.carColorId.message}
+          </p>
+        )}
       </div>
 
       {/* Car Plate Number */}
@@ -256,33 +226,13 @@ const CarForm = ({
 
       {/* Action Buttons */}
       <div className="col-span-2 flex justify-center mt-4">
-        {editingCar ? (
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={onCancelEdit}
-              className="px-4 py-2 border rounded-lg"
-              disabled={loading}
-            >
-              {t("cancel")}
-            </button>
-            <button
-              type="submit"
-              className="bg-primary text-white px-6 py-2 rounded-lg"
-              disabled={loading}
-            >
-              {loading ? t("saving") : t("save")}
-            </button>
-          </div>
-        ) : (
-          <button
-            type="submit"
-            className="bg-primary text-white px-6 py-2 rounded-lg"
-            disabled={loading}
-          >
-            {loading ? t("adding") : t("add")}
-          </button>
-        )}
+        <button
+          type="submit"
+          className="bg-primary text-white px-6 py-2 rounded-lg"
+          disabled={loading}
+        >
+          {loading ? t("adding") : t("add")}
+        </button>
       </div>
     </form>
   );

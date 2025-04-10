@@ -41,8 +41,11 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, isRegister }) => {
       console.log(response);
       if (response.data.success) {
         const token = response.data.content?.token;
+        console.log(response.data.content);
         if (token) {
           sessionStorage.setItem("accessToken", token);
+          const currentToken = sessionStorage.getItem("accessToken");
+          console.log(currentToken);
           getUser();
           {
             isRegister
@@ -51,7 +54,7 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, isRegister }) => {
           }
           setTimeout(() => {
             navigate("/");
-          }, 1000);
+          }, 2000);
         } else {
           toast.error(t("tokenMissing"));
         }

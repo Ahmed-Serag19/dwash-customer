@@ -30,6 +30,7 @@ export const en = {
   bookNow: "Book now",
   logout: "Logout",
   SAR: "SAR",
+  editCar: "Edit Car",
   youMustLogin: "You have to log in first",
   addedToCart: "Service added to cart successfully!",
   errorAddingToCart: "Failed to add service to cart",
