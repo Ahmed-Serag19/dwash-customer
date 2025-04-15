@@ -195,4 +195,8 @@ export const en = {
   pleaseAddCar: "Please add a car in your profile before proceeding.",
   pleaseSelectAddressAndCar:
     "Please select an address and car before proceeding.",
+  paymentSuccess: {
+    message: "Payment has been successfully completed.",
+    toast: "Payment went through successfully!",
+  },
 };

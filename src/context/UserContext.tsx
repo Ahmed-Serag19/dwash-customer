@@ -8,7 +8,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [cart, setCart] = useState<CartItem[] | null>(null);
-  const [cars, setCars] = useState<Car[]>([]); // Add cars state
+  const [cars, setCars] = useState<Car[]>([]);
   const [token, setToken] = useState<string | null>(
     sessionStorage.getItem("accessToken")
   );

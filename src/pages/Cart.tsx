@@ -131,12 +131,12 @@ const Cart = () => {
       );
 
       if (response.data.success) {
-        axios.delete(
-          `${apiEndpoints.deleteFromCart}?invoiceId=${selectedInvoiceId}&itemId=${selectedInvoiceId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        // axios.delete(
+        //   `${apiEndpoints.deleteFromCart}?invoiceId=${selectedInvoiceId}&itemId=${selectedInvoiceId}`,
+        //   {
+        //     headers: { Authorization: `Bearer ${token}` },
+        //   }
+        // );
         // Redirect to payment page if redirect_url exists
 
         if (response.data.content?.redirect_url) {

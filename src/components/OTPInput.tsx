@@ -58,7 +58,15 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, isRegister }) => {
         } else {
           toast.error(t("tokenMissing"));
         }
+      } else if (
+        response.data.messageAr === "Confirmation code has been expired"
+      ) {
+        toast.error(t("otpExpired"));
+        navigate("/login");
       } else {
+        toast.error(t("otpError"));
+      }
+      {
         toast.error(response.data.messageEn || t("otpError"));
       }
     } catch (error) {

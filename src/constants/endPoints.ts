@@ -19,6 +19,7 @@ export const apiEndpoints = {
   getSlots: `${baseUrl}/consumer/getSlot`,
   validateDiscount: `${baseUrl}/consumer/validateDiscount`,
   makePayment: `${baseUrl}/payment/consumer/card/payment/initiate`,
+  finalizePayment: `${baseUrl}/payment/consumer/card/payment/finalize`,
   getCities: `${baseUrl}/public/cities`,
   getBrandReviews: (id: string | undefined) =>
     `${baseUrl}/public/getReviewsBrand?page=0&size=8&brandId=${id}`,

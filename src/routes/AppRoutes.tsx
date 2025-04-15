@@ -1,3 +1,5 @@
+import PaymentFailed from "@/components/payment/PaymentFailed";
+import PaymentSuccess from "@/components/payment/PaymentSuccess";
 import ServiceProvider from "@/components/ServiceProvider";
 import MainLayout from "@/layout/MainLayout";
 import About from "@/pages/About";
@@ -22,6 +24,8 @@ const router = createBrowserRouter([
       { path: "profile", element: <Profile /> },
       { path: "service-provider/:id", element: <ServiceProvider /> },
       { path: "my-cars", element: <Cars /> },
+      { path: "payment-success", element: <PaymentSuccess /> },
+      { path: "payment-failed", element: <PaymentFailed /> },
     ],
   },
   { path: "/login", element: <Login /> },

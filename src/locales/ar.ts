@@ -196,4 +196,8 @@ export const ar = {
   pleaseAddAddress: "يرجى إضافة عنوان في ملفك الشخصي قبل المتابعة.",
   pleaseAddCar: "يرجى إضافة سيارة في ملفك الشخصي قبل المتابعة.",
   pleaseSelectAddressAndCar: "يرجى اختيار عنوان وسيارة قبل المتابعة.",
+  paymentSuccess: {
+    message: "تمت عملية الدفع بنجاح.",
+    toast: "تمت عملية الدفع بنجاح!",
+  },
 };
