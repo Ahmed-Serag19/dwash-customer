@@ -199,4 +199,9 @@ export const en = {
     message: "Payment has been successfully completed.",
     toast: "Payment went through successfully!",
   },
+  goHome: "Back to homepage",
+  contactSupportMessage:
+    "If you believe this is an error, please contact our support team.",
+  backToDashboard: "Back to Dashboard",
+  pageNotFound: "Page Not Found",
 };

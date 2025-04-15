@@ -10,6 +10,8 @@ import Login from "@/pages/Login";
 import Orders from "@/pages/Orders";
 import Profile from "@/pages/Profile";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProtectedRoute from "@/components/ProtectedRoute"; // Import the ProtectedRoute
+import NotFoundPage from "@/pages/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -19,17 +21,60 @@ const router = createBrowserRouter([
       { index: true, element: <Homepage /> },
       { path: "home", element: <Homepage /> },
       { path: "about", element: <About /> },
-      { path: "orders", element: <Orders /> },
-      { path: "cart", element: <Cart /> },
-      { path: "profile", element: <Profile /> },
+      {
+        path: "orders",
+        element: (
+          <ProtectedRoute>
+            <Orders />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "cart",
+        element: (
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
       { path: "service-provider/:id", element: <ServiceProvider /> },
-      { path: "my-cars", element: <Cars /> },
-      { path: "payment-success", element: <PaymentSuccess /> },
-      { path: "payment-failed", element: <PaymentFailed /> },
+      {
+        path: "my-cars",
+        element: (
+          <ProtectedRoute>
+            <Cars />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "payment-success",
+        element: (
+          <ProtectedRoute>
+            <PaymentSuccess />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "payment-failed",
+        element: (
+          <ProtectedRoute>
+            <PaymentFailed />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Login /> },
+  { path: "*", element: <NotFoundPage /> },
 ]);
 
 const AppRoutes = () => <RouterProvider router={router} />;

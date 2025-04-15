@@ -66,9 +66,6 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, isRegister }) => {
       } else {
         toast.error(t("otpError"));
       }
-      {
-        toast.error(response.data.messageEn || t("otpError"));
-      }
     } catch (error) {
       toast.error(t("otpError"));
     } finally {
