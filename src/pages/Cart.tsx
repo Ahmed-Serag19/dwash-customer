@@ -31,8 +31,7 @@ const Cart = () => {
   );
   const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
   const [selectionConfirmed, setSelectionConfirmed] = useState(false);
-  console.log(selectedSlotId);
-  console.log(selectedBrandId);
+
   // Filter the cart to show only the selected item with a time slot
   const selectedItem = cart?.find(
     (item) =>
@@ -57,7 +56,6 @@ const Cart = () => {
       ? discountAmount
       : 0;
 
-  // Calculate final total
   const finalTotal = subtotal - discountValue;
 
   useEffect(() => {

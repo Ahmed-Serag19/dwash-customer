@@ -2,7 +2,6 @@ import PaymentFailed from "@/components/payment/PaymentFailed";
 import PaymentSuccess from "@/components/payment/PaymentSuccess";
 import ServiceProvider from "@/components/ServiceProvider";
 import MainLayout from "@/layout/MainLayout";
-import About from "@/pages/About";
 import Cars from "@/pages/Cars";
 import Cart from "@/pages/Cart";
 import Homepage from "@/pages/Homepage";
@@ -10,7 +9,7 @@ import Login from "@/pages/Login";
 import Orders from "@/pages/Orders";
 import Profile from "@/pages/Profile";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ProtectedRoute from "@/components/ProtectedRoute"; // Import the ProtectedRoute
+import ProtectedRoute from "@/components/ProtectedRoute";
 import NotFoundPage from "@/pages/NotFound";
 
 const router = createBrowserRouter([
@@ -20,7 +19,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Homepage /> },
       { path: "home", element: <Homepage /> },
-      { path: "about", element: <About /> },
       {
         path: "orders",
         element: (
@@ -56,19 +54,11 @@ const router = createBrowserRouter([
       },
       {
         path: "payment-success",
-        element: (
-          <ProtectedRoute>
-            <PaymentSuccess />
-          </ProtectedRoute>
-        ),
+        element: <PaymentSuccess />,
       },
       {
         path: "payment-failed",
-        element: (
-          <ProtectedRoute>
-            <PaymentFailed />
-          </ProtectedRoute>
-        ),
+        element: <PaymentFailed />,
       },
     ],
   },

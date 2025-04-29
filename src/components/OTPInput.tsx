@@ -38,14 +38,11 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, isRegister }) => {
         : apiEndpoints.LoginFinalize(otp, phoneNumber);
 
       const response = await axios.post(apiUrl, {});
-      console.log(response);
+
       if (response.data.success) {
         const token = response.data.content?.token;
-        console.log(response.data.content);
         if (token) {
           sessionStorage.setItem("accessToken", token);
-          const currentToken = sessionStorage.getItem("accessToken");
-          console.log(currentToken);
           getUser();
           {
             isRegister

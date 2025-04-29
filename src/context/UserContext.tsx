@@ -12,11 +12,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(
     sessionStorage.getItem("accessToken")
   );
+  const [loading, setLoading] = useState(true);
   const isAuthenticated = !!user && !!token;
 
   const refreshUserData = async () => {
     const storedToken = sessionStorage.getItem("accessToken");
-    if (!storedToken) return;
+    if (!storedToken) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.get(apiEndpoints.getProfile, {
@@ -29,9 +34,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Failed to refresh user data:", error);
     }
   };
+
   const getUser = async () => {
     const storedToken = sessionStorage.getItem("accessToken");
-    if (!storedToken) return;
+    if (!storedToken) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.get(apiEndpoints.getProfile, {
@@ -48,6 +57,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Failed to get user:", error);
       logout();
+    } finally {
+      setLoading(false); // ✅ done either way
     }
   };
 
@@ -68,7 +79,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // Add cars fetching function
   const getCars = async () => {
     if (!token) return;
     try {
@@ -91,14 +101,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setToken(null);
     setUser(null);
     setCart(null);
-    setCars([]); // Clear cars on logout
+    setCars([]);
+    setLoading(false); // ✅ reset loading just in case
   };
 
   useEffect(() => {
     if (token) {
-      getUser();
+      getUser(); // will set loading=false inside
       getCart();
-      getCars(); // Fetch cars when token changes
+      getCars();
+    } else {
+      setLoading(false); // no token = done
     }
   }, [token]);
 
@@ -115,6 +128,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         cars,
         getCars,
         refreshUserData,
+        loading, // ✅ return it
       }}
     >
       {children}

@@ -49,6 +49,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ isRegister }) => {
       );
 
       if (response.data.success) {
+        console.log(response);
         toast.success(t("otpSent"));
         setPhoneNumber(data.phoneNumber);
         setIsOTP(true);
@@ -59,7 +60,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ isRegister }) => {
         );
       }
     } catch (error: any) {
-      console.log(error);
       toast.error(
         i18n.language === "ar"
           ? error.response.data.messageAr

@@ -12,7 +12,7 @@ import LoadingIndicator from "@/components/ui/loading-indicator";
 import type { Car } from "@/interfaces";
 
 export default function Cars() {
-  const { token, cars, getCars } = useUser();
+  const { token, cars, getCars, refreshUserData } = useUser();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [carToDelete, setCarToDelete] = useState<Car | null>(null);
@@ -34,6 +34,7 @@ export default function Cars() {
       if (response.data.success) {
         toast.success(t("carAdded"));
         await getCars();
+        await refreshUserData();
       } else {
         toast.error(t("addFailed"));
       }
@@ -60,6 +61,7 @@ export default function Cars() {
       if (response.data.success) {
         toast.success(t("carUpdated"));
         await getCars();
+        await refreshUserData();
       } else {
         toast.error(t("updateFailed"));
       }
@@ -91,6 +93,7 @@ export default function Cars() {
         setCarToDelete(null);
         setIsConfirmModalOpen(false);
         await getCars();
+        await refreshUserData();
       } else {
         toast.error(t("deleteFailed"));
       }

@@ -62,6 +62,7 @@ export interface UserContextType {
   getCars: () => Promise<void>;
   refreshUserData: () => Promise<void>;
   cars: Car[];
+  loading: boolean;
 }
 
 export interface CartItem {
