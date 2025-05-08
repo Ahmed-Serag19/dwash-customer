@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { ShoppingCart, User, Menu } from "lucide-react";
 import CarLogo from "@/assets/images/navbar-logo.png";
 import LanguageSwitcher from "../components/LanguageSwitcher";
@@ -9,6 +9,7 @@ import { useUser } from "@/context/UserContext";
 import { toast } from "react-toastify";
 
 const NavbarComponent = () => {
+  const location = useLocation();
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
   const { logout, user, isAuthenticated, cart } = useUser();
@@ -55,14 +56,23 @@ const NavbarComponent = () => {
             </NavLink>
           </li>
           <li>
-            <ScrollLink
-              to="services"
-              smooth={true}
-              duration={700}
-              className=" hover:text-primary transition duration-300 cursor-pointer"
-            >
-              {t("services")}
-            </ScrollLink>
+            {location.pathname === "/" ? (
+              <ScrollLink
+                to="services"
+                smooth={true}
+                duration={700}
+                className="hover:text-primary transition duration-300 cursor-pointer"
+              >
+                {t("services")}
+              </ScrollLink>
+            ) : (
+              <Link
+                to="/#services"
+                className="hover:text-primary transition duration-300"
+              >
+                {t("services")}
+              </Link>
+            )}
           </li>
           {user && (
             <>

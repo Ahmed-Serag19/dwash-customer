@@ -21,10 +21,10 @@ export const apiEndpoints = {
   makePayment: `${baseUrl}/payment/consumer/card/payment/initiate`,
   finalizePayment: `${baseUrl}/payment/consumer/card/payment/finalize`,
   getCities: `${baseUrl}/public/cities`,
-  getBrandReviews: (id: string | undefined) =>
-    `${baseUrl}/public/getReviewsBrand?page=0&size=8&brandId=${id}`,
   getDistrict: (selectedCityId: number) =>
     `${baseUrl}/public/districts?cityId=${selectedCityId}`,
+  getBrandReviews: (id: string | undefined) =>
+    `${baseUrl}/public/getReviewsBrand?page=0&size=8&brandId=${id}`,
   getOrders: (page: number, pageSize: number) =>
     `${baseUrl}/consumer/getOrders?page=${page - 1}&size=${pageSize}`,
   cancelOrder: (id: number) =>

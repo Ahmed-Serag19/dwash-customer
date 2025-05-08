@@ -153,8 +153,7 @@ export const en = {
   add: "Add",
   adding: "Adding...",
   saving: "Saving...",
-  confirmDeleteCarMessage:
-    "Are you sure you want to delete this car? This action cannot be undone.",
+  confirmDeleteCarMessage: "Are you sure you want to delete this car?",
   carAdded: "Car added successfully",
   carUpdated: "Car updated successfully",
   carDeleted: "Car deleted successfully",
@@ -177,7 +176,7 @@ export const en = {
   pink: "Pink",
   brown: "Brown",
   beige: "Beige",
-  addNewCar: "Add New Car",
+  addNewCar: "Add a Car",
   yourCars: "Your Cars",
   slogan: "Your car... shining like new, every single day!",
   sloganSecondary:
@@ -204,4 +203,13 @@ export const en = {
     "If you believe this is an error, please contact our support team.",
   backToDashboard: "Back to Dashboard",
   pageNotFound: "Page Not Found",
+  customerReviews: "Customer Reviews",
+  manageYourCars: "Manage Your Cars",
+  profileDescription: "Profile Details",
+  getCurrentLocation: "Get Current Location",
+  location: "Location",
+  viewOnGoogleMaps: "View on Google Maps",
+  viewServices: "View Services",
+  serviceAddedToCart: "Service added to cart",
+  checkout: "Checkout",
 };

@@ -7,17 +7,28 @@ import { apiEndpoints } from "@/constants/endPoints";
 import CarForm from "@/components/cars/car-form";
 import CarCard from "@/components/cars/car-card";
 import EditCarModal from "@/components/cars/edit-car-modal";
-import ConfirmationModal from "@/components/ui/confirmation-modal";
-import LoadingIndicator from "@/components/ui/loading-indicator";
+import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, CarIcon } from "lucide-react";
 import type { Car } from "@/interfaces";
 
 export default function Cars() {
   const { token, cars, getCars, refreshUserData } = useUser();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [carToDelete, setCarToDelete] = useState<Car | null>(null);
   const [carToEdit, setCarToEdit] = useState<Car | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const currentLang = i18n.language;
+  const isRTL = currentLang === "ar";
 
   const handleAddCar = async (data: any) => {
     if (!token) {
@@ -106,44 +117,74 @@ export default function Cars() {
   };
 
   if (loading && cars.length === 0) {
-    return <LoadingIndicator message={t("loading")} />;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <p className="text-muted-foreground">{t("loading")}</p>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-7xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-3xl font-semibold text-center text-primary mb-8">
-        {t("myCars")}
-      </h2>
-
-      {/* Add Car Form */}
-      <div className="mb-10">
-        <h3 className="text-2xl font-semibold mb-6 text-primary">
-          {t("addNewCar")}
-        </h3>
-        <CarForm onSubmit={handleAddCar} />
-      </div>
-
-      {/* Car List */}
-      {cars.length > 0 && (
-        <>
-          <h3 className="text-2xl font-semibold mb-6 text-primary">
-            {t("yourCars")}
-          </h3>
-          <div className="grid grid-cols-1 gap-4 mb-6">
-            {cars.map((car) => (
-              <CarCard
-                key={car.carId}
-                car={car}
-                onEdit={() => setCarToEdit(car)}
-                onDelete={() => {
-                  setCarToDelete(car);
-                  setIsConfirmModalOpen(true);
-                }}
-              />
-            ))}
+    <div
+      className="container max-w-6xl mx-auto py-10 px-4 sm:px-6"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
+      <Card className="border-none shadow-lg">
+        <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-t-lg">
+          <div className="flex items-center gap-2">
+            <CarIcon className="h-6 w-6 text-primary" />
+            <CardTitle className="text-2xl font-bold text-primary">
+              {t("myCars")}
+            </CardTitle>
           </div>
-        </>
-      )}
+          <CardDescription className="text-md font-semibold">
+            {t("manageYourCars")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6">
+          <Tabs defaultValue="cars" className="w-full py-2">
+            <TabsList className="grid w-full grid-cols-2 mb-8 min-h-10">
+              <TabsTrigger value="cars" className="text-md">
+                {t("yourCars")}
+              </TabsTrigger>
+              <TabsTrigger value="add" className="text-md">
+                {t("addNewCar")}
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="cars" className="mt-4 space-y-6">
+              {cars.length === 0 ? (
+                <Alert variant="default" className="bg-muted/50">
+                  <AlertDescription>{t("noCars")}</AlertDescription>
+                </Alert>
+              ) : (
+                <div className="grid gap-4">
+                  {cars.map((car) => (
+                    <CarCard
+                      key={car.carId}
+                      car={car}
+                      onEdit={() => setCarToEdit(car)}
+                      onDelete={() => {
+                        setCarToDelete(car);
+                        setIsConfirmModalOpen(true);
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="add" className="mt-4">
+              <Card>
+                <CardContent className="p-6">
+                  <CarForm onSubmit={handleAddCar} isSubmitting={loading} />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
 
       {/* Edit Car Modal */}
       {carToEdit && (
@@ -152,6 +193,7 @@ export default function Cars() {
           onClose={() => setCarToEdit(null)}
           car={carToEdit}
           onSave={handleEditCar}
+          isSubmitting={loading}
         />
       )}
 
@@ -163,10 +205,12 @@ export default function Cars() {
           setCarToDelete(null);
         }}
         onConfirm={handleDeleteCar}
-        title={t("confirmDeleteTitle")}
+        title={t("confirmDelete")}
         message={t("confirmDeleteCarMessage")}
         confirmText={t("yes")}
         cancelText={t("no")}
+        isSubmitting={loading}
+        isRTL={isRTL}
       />
     </div>
   );

@@ -5,9 +5,12 @@ import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
 import AddressCard from "./address-card";
 import AddressModal from "./address-modal";
-import ConfirmationModal from "./confirmation-modal";
+import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 import type { UserAddress, AddressFormData } from "@/interfaces";
 import { useUser } from "@/context/UserContext";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface AddressManagementProps {
   addresses: UserAddress[];
@@ -30,6 +33,7 @@ const AddressManagement = ({
     null
   );
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddAddress = async (data: AddressFormData) => {
     if (!token) {
@@ -37,6 +41,7 @@ const AddressManagement = ({
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await axios.post(apiEndpoints.addAddress, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -52,6 +57,8 @@ const AddressManagement = ({
       }
     } catch (error) {
       toast.error(t("generalError"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -64,6 +71,7 @@ const AddressManagement = ({
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await axios.put(
         apiEndpoints.editAddress(addressId),
@@ -83,6 +91,8 @@ const AddressManagement = ({
       }
     } catch (error) {
       toast.error(t("generalError"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -92,6 +102,7 @@ const AddressManagement = ({
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await axios.delete(
         apiEndpoints.deleteAddress(addressToDelete.userAddressId),
@@ -111,6 +122,8 @@ const AddressManagement = ({
       }
     } catch (error) {
       toast.error(t("generalError"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -120,26 +133,33 @@ const AddressManagement = ({
   };
 
   return (
-    <div>
-      {/* Address List */}
-      <div className="grid grid-cols-1 gap-4 mb-6">
-        {addresses.map((address) => (
-          <AddressCard
-            key={address.userAddressId}
-            address={address}
-            onEdit={() => setEditingAddress(address)}
-            onDelete={() => openDeleteConfirmation(address)}
-          />
-        ))}
-      </div>
+    <div className="space-y-6">
+      {addresses.length === 0 ? (
+        <Alert variant="default" className="bg-muted/50">
+          <AlertDescription>{t("noAddresses")}</AlertDescription>
+        </Alert>
+      ) : (
+        <div className="grid gap-4">
+          {addresses.map((address) => (
+            <AddressCard
+              key={address.userAddressId}
+              address={address}
+              onEdit={() => setEditingAddress(address)}
+              onDelete={() => openDeleteConfirmation(address)}
+            />
+          ))}
+        </div>
+      )}
 
-      {/* Add Address Button */}
-      <button
+      <Button
         onClick={() => setIsAddModalOpen(true)}
-        className="bg-primary text-white px-4 py-2 rounded-lg"
+        className="w-full sm:w-auto"
+        disabled={isSubmitting}
+        variant="primary"
       >
+        <PlusCircle className="mr-2 h-4 w-4" />
         {t("addAddress")}
-      </button>
+      </Button>
 
       {/* Add Address Modal */}
       <AddressModal
@@ -147,6 +167,7 @@ const AddressManagement = ({
         onClose={() => setIsAddModalOpen(false)}
         title={t("addNewAddress")}
         onSubmit={handleAddAddress}
+        isSubmitting={isSubmitting}
       />
 
       {/* Edit Address Modal */}
@@ -165,6 +186,7 @@ const AddressManagement = ({
           onSubmit={(data) =>
             handleEditAddress(editingAddress.userAddressId, data)
           }
+          isSubmitting={isSubmitting}
         />
       )}
 
@@ -180,6 +202,7 @@ const AddressManagement = ({
         message={t("confirmDeleteMessage")}
         confirmText={t("yes")}
         cancelText={t("no")}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

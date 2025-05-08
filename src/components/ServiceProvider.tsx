@@ -17,6 +17,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Star } from "lucide-react";
+import DummyUser from "@/assets/images/dummy-user.avif";
 
 const ServiceProvider: React.FC = () => {
   const { id } = useParams();
@@ -27,7 +28,32 @@ const ServiceProvider: React.FC = () => {
     description: string;
   }
 
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([
+    {
+      username: "Ahmed Al-Farsi",
+      appraisal: 5,
+      description:
+        "خدمة رائعة! كان التواصل مع مقدم الخدمة سريعًا وسهلاً، وأدى الخدمة بجودة عالية. بالتأكيد سأعود لاستخدام الخدمة مرة أخرى.",
+    },
+    {
+      username: "Fatima Zahran",
+      appraisal: 4,
+      description:
+        "كانت الخدمة جيدة جدًا، لكن أعتقد أنه يمكن تحسين وقت الانتظار قليلاً. ولكن بشكل عام، كنت راضية عن التجربة.",
+    },
+    {
+      username: "John Doe",
+      appraisal: 5,
+      description:
+        "Excellent service! The freelancer was prompt and professional, and the results were exactly what I needed. Highly recommended!",
+    },
+    {
+      username: "Emily Smith",
+      appraisal: 4,
+      description:
+        "The service was great, but I felt like the response time could be a bit quicker. Overall, I’m very satisfied with the quality of work.",
+    },
+  ]);
   const { t, i18n } = useTranslation();
   const freelancers = useFreelancers();
   const [freelancer, setFreelancer] = useState<Freelancer | null>(null);
@@ -77,21 +103,29 @@ const ServiceProvider: React.FC = () => {
   return (
     <main>
       <div className="object-cover w-full relative">
-        <img src={BgLogo} alt="service provider logo" className="w-full" />
-        <div className="md:absolute lg:top-28 lg:left-40 md:top-10 2xl:left-52 2xl:top-32 md:left-20 text-center relative mt-10 md:mt-0">
-          <h1 className="xl:text-4xl font-semibold md:text-3xl text-xl">
-            {i18n.language === "ar"
-              ? freelancer?.brandNameAr
-              : freelancer?.brandNameEn}
-          </h1>
-          <p className="text-lg text-stone-800">
-            {i18n.language === "ar"
-              ? freelancer?.brandDescriptionsAr
-              : freelancer?.brandDescriptionsEn}
-          </p>
+        <img
+          src={BgLogo}
+          alt="service provider logo"
+          className="object-cover w-full "
+        />
+        <div className="absolute inset-0 bg-stone-800 opacity-50"></div>
+
+        <div className="absolute text-right top-0 right-0 left-0 bottom-0 text-white">
+          <div className="absolute top-20 left-5 md:top-40 md:left-40">
+            <h1 className="xl:text-4xl font-semibold md:text-3xl text-xl">
+              {i18n.language === "ar"
+                ? freelancer?.brandNameAr
+                : freelancer?.brandNameEn}
+            </h1>
+            <p className="text-lg text-stone-100 font-semibold">
+              {i18n.language === "ar"
+                ? freelancer?.brandDescriptionsAr
+                : freelancer?.brandDescriptionsEn}
+            </p>
+          </div>
         </div>
       </div>
-      <div className="py-10 px-10 relative">
+      <div className="py-10 px-10 relative  grid  grid-cols-1 xl:grid-cols-2 gap-5 md:gap-8">
         {services?.length > 0 ? (
           services.map((service) => (
             <ServiceCard key={service.serviceId} service={service} />
@@ -108,43 +142,53 @@ const ServiceProvider: React.FC = () => {
           }}
           plugins={[
             Autoplay({
-              delay: 3000,
+              delay: 4000,
             }),
           ]}
         >
-          <CarouselContent className="px-5">
-            {reviews.map((review, index) => (
-              <CarouselItem
-                key={index}
-                className="basis-full md:basis-1/2"
-                dir="rtl"
-              >
-                <div className="sm:!max-w-[350px] sm:min-w-[250px] rounded-xl shadow-sm min-h-52">
-                  <div className="text-lg text-white pt-10 bg-[#0A398180] px-2 min-h-40  rounded-2xl special-top-border">
-                    {review.description}
-                  </div>
-                  <div className="flex items-center justify-end text-lg min-h-12">
-                    <div className="bg-[#0A398180] w-6/12 h-14 rounded-2xl special-border-2">
-                      <span className="font-semibold opacity-0">
-                        {review.username}
-                      </span>
-                      <div className="flex items-center gap-0.5 opacity-0">
-                        <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                        {review.appraisal}
+          <CarouselContent className="px-5 py-5">
+            {reviews.length > 0
+              ? reviews.map((review, index) => (
+                  <CarouselItem
+                    key={index}
+                    className="pl-1 basis-full md:basis-1/2 "
+                    dir={i18n.language === "ar" ? "rtl" : "ltr"}
+                  >
+                    <div className="flex flex-col h-full bg-white rounded-lg p-6 shadow-lg border border-gray-100 mx-2">
+                      <div className="flex items-center gap-4 mb-4">
+                        <img
+                          src={DummyUser}
+                          alt="Profile"
+                          className="w-16 h-16 rounded-full"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-gray-800">
+                            {review.username}
+                          </h3>
+                          <div className="flex items-center gap-1 mt-1">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                fill={
+                                  i < review.appraisal ? "currentColor" : "none"
+                                }
+                                className={`h-4 w-4 ${
+                                  i < review.appraisal
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
                       </div>
+                      <p className="text-gray-600">{review.description}</p>
                     </div>
-                    <div className="flex items-center gap-2 text-primary min-w-40 w-6/12 bg-white py-3 px-2 special-border rounded-2xl">
-                      <span className="font-semibold">{review.username}</span>
-                      <div className="flex items-center gap-0.5">
-                        <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                        {review.appraisal}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CarouselItem>
-            ))}
+                  </CarouselItem>
+                ))
+              : ""}
           </CarouselContent>
+
           <CarouselPrevious />
           <CarouselNext />
         </Carousel>

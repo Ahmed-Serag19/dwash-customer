@@ -4,16 +4,32 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
-import { MapPin } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { MapPin, Loader2 } from "lucide-react";
 import type { City, District, AddressFormData } from "@/interfaces";
 
 interface AddressFormProps {
   initialData?: AddressFormData;
   onSubmit: (data: AddressFormData) => Promise<void>;
   onCancel: () => void;
+  isSubmitting?: boolean;
 }
 
-const AddressForm = ({ initialData, onSubmit, onCancel }: AddressFormProps) => {
+const AddressForm = ({
+  initialData,
+  onSubmit,
+  onCancel,
+  isSubmitting = false,
+}: AddressFormProps) => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const [cities, setCities] = useState<City[]>([]);
@@ -97,144 +113,209 @@ const AddressForm = ({ initialData, onSubmit, onCancel }: AddressFormProps) => {
   }, [selectedCityId, t]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-2">
       {/* Address Title */}
-      <div className="col-span-2">
-        <label className="block mb-2 text-gray-700">{t("addressTitle")}</label>
-        <input
+      <div className="space-y-2">
+        <Label htmlFor="addressTitle" className="text-base">
+          {t("addressTitle")}
+        </Label>
+        <Input
+          id="addressTitle"
           {...register("addressTitle", { required: t("addressTitleRequired") })}
-          className="w-full px-4 py-2 border rounded-lg"
+          className="h-11"
           placeholder={t("addressTitlePlaceholder")}
+          disabled={isSubmitting}
         />
         {errors.addressTitle && (
-          <p className="text-red-500 text-sm">{errors.addressTitle.message}</p>
-        )}
-      </div>
-
-      {/* City Dropdown */}
-      <div>
-        <label className="block mb-2 text-gray-700">{t("city")}</label>
-        <Controller
-          name="cityId"
-          control={control}
-          rules={{ required: t("cityRequired") }}
-          render={({ field }) => (
-            <select {...field} className="w-full px-4 py-2 border rounded-lg">
-              <option value="">{t("selectCity")}</option>
-              {cities.map((city) => (
-                <option key={city.cityId} value={city.cityId}>
-                  {currentLang === "ar"
-                    ? city.cityNameAr
-                    : city.cityNameEn || city.cityNameAr}
-                </option>
-              ))}
-            </select>
-          )}
-        />
-        {errors.cityId && (
-          <p className="text-red-500 text-sm">
-            {typeof errors.cityId.message === "string"
-              ? errors.cityId.message
-              : t("unknown")}
+          <p className="text-destructive text-sm">
+            {errors.addressTitle.message}
           </p>
         )}
       </div>
 
-      {/* District Dropdown */}
-      <div>
-        <label className="block mb-2 text-gray-700">{t("district")}</label>
-        <Controller
-          name="districtId"
-          control={control}
-          rules={{ required: t("districtRequired") }}
-          render={({ field }) => (
-            <select
-              {...field}
-              className="w-full px-4 py-2 border rounded-lg max-h-48 overflow-y-auto"
-            >
-              <option value="">{t("selectDistrict")}</option>
-              {districts.map((district) => (
-                <option key={district.districtId} value={district.districtId}>
-                  {currentLang === "ar"
-                    ? district.districtNameAr
-                    : district.districtNameEn || district.districtNameAr}
-                </option>
-              ))}
-            </select>
-          )}
-        />
-        {errors.districtId && (
-          <p className="text-red-500 text-sm">
-            {typeof errors.districtId.message === "string"
-              ? errors.districtId.message
-              : t("unknown")}
-          </p>
-        )}
-      </div>
-      {/* Coordinates */}
-      <div className="col-span-2 grid grid-cols-3 gap-2">
-        {/* Fetch Location Button */}
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-lg"
-          onClick={handleGetLocation}
-          disabled={loadingLocation}
-        >
-          {loadingLocation ? t("determiningLocation") : <MapPin size={20} />}
-        </button>
-
-        {/* Latitude Input */}
-        <div>
-          <input
-            {...register("latitude", {
-              required: t("locationRequired"),
-            })}
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder={t("latitude")}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* City Dropdown */}
+        <div className="space-y-2">
+          <Label htmlFor="cityId" className="text-base">
+            {t("city")}
+          </Label>
+          <Controller
+            name="cityId"
+            control={control}
+            rules={{ required: t("cityRequired") }}
+            render={({ field }) => (
+              <Select
+                disabled={isSubmitting}
+                value={field.value ? field.value.toString() : ""}
+                onValueChange={(value: any) => {
+                  field.onChange(Number(value));
+                  setValue("districtId", 0);
+                }}
+              >
+                <SelectTrigger id="cityId" className="h-11">
+                  <SelectValue placeholder={t("selectCity")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {cities.map((city) => (
+                    <SelectItem
+                      key={city.cityId}
+                      value={city.cityId.toString()}
+                    >
+                      {currentLang === "ar"
+                        ? city.cityNameAr
+                        : city.cityNameEn || city.cityNameAr}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           />
-          {errors.latitude && (
-            <p className="text-red-500 text-sm">
-              {typeof errors.latitude.message === "string"
-                ? errors.latitude.message
+          {errors.cityId && (
+            <p className="text-destructive text-sm">
+              {typeof errors.cityId.message === "string"
+                ? errors.cityId.message
                 : t("unknown")}
             </p>
           )}
         </div>
 
-        {/* Longitude Input */}
-        <div>
-          <input
-            {...register("longitude", {
-              required: t("locationRequired"),
-            })}
-            className="w-full px-4 py-2 border rounded-lg"
-            placeholder={t("longitude")}
+        {/* District Dropdown */}
+        <div className="space-y-2">
+          <Label htmlFor="districtId" className="text-base">
+            {t("district")}
+          </Label>
+          <Controller
+            name="districtId"
+            control={control}
+            rules={{ required: t("districtRequired") }}
+            render={({ field }) => (
+              <Select
+                disabled={isSubmitting || !selectedCityId}
+                value={field.value ? field.value.toString() : ""}
+                onValueChange={(value: any) => field.onChange(Number(value))}
+              >
+                <SelectTrigger id="districtId" className="h-11">
+                  <SelectValue placeholder={t("selectDistrict")} />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  {districts.map((district) => (
+                    <SelectItem
+                      key={district.districtId}
+                      value={district.districtId.toString()}
+                    >
+                      {currentLang === "ar"
+                        ? district.districtNameAr
+                        : district.districtNameEn || district.districtNameAr}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           />
-          {errors.longitude && (
-            <p className="text-red-500 text-sm">
-              {typeof errors.longitude.message === "string"
-                ? errors.longitude.message
+          {errors.districtId && (
+            <p className="text-destructive text-sm">
+              {typeof errors.districtId.message === "string"
+                ? errors.districtId.message
                 : t("unknown")}
             </p>
           )}
+        </div>
+      </div>
+
+      {/* Coordinates */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <Label className="text-base">{t("location")}</Label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleGetLocation}
+            disabled={loadingLocation || isSubmitting}
+            className="gap-2"
+          >
+            {loadingLocation ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t("determiningLocation")}
+              </>
+            ) : (
+              <>
+                <MapPin className="h-4 w-4" />
+                {t("getCurrentLocation")}
+              </>
+            )}
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          {/* Latitude Input */}
+          <div className="space-y-2">
+            <Label htmlFor="latitude" className="text-sm text-muted-foreground">
+              {t("latitude")}
+            </Label>
+            <Input
+              id="latitude"
+              {...register("latitude", { required: t("locationRequired") })}
+              className="h-11"
+              placeholder={t("latitude")}
+              disabled={isSubmitting}
+            />
+            {errors.latitude && (
+              <p className="text-destructive text-sm">
+                {typeof errors.latitude.message === "string"
+                  ? errors.latitude.message
+                  : t("unknown")}
+              </p>
+            )}
+          </div>
+
+          {/* Longitude Input */}
+          <div className="space-y-2">
+            <Label
+              htmlFor="longitude"
+              className="text-sm text-muted-foreground"
+            >
+              {t("longitude")}
+            </Label>
+            <Input
+              id="longitude"
+              {...register("longitude", { required: t("locationRequired") })}
+              className="h-11"
+              placeholder={t("longitude")}
+              disabled={isSubmitting}
+            />
+            {errors.longitude && (
+              <p className="text-destructive text-sm">
+                {typeof errors.longitude.message === "string"
+                  ? errors.longitude.message
+                  : t("unknown")}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="col-span-2 flex justify-end gap-2 mt-4">
-        <button
+      <div className="flex justify-end gap-2 pt-4">
+        <Button
           type="button"
+          variant="outline"
           onClick={onCancel}
-          className="px-4 py-2 border rounded-lg"
+          disabled={isSubmitting}
         >
           {t("cancel")}
-        </button>
-        <button
-          type="submit"
-          className="bg-primary text-white px-4 py-2 rounded-lg"
-        >
-          {t("save")}
-        </button>
+        </Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {t("saving")}
+            </>
+          ) : (
+            t("save")
+          )}
+        </Button>
       </div>
     </form>
   );

@@ -1,12 +1,31 @@
+
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
 import ColorSelector from "./color-selector";
-import type { CarBrand, CarModel, Car } from "@/interfaces";
 import { toast } from "react-toastify";
 import { useUser } from "@/context/UserContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
+import type { CarBrand, CarModel, Car } from "@/interfaces";
 
 interface CarFormData {
   carModelId: number;
@@ -20,15 +39,22 @@ interface EditCarModalProps {
   onClose: () => void;
   car: Car | null;
   onSave: (carId: number, data: CarFormData) => Promise<void>;
+  isSubmitting?: boolean;
 }
 
-const EditCarModal = ({ isOpen, onClose, car, onSave }: EditCarModalProps) => {
+const EditCarModal = ({
+  isOpen,
+  onClose,
+  car,
+  onSave,
+  isSubmitting = false,
+}: EditCarModalProps) => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const [carBrands, setCarBrands] = useState<CarBrand[]>([]);
   const [carModels, setCarModels] = useState<CarModel[]>([]);
   const [loading, setLoading] = useState(false);
-  const { getCars, refreshUserData } = useUser(); // Get getCars from context
+  const { getCars, refreshUserData } = useUser();
 
   const {
     register,
@@ -43,20 +69,22 @@ const EditCarModal = ({ isOpen, onClose, car, onSave }: EditCarModalProps) => {
 
   // Fetch car brands on component mount
   useEffect(() => {
-    const fetchCarBrands = async () => {
-      try {
-        const response = await axios.get(apiEndpoints.getCarBrands);
-        if (response.data.success) {
-          setCarBrands(response.data.content || []);
+    if (isOpen) {
+      const fetchCarBrands = async () => {
+        try {
+          const response = await axios.get(apiEndpoints.getCarBrands);
+          if (response.data.success) {
+            setCarBrands(response.data.content || []);
+          }
+        } catch (error) {
+          console.error("Error fetching car brands:", error);
+          toast.error(t("failedToLoadBrands"));
         }
-      } catch (error) {
-        console.error("Error fetching car brands:", error);
-        toast.error(t("failedToLoadBrands"));
-      }
-    };
+      };
 
-    fetchCarBrands();
-  }, [t]);
+      fetchCarBrands();
+    }
+  }, [isOpen, t]);
 
   // Fetch car models when brand changes
   useEffect(() => {
@@ -96,7 +124,6 @@ const EditCarModal = ({ isOpen, onClose, car, onSave }: EditCarModalProps) => {
 
   const handleFormSubmit = async (data: CarFormData) => {
     if (!car) return;
-    setLoading(true);
     try {
       await onSave(car.carId, data);
       await getCars();
@@ -104,163 +131,175 @@ const EditCarModal = ({ isOpen, onClose, car, onSave }: EditCarModalProps) => {
       onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (!isOpen || !car) return null;
+  if (!car) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-        <h2 className="text-2xl font-bold mb-6">{t("editCar")}</h2>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-semibold">
+            {t("editCar")}
+          </DialogTitle>
+        </DialogHeader>
 
         <form
           onSubmit={handleSubmit(handleFormSubmit)}
-          className="grid grid-cols-2 gap-x-10 gap-y-6"
+          className="space-y-6 py-4"
         >
-          {/* Car Brand */}
-          <div>
-            <label className="block mb-2 text-lg font-medium text-primary">
-              {t("carBrand")}
-            </label>
-            <Controller
-              name="carBrandId"
-              control={control}
-              rules={{ required: t("carBrandRequired") }}
-              render={({ field }) => (
-                <div className="relative">
-                  <select
-                    {...field}
-                    className="w-full px-4 py-2 border rounded-lg appearance-none pr-10"
-                    onChange={(e) => {
-                      field.onChange(Number(e.target.value));
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Car Brand */}
+            <div className="space-y-2">
+              <Label htmlFor="edit-carBrandId" className="text-base">
+                {t("carBrand")}
+              </Label>
+              <Controller
+                name="carBrandId"
+                control={control}
+                rules={{ required: t("carBrandRequired") }}
+                render={({ field }) => (
+                  <Select
+                    disabled={isSubmitting}
+                    value={field.value.toString()}
+                    onValueChange={(value) => {
+                      field.onChange(Number(value));
                       setValue("carModelId", 0);
                     }}
                   >
-                    <option value="0">{t("selectCarBrand")}</option>
-                    {carBrands.map((brand) => (
-                      <option key={brand.carBrandId} value={brand.carBrandId}>
-                        {currentLang === "ar" ? brand.brandAr : brand.brandEn}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                    </svg>
-                  </div>
-                </div>
+                    <SelectTrigger id="edit-carBrandId" className="h-11">
+                      <SelectValue placeholder={t("selectCarBrand")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {carBrands.map((brand) => (
+                        <SelectItem
+                          key={brand.carBrandId}
+                          value={brand.carBrandId.toString()}
+                        >
+                          {currentLang === "ar" ? brand.brandAr : brand.brandEn}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.carBrandId && (
+                <p className="text-destructive text-sm">
+                  {errors.carBrandId.message}
+                </p>
               )}
-            />
-            {errors.carBrandId && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.carBrandId.message}
-              </p>
-            )}
-          </div>
+            </div>
 
-          {/* Car Model */}
-          <div>
-            <label className="block mb-2 text-lg font-medium text-primary">
-              {t("carModel")}
-            </label>
-            <Controller
-              name="carModelId"
-              control={control}
-              rules={{ required: t("carModelRequired") }}
-              render={({ field }) => (
-                <div className="relative">
-                  <select
-                    {...field}
-                    className="w-full px-4 py-2 border rounded-lg appearance-none pr-10"
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    disabled={!selectedBrandId || selectedBrandId === 0}
+            {/* Car Model */}
+            <div className="space-y-2">
+              <Label htmlFor="edit-carModelId" className="text-base">
+                {t("carModel")}
+              </Label>
+              <Controller
+                name="carModelId"
+                control={control}
+                rules={{ required: t("carModelRequired") }}
+                render={({ field }) => (
+                  <Select
+                    disabled={
+                      isSubmitting || !selectedBrandId || selectedBrandId === 0
+                    }
+                    value={field.value.toString()}
+                    onValueChange={(value) => field.onChange(Number(value))}
                   >
-                    <option value="0">{t("selectCarModel")}</option>
-                    {carModels.map((model) => (
-                      <option key={model.carModelId} value={model.carModelId}>
-                        {currentLang === "ar" ? model.modelAr : model.modelEn}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                    </svg>
-                  </div>
-                </div>
+                    <SelectTrigger id="edit-carModelId" className="h-11">
+                      <SelectValue placeholder={t("selectCarModel")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {carModels.map((model) => (
+                        <SelectItem
+                          key={model.carModelId}
+                          value={model.carModelId.toString()}
+                        >
+                          {currentLang === "ar" ? model.modelAr : model.modelEn}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.carModelId && (
+                <p className="text-destructive text-sm">
+                  {errors.carModelId.message}
+                </p>
               )}
-            />
-            {errors.carModelId && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.carModelId.message}
-              </p>
-            )}
-          </div>
+            </div>
 
-          {/* Car Color */}
-          <div>
-            <label className="block mb-2 text-lg font-medium text-primary">
-              {t("carColor")}
-            </label>
-            <Controller
-              name="carColorId"
-              control={control}
-              rules={{ required: t("carColorRequired") }}
-              render={({ field }) => (
-                <ColorSelector
-                  selectedColorId={field.value}
-                  onChange={field.onChange}
-                />
+            {/* Car Color */}
+            <div className="space-y-2">
+              <Label htmlFor="edit-carColorId" className="text-base">
+                {t("carColor")}
+              </Label>
+              <Controller
+                name="carColorId"
+                control={control}
+                rules={{ required: t("carColorRequired") }}
+                render={({ field }) => (
+                  <ColorSelector
+                    selectedColorId={field.value}
+                    onChange={field.onChange}
+                    disabled={isSubmitting}
+                  />
+                )}
+              />
+              {errors.carColorId && (
+                <p className="text-destructive text-sm">
+                  {errors.carColorId.message}
+                </p>
               )}
-            />
-            {errors.carColorId && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.carColorId.message}
-              </p>
-            )}
+            </div>
+
+            {/* Car Plate Number */}
+            <div className="space-y-2">
+              <Label htmlFor="edit-carPlateNo" className="text-base">
+                {t("carPlateNo")}
+              </Label>
+              <Input
+                id="edit-carPlateNo"
+                {...register("carPlateNo", {
+                  required: t("carPlateNoRequired"),
+                })}
+                className="h-11"
+                placeholder={t("carPlateNoPlaceholder")}
+                disabled={isSubmitting}
+              />
+              {errors.carPlateNo && (
+                <p className="text-destructive text-sm">
+                  {errors.carPlateNo.message}
+                </p>
+              )}
+            </div>
           </div>
 
-          {/* Car Plate Number */}
-          <div>
-            <label className="block mb-2 text-lg font-medium text-primary">
-              {t("carPlateNo")}
-            </label>
-            <input
-              {...register("carPlateNo", { required: t("carPlateNoRequired") })}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder={t("carPlateNoPlaceholder")}
-            />
-            {errors.carPlateNo && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.carPlateNo.message}
-              </p>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="col-span-2 flex justify-end gap-2 mt-4">
-            <button
+          <DialogFooter>
+            <Button
               type="button"
+              variant="outline"
               onClick={onClose}
-              className="px-4 py-2 border rounded-lg"
-              disabled={loading}
+              disabled={isSubmitting}
             >
               {t("cancel")}
-            </button>
-            <button
-              type="submit"
-              className="bg-primary text-white px-6 py-2 rounded-lg"
-              disabled={loading}
-            >
-              {loading ? t("saving") : t("save")}
-            </button>
-          </div>
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t("saving")}
+                </>
+              ) : (
+                t("save")
+              )}
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -4,7 +4,12 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import type { User } from "@/interfaces";
+import { Loader2 } from "lucide-react";
 
 interface PersonalInfoFormProps {
   user: User;
@@ -15,15 +20,16 @@ interface PersonalInfoFormProps {
 const PersonalInfoForm = ({
   user,
   token,
-
   onSuccess,
 }: PersonalInfoFormProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
+  const isRTL = currentLang === "ar";
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
       email: user?.email || "",
@@ -61,41 +67,62 @@ const PersonalInfoForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-6">
-      {/* Name */}
-      <div>
-        <label className="block my-3 text-lg text-gray-700">{t("name")}</label>
-        <input
-          {...register("name", { required: t("nameRequired") })}
-          className="w-full px-4 py-2 border rounded-lg"
-        />
-        {errors.name && (
-          <p className="text-red-500 text-sm">{errors.name.message}</p>
-        )}
-      </div>
+    <Card className="border shadow-sm" dir={isRTL ? "rtl" : "ltr"}>
+      <CardContent className="p-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-base">
+                {t("name")}
+              </Label>
+              <Input
+                id="name"
+                {...register("name", { required: t("nameRequired") })}
+                className="h-11"
+              />
+              {errors.name && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
 
-      {/* Email */}
-      <div>
-        <label className="block my-3 text-lg text-gray-700">{t("email")}</label>
-        <input
-          {...register("email", { required: t("emailRequired") })}
-          className="w-full px-4 py-2 border rounded-lg"
-        />
-        {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email.message}</p>
-        )}
-      </div>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-base">
+                {t("email")}
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                {...register("email", { required: t("emailRequired") })}
+                className="h-11"
+              />
+              {errors.email && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+          </div>
 
-      {/* Edit & Save Buttons */}
-      <div className="col-span-2 flex justify-start mt-4">
-        <button
-          type="submit"
-          className="bg-primary text-white px-6 py-2 rounded-lg"
-        >
-          {t("edit")}
-        </button>
-      </div>
-    </form>
+          <Button
+            type="submit"
+            className="w-full sm:w-auto"
+            disabled={isSubmitting}
+            variant="primary"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {t("saving")}
+              </>
+            ) : (
+              t("edit")
+            )}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 

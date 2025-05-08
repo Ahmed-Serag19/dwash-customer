@@ -1,4 +1,9 @@
 import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Edit, Trash2, MapPin, ExternalLink } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { UserAddress } from "@/interfaces";
 
 interface AddressCardProps {
@@ -11,57 +16,111 @@ const AddressCard = ({ address, onEdit, onDelete }: AddressCardProps) => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const isRTL = currentLang === "ar";
+  const [formattedAddress, setFormattedAddress] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Function to get human-readable address from coordinates
+    const getAddressFromCoordinates = async () => {
+      if (!address.latitude || !address.longitude) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Using Nominatim OpenStreetMap API (free, no API key required)
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${address.latitude}&lon=${address.longitude}&accept-language=${currentLang}`
+        );
+        const data = await response.json();
+
+        if (data && data.display_name) {
+          setFormattedAddress(data.display_name);
+        } else {
+          setFormattedAddress(t("addressNotFound"));
+        }
+      } catch (error) {
+        console.error("Error fetching address:", error);
+        setFormattedAddress(t("errorFetchingAddress"));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getAddressFromCoordinates();
+  }, [address.latitude, address.longitude, currentLang, t]);
+
+  // Create Google Maps link
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${address.latitude},${address.longitude}`;
 
   return (
-    <div className="p-4 border rounded-lg flex flex-col md:flex-row gap-10">
-      <div className="flex justify-between items-center md:items-start mb-4 flex-col flex-1 gap-10">
-        <h4 className="text-2xl font-medium text-primary">
-          {address.addressTitle}
-        </h4>
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-10 w-full">
-          <div>
-            <p className="text-lg font-medium text-primary">{t("city")}</p>
-            <p className="font-medium text-lg">
-              {isRTL ? address.cityAr : address.cityEn || address.cityAr}
-            </p>
+    <Card
+      className="overflow-hidden transition-all hover:shadow-md"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
+      <CardContent className="p-0">
+        <div className="flex flex-col md:flex-row">
+          <div className="flex-1 p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <MapPin className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="text-lg font-medium text-primary">
+                  {address.addressTitle}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {isRTL ? address.cityAr : address.cityEn || address.cityAr},{" "}
+                  {isRTL
+                    ? address.districtAr
+                    : address.districtEn || address.districtAr}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <p className="font-medium text-muted-foreground mb-1">
+                {t("location")}
+              </p>
+              {loading ? (
+                <Skeleton className="h-10 w-full" />
+              ) : (
+                <div className="text-sm">
+                  <p className="mb-2">{formattedAddress}</p>
+                  <a
+                    href={googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary flex items-center gap-1 hover:underline text-xs"
+                  >
+                    {t("viewOnGoogleMaps")} <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
-          <div>
-            <p className="text-lg font-medium text-primary">{t("district")}</p>
-            <p className="font-medium text-lg">
-              {isRTL
-                ? address.districtAr
-                : address.districtEn || address.districtAr}
-            </p>
-          </div>
-          <div>
-            <p className="text-lg font-medium text-primary">{t("latitude")}</p>
-            <p className="font-medium text-lg">{address.latitude}</p>
-          </div>
-          <div>
-            <p className="text-lg font-medium text-primary">{t("longitude")}</p>
-            <p className="font-medium text-lg">{address.longitude}</p>
+
+          <div className="flex md:flex-col justify-end gap-2 p-4 md:p-6 bg-muted/20 md:border-l">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 md:w-24"
+              onClick={onEdit}
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              {t("edit")}
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="flex-1 md:w-24"
+              onClick={onDelete}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              {t("delete")}
+            </Button>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col gap-7 justify-center max-md:items-center">
-        {onEdit && onDelete && (
-          <>
-            <button
-              onClick={onEdit}
-              className="bg-green-500 text-white max-md:w-2/3 px-4 text-lg md:px-10 py-2 rounded-2xl"
-            >
-              {t("edit")}
-            </button>
-            <button
-              onClick={onDelete}
-              className="bg-red-500 text-white max-md:w-2/3 px-4 text-lg md:px-10 py-2 rounded-2xl"
-            >
-              {t("delete")}
-            </button>
-          </>
-        )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

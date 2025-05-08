@@ -19,7 +19,7 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
   };
   return (
     <main
-      className="flex flex-col rounded-md max-w-md justify-center items-center self-center hover:cursor-pointer"
+      className="flex flex-col max-w-md justify-center items-center self-center hover:cursor-pointer hover:shadow-lg transition-all duration-300 rounded-lg"
       onClick={toSp}
     >
       <div className="rounded-lg ">
@@ -50,7 +50,7 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
               : freelancer.brandDescriptionsAr || t("noDescription")}
           </p>
           <p className="text-2xl pt-3 border-stone-900 border-b-2 w-fit">
-            {t("seeMore")}
+            {t("viewServices")}
           </p>
         </div>
       </div>

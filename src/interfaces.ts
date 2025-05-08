@@ -184,3 +184,9 @@ export interface CarFormData {
   carColor: string;
   carPlateNo: string;
 }
+export interface TimeSlot {
+  slotId: number;
+  date: string;
+  timeFrom: string;
+  timeTo: string;
+}

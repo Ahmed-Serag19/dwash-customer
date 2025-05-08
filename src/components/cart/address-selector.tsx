@@ -19,7 +19,6 @@ const AddressSelector = ({
   const isRTL = currentLang === "ar";
   const [isOpen, setIsOpen] = useState(false);
 
-  // Find the selected address
   const selectedAddress = addresses.find(
     (address) => address.userAddressId === selectedAddressId
   );
