@@ -212,4 +212,7 @@ export const en = {
   viewServices: "View Services",
   serviceAddedToCart: "Service added to cart",
   checkout: "Checkout",
+  processing: "Processing...",
+  enterDiscountCode: "Enter discount code",
+  noServicesAvailable: "No services available",
 };

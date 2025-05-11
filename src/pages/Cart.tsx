@@ -23,7 +23,7 @@ interface TimeSlot {
 
 const Cart = () => {
   const { cart, getCart, token } = useUser();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   // State for checkout

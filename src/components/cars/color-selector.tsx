@@ -100,7 +100,7 @@ const ColorSelector = ({
   onChange,
   disabled = false,
 }: ColorSelectorProps) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const [colors, setColors] = useState<Color[]>([]);
   const [loading, setLoading] = useState(true);
 

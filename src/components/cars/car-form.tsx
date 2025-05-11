@@ -44,7 +44,7 @@ const CarForm = ({ onSubmit, isSubmitting = false }: CarFormProps) => {
     setValue,
     watch,
     reset,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<CarFormData>({
     defaultValues: {
       carBrandId: 0,

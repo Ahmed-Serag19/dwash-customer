@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -86,7 +85,6 @@ const EditCarModal = ({
     }
   }, [isOpen, t]);
 
-  // Fetch car models when brand changes
   useEffect(() => {
     if (selectedBrandId && selectedBrandId > 0) {
       const fetchCarModels = async () => {
@@ -136,6 +134,22 @@ const EditCarModal = ({
 
   if (!car) return null;
 
+  if (loading) {
+    return (
+      <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">
+              {t("loading")}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center items-center h-32">
+            <Loader2 className="animate-spin h-8 w-8" />
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px]">

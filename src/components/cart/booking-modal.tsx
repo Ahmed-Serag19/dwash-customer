@@ -21,7 +21,7 @@ const BookingModal = ({ service, onClose, onSuccess }: BookingModalProps) => {
   const [selectedExtras, setSelectedExtras] = useState<number[]>([]);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
 

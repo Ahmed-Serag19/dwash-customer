@@ -28,32 +28,7 @@ const ServiceProvider: React.FC = () => {
     description: string;
   }
 
-  const [reviews, setReviews] = useState<Review[]>([
-    {
-      username: "Ahmed Al-Farsi",
-      appraisal: 5,
-      description:
-        "خدمة رائعة! كان التواصل مع مقدم الخدمة سريعًا وسهلاً، وأدى الخدمة بجودة عالية. بالتأكيد سأعود لاستخدام الخدمة مرة أخرى.",
-    },
-    {
-      username: "Fatima Zahran",
-      appraisal: 4,
-      description:
-        "كانت الخدمة جيدة جدًا، لكن أعتقد أنه يمكن تحسين وقت الانتظار قليلاً. ولكن بشكل عام، كنت راضية عن التجربة.",
-    },
-    {
-      username: "John Doe",
-      appraisal: 5,
-      description:
-        "Excellent service! The freelancer was prompt and professional, and the results were exactly what I needed. Highly recommended!",
-    },
-    {
-      username: "Emily Smith",
-      appraisal: 4,
-      description:
-        "The service was great, but I felt like the response time could be a bit quicker. Overall, I’m very satisfied with the quality of work.",
-    },
-  ]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const { t, i18n } = useTranslation();
   const freelancers = useFreelancers();
   const [freelancer, setFreelancer] = useState<Freelancer | null>(null);

@@ -27,8 +27,8 @@ const CartCard = ({
   isSelected,
   onSelect,
   disabled,
-  slotId,
-}: CartCardProps) => {
+}: // slotId,
+CartCardProps) => {
   const { t, i18n } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 

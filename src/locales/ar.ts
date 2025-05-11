@@ -215,4 +215,7 @@ export const ar = {
   serviceAddedToCart: "تمت إضافة الخدمة إلى السلة",
   checkout: "الدفع",
   selectedTimeSlot: "الوقت",
+  processing: "جاري التحميل..",
+  enterDiscountCode: "أدخل كود الخصم",
+  noServicesAvailable: "لا توجد خدمات متاحة",
 };
