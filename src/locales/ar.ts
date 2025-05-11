@@ -218,4 +218,18 @@ export const ar = {
   processing: "جاري التحميل..",
   enterDiscountCode: "أدخل كود الخصم",
   noServicesAvailable: "لا توجد خدمات متاحة",
+  continue: "متابعة",
+  basePrice: "سعر الخدمة",
+  noTimeSlotSelected: "لم يتم اختيار أي وقت",
+  timeSlot: "الوقت",
+  noAddresses: "لا توجد عناوين",
+  noCars: "لا توجد سيارات",
+  Loading: " جارٍ التحميل...",
+  choosePreferredTimeSlot: "اختر الوقت للحجز",
+  changeTimeSlot: "تغيير الوقت",
+  selectExtrasAndTimeSlot: "اختر الخدمات الإضافية ووقت الحجز",
+  lockTimeSlot: "تأكيد حجز الوقت",
+  timeSlotLocked: "تم حجز الوقت بنجاح",
+  slotLocked: "تم حجز الوقت",
+  change:"تغيير"
 };

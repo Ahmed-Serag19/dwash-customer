@@ -42,7 +42,7 @@ const OTPInput: React.FC<OTPProps> = ({ phoneNumber, isRegister }) => {
       if (response.data.success) {
         const token = response.data.content?.token;
         if (token) {
-          sessionStorage.setItem("accessToken", token);
+          localStorage.setItem("accessToken", token);
           getUser();
           {
             isRegister

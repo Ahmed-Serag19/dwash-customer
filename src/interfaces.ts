@@ -186,7 +186,12 @@ export interface CarFormData {
 }
 export interface TimeSlot {
   slotId: number;
-  date: string;
+  brandNameAr: string;
+  brandNameEn: string;
   timeFrom: string;
   timeTo: string;
+  date: string;
+  reserved: number;
+  username: string | null;
+  mobile: string | null;
 }

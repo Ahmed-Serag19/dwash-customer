@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -8,45 +10,41 @@ import { Loader2, Calendar, Clock } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import type { TimeSlot } from "@/interfaces";
+import { useCart } from "@/context/CartContext";
 
-interface TimeSlot {
-  slotId: number;
-  brandNameAr: string;
-  brandNameEn: string;
-  timeFrom: string;
-  timeTo: string;
-  date: string;
-  reserved: number;
-  username: string | null;
-  mobile: string | null;
-}
-
-interface TimeSlotSelectorProps {
+interface TimeSlotSelectorModalProps {
   isOpen: boolean;
   onClose: () => void;
   brandId: number;
   onSelectSlot: (slotId: number) => void;
+  initialSelectedSlot?: number | null;
 }
 
-const TimeSlotSelector = ({
+const TimeSlotSelectorModal = ({
   isOpen,
   onClose,
   brandId,
   onSelectSlot,
-}: TimeSlotSelectorProps) => {
-  const { t } = useTranslation();
+  initialSelectedSlot,
+}: TimeSlotSelectorModalProps) => {
+  const { t, i18n } = useTranslation();
   const { token } = useUser();
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
-  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(
+    initialSelectedSlot || null
+  );
   const [loading, setLoading] = useState(true);
+  const { saveTimeSlotInfo } = useCart();
 
   useEffect(() => {
-    if (isOpen && token) {
+    if (isOpen && token && brandId) {
       setLoading(true);
       axios
         .get(`${apiEndpoints.getSlots}?brandId=${brandId}`, {
@@ -69,15 +67,39 @@ const TimeSlotSelector = ({
     }
   }, [isOpen, brandId, token, t]);
 
+  // Reset selected slot when modal opens with initialSelectedSlot
+  useEffect(() => {
+    if (isOpen) {
+      if (initialSelectedSlot) {
+        setSelectedSlot(initialSelectedSlot);
+      }
+    }
+  }, [isOpen, initialSelectedSlot]);
+
   const handleSlotSelection = (slotId: number) => {
     setSelectedSlot(slotId);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!selectedSlot) {
       toast.error(t("pleaseSelectSlot"));
       return;
     }
+
+    // Find the selected time slot details
+    const selectedTimeSlot = timeSlots.find(
+      (slot) => slot.slotId === selectedSlot
+    );
+
+    if (!selectedTimeSlot) {
+      toast.error(t("timeSlotNotFound"));
+      return;
+    }
+
+    // Save the time slot info without locking it
+    saveTimeSlotInfo(selectedTimeSlot);
+
+    // Call the onSelectSlot callback
     onSelectSlot(selectedSlot);
     onClose();
   };
@@ -87,6 +109,7 @@ const TimeSlotSelector = ({
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("selectTimeSlot")}</DialogTitle>
+          <DialogDescription>{t("choosePreferredTimeSlot")}</DialogDescription>
         </DialogHeader>
 
         {loading ? (
@@ -105,6 +128,7 @@ const TimeSlotSelector = ({
                     ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                     : "border-gray-200 hover:border-gray-300"
                 }`}
+                disabled={slot.reserved === 1}
               >
                 <div className="flex items-center gap-2 mb-2">
                   <Calendar className="h-4 w-4 text-primary" />
@@ -116,6 +140,11 @@ const TimeSlotSelector = ({
                     {slot.timeFrom.slice(0, 5)} - {slot.timeTo.slice(0, 5)}
                   </span>
                 </div>
+                {slot.reserved === 1 && (
+                  <div className="mt-2 text-xs text-red-500 font-medium">
+                    {t("slotReserved")}
+                  </div>
+                )}
               </button>
             ))}
           </div>
@@ -138,4 +167,4 @@ const TimeSlotSelector = ({
   );
 };
 
-export default TimeSlotSelector;
+export default TimeSlotSelectorModal;

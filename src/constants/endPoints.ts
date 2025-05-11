@@ -1,4 +1,5 @@
 const baseUrl = "https://api.stg.2025.dwash.cood2.dussur.sa/api";
+
 export const apiEndpoints = {
   LoginInitiate: (number: string | null, language: string | null) =>
     `${baseUrl}/auth/login/initiate?number=${number}&language=${language}`,
@@ -17,6 +18,7 @@ export const apiEndpoints = {
   addToCart: `${baseUrl}/consumer/addToCart`,
   deleteFromCart: `${baseUrl}/consumer/deleteItem`,
   getSlots: `${baseUrl}/consumer/getSlot`,
+  lockSlot: `${baseUrl}/consumer/lockSlot`,
   validateDiscount: `${baseUrl}/consumer/validateDiscount`,
   makePayment: `${baseUrl}/payment/consumer/card/payment/initiate`,
   finalizePayment: `${baseUrl}/payment/consumer/card/payment/finalize`,

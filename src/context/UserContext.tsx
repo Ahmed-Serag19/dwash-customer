@@ -10,13 +10,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<CartItem[] | null>(null);
   const [cars, setCars] = useState<Car[]>([]);
   const [token, setToken] = useState<string | null>(
-    sessionStorage.getItem("accessToken")
+    localStorage.getItem("accessToken")
   );
   const [loading, setLoading] = useState(true);
   const isAuthenticated = !!user && !!token;
 
   const refreshUserData = async () => {
-    const storedToken = sessionStorage.getItem("accessToken");
+    const storedToken = localStorage.getItem("accessToken");
     if (!storedToken) {
       setUser(null);
       setLoading(false);
@@ -36,7 +36,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const getUser = async () => {
-    const storedToken = sessionStorage.getItem("accessToken");
+    const storedToken = localStorage.getItem("accessToken");
     if (!storedToken) {
       setLoading(false);
       return;
@@ -97,12 +97,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    sessionStorage.removeItem("accessToken");
+    sessionStorage.clear();
+    localStorage.clear();
     setToken(null);
     setUser(null);
     setCart(null);
     setCars([]);
-    setLoading(false); // ✅ reset loading just in case
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -112,6 +113,26 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       getCars();
     } else {
       setLoading(false); // no token = done
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      const loginTime = parseInt(localStorage.getItem("loginTime") || "0", 10);
+      const currentTime = Date.now();
+      const sessionDuration = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+
+      if (currentTime - loginTime >= sessionDuration) {
+        logout();
+      } else {
+        const logoutTimer = setTimeout(() => {
+          logout();
+        }, sessionDuration - (currentTime - loginTime));
+
+        return () => clearTimeout(logoutTimer);
+      }
+    } else {
+      setLoading(false);
     }
   }, [token]);
 

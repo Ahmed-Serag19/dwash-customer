@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Trash2, CheckCircle, Circle } from "lucide-react";
@@ -17,18 +19,9 @@ interface CartCardProps {
   onDelete: (invoiceId: number, itemId: number) => void;
   isSelected: boolean;
   onSelect: (invoiceId: number) => void;
-  disabled: boolean;
-  slotId: number | null;
 }
 
-const CartCard = ({
-  item,
-  onDelete,
-  isSelected,
-  onSelect,
-  disabled,
-}: // slotId,
-CartCardProps) => {
+const CartCard = ({ item, onDelete, isSelected, onSelect }: CartCardProps) => {
   const { t, i18n } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -46,9 +39,7 @@ CartCardProps) => {
   const totalPrice = calculateTotalPrice();
 
   const handleSelect = () => {
-    if (!disabled || isSelected) {
-      onSelect(item.invoiceId);
-    }
+    onSelect(item.invoiceId);
   };
 
   return (
@@ -56,8 +47,6 @@ CartCardProps) => {
       className={`rounded-lg border bg-white shadow-sm overflow-hidden transition-all ${
         isSelected
           ? "border-primary ring-1 ring-primary"
-          : disabled
-          ? "opacity-70"
           : "border-gray-200 hover:border-gray-300"
       }`}
     >
@@ -67,8 +56,7 @@ CartCardProps) => {
             <div className="flex items-start gap-3">
               <button
                 onClick={handleSelect}
-                className="mt-1 flex-shrink-0 focus:outline-none"
-                disabled={disabled && !isSelected}
+                className="mt-1 flex-shrink-0 focus:outline-none cursor-pointer"
               >
                 {isSelected ? (
                   <CheckCircle className="h-5 w-5 text-primary" />
@@ -93,7 +81,7 @@ CartCardProps) => {
 
             {/* Base Price */}
             <div>
-              <p className="text-sm text-gray-500">{t("price")}</p>
+              <p className="text-sm text-gray-500">{t("basePrice")}</p>
               <p className="font-medium">
                 {item.itemDto.itemPrice} {t("SAR")}
               </p>

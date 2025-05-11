@@ -31,7 +31,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ isRegister }) => {
   const handlePhoneSubmit = async (data: { phoneNumber: string }) => {
     setLoading(true);
     try {
-      const token = sessionStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
 
       // ✅ Dynamically determine the API endpoint based on isRegister
       const apiUrl = isRegister

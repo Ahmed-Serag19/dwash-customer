@@ -1,66 +1,36 @@
+"use client";
+
 import { useUser } from "@/context/UserContext";
+import { useCart } from "@/context/CartContext";
 import CartCard from "@/components/cart/cart-card";
+import CheckoutSummary from "@/components/cart/checkout-summary";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { apiEndpoints } from "@/constants/endPoints";
-import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import SelectionCard from "@/components/cart/selection-card";
-import { Loader2, ShoppingCart, Calendar, Clock } from "lucide-react";
-
-interface TimeSlot {
-  slotId: number;
-  brandNameAr: string;
-  brandNameEn: string;
-  timeFrom: string;
-  timeTo: string;
-  date: string;
-  reserved: number;
-  username: string | null;
-  mobile: string | null;
-}
+import { Loader2, ShoppingCart } from "lucide-react";
+import CartTimeSlotSection from "@/components/cart/cart-time-slot-section";
 
 const Cart = () => {
   const { cart, getCart, token } = useUser();
   const { t } = useTranslation();
-  const navigate = useNavigate();
-
-  // State for checkout
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [discountCode, setDiscountCode] = useState<string>("");
-  const [discountAmount, setDiscountAmount] = useState<number>(0);
-  const [discountType, setDiscountType] = useState<string | null>(null);
-
-  // State for address and car selection
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
-    null
-  );
-  const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
-  const [selectionConfirmed, setSelectionConfirmed] = useState(false);
-
-  // State for selected item
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(
-    () => {
-      const storedInvoiceId = localStorage.getItem("selectedInvoiceId");
-      return storedInvoiceId ? Number.parseInt(storedInvoiceId, 10) : null;
-    }
-  );
-
-  // State for selected time slot
-  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(() => {
-    const storedSlotId = localStorage.getItem("selectedSlotId");
-    return storedSlotId ? Number.parseInt(storedSlotId, 10) : null;
-  });
-
-  // State for time slot details
-  const [timeSlotDetails, setTimeSlotDetails] = useState<TimeSlot | null>(null);
-  const [loadingTimeSlot, setLoadingTimeSlot] = useState(false);
-
-  // Get the selected item
-  const selectedItem = cart?.find(
-    (item) => item.invoiceId === selectedInvoiceId
-  );
+  const {
+    selectedInvoiceId,
+    selectedSlotId,
+    discountCode,
+    discountAmount,
+    discountType,
+    selectionConfirmed,
+    isProcessingPayment,
+    selectItem,
+    selectAddressAndCar,
+    setDiscountCode,
+    applyDiscount,
+    processPayment,
+    resetSelection,
+    selectedItem,
+  } = useCart();
 
   // Calculate subtotal for the selected item
   const subtotal = selectedItem
@@ -82,155 +52,33 @@ const Cart = () => {
 
   const finalTotal = subtotal - discountValue;
 
-  // Fetch time slot details when selectedSlotId changes
-  useEffect(() => {
-    if (selectedSlotId && token && selectedItem?.brandId) {
-      setLoadingTimeSlot(true);
-      axios
-        .get(`${apiEndpoints.getSlots}?brandId=${selectedItem.brandId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((response) => {
-          if (response.data.success) {
-            const slots = response.data.content || [];
-            const selectedSlot = slots.find(
-              (slot: TimeSlot) => slot.slotId === selectedSlotId
-            );
-            if (selectedSlot) {
-              setTimeSlotDetails(selectedSlot);
-            }
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching time slot details:", error);
-        })
-        .finally(() => {
-          setLoadingTimeSlot(false);
-        });
-    }
-  }, [selectedSlotId, token, selectedItem]);
-
-  // Handle item selection for checkout
-  const handleSelectItem = (invoiceId: number) => {
-    if (selectedInvoiceId === invoiceId) {
-      // Deselect if already selected
-      setSelectedInvoiceId(null);
-      localStorage.removeItem("selectedInvoiceId");
-
-      // Reset checkout-related states
-      setSelectedAddressId(null);
-      setSelectedCarId(null);
-      setSelectionConfirmed(false);
-      setDiscountAmount(0);
-      setDiscountType(null);
-      setDiscountCode("");
-    } else {
-      // Select new item
-      setSelectedInvoiceId(invoiceId);
-      localStorage.setItem("selectedInvoiceId", invoiceId.toString());
-
-      // Reset checkout-related states
-      setSelectedAddressId(null);
-      setSelectedCarId(null);
-      setSelectionConfirmed(false);
-      setDiscountAmount(0);
-      setDiscountType(null);
-      setDiscountCode("");
-    }
-  };
-
-  const handleApplyDiscount = async () => {
-    if (!discountCode) {
-      toast.error(t("enterValidDiscount"));
-      return;
-    }
-
-    if (!selectedItem) {
-      toast.error(t("selectItemFirst"));
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        `${apiEndpoints.validateDiscount}?discountCode=${discountCode}&brandId=${selectedItem.brandId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response.data.success) {
-        const discount = response.data.content;
-        setDiscountAmount(discount.discountAmount);
-        setDiscountType(discount.discountType);
-        toast.success(t("discountApplied"));
-      } else {
-        toast.error(t("invalidDiscount"));
-      }
-    } catch (error) {
-      toast.error(t("invalidDiscount"));
-      console.error("Error validating discount:", error);
-    }
-  };
-
   const handleSelectionConfirmed = (addressId: number, carId: number) => {
-    setSelectedAddressId(addressId);
-    setSelectedCarId(carId);
-    setSelectionConfirmed(true);
+    selectAddressAndCar(addressId, carId);
   };
 
-  const handlePayment = async () => {
-    if (!selectedInvoiceId) {
-      toast.error(t("selectItemFirst"));
-      return;
-    }
-
-    if (!selectedSlotId) {
-      toast.error(t("pleaseSelectTimeSlot"));
-      return;
-    }
-
-    if (!selectedAddressId || !selectedCarId) {
-      toast.error(t("pleaseSelectAddressAndCar"));
-      return;
-    }
-
-    setIsProcessingPayment(true);
-
+  const handleDeleteCartItem = async (invoiceId: number, itemId: number) => {
     try {
-      const response = await axios.post(
-        apiEndpoints.makePayment,
+      const response = await axios.delete(
+        `${apiEndpoints.deleteFromCart}?invoiceId=${invoiceId}&itemId=${itemId}`,
         {
-          paymentMethodId: 2,
-          invoiceId: selectedInvoiceId,
-          slotId: selectedSlotId,
-          discountCode: discountCode || null,
-          userAddress: selectedAddressId,
-          userCar: selectedCarId,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       if (response.data.success) {
-        // Clear the stored IDs after successful payment
-        localStorage.removeItem("selectedSlotId");
-        localStorage.removeItem("selectedInvoiceId");
+        await getCart();
+        toast.success(t("itemRemoved"));
 
-        if (response.data.content?.redirect_url) {
-          window.location.href = response.data.content.redirect_url;
-        } else {
-          toast.success(t("paymentSuccessful"));
-          getCart();
-          setDiscountAmount(0);
-          setDiscountType(null);
-          setDiscountCode("");
-          navigate("/orders");
+        // If the deleted item was selected, reset selection
+        if (selectedInvoiceId === invoiceId) {
+          resetSelection();
         }
       } else {
-        toast.error(t("paymentFailed"));
+        toast.error(t("errorRemovingItem"));
       }
     } catch (error) {
-      toast.error(t("paymentFailed"));
-      console.error("Payment error:", error);
-    } finally {
-      setIsProcessingPayment(false);
+      console.error("Error deleting item:", error);
+      toast.error(t("errorRemovingItem"));
     }
   };
 
@@ -249,32 +97,8 @@ const Cart = () => {
               key={item.invoiceId}
               item={item}
               isSelected={selectedInvoiceId === item.invoiceId}
-              onSelect={handleSelectItem}
-              disabled={
-                selectedInvoiceId !== null &&
-                selectedInvoiceId !== item.invoiceId
-              }
-              slotId={selectedSlotId}
-              onDelete={(invoiceId: number, itemId: number) => {
-                axios
-                  .delete(
-                    `${apiEndpoints.deleteFromCart}?invoiceId=${invoiceId}&itemId=${itemId}`,
-                    {
-                      headers: { Authorization: `Bearer ${token}` },
-                    }
-                  )
-                  .then(() => {
-                    getCart();
-                    toast.success(t("itemRemoved"));
-                    if (selectedInvoiceId === invoiceId) {
-                      setSelectedInvoiceId(null);
-                      localStorage.removeItem("selectedInvoiceId");
-                      setSelectedSlotId(null);
-                      localStorage.removeItem("selectedSlotId");
-                    }
-                  })
-                  .catch((err) => console.error("Error deleting item:", err));
-              }}
+              onSelect={selectItem}
+              onDelete={handleDeleteCartItem}
             />
           ))
         ) : (
@@ -290,35 +114,9 @@ const Cart = () => {
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mt-6">
           <h2 className="text-xl font-semibold mb-6">{t("checkout")}</h2>
 
-          {/* Selected Time Slot */}
-          {selectedSlotId && (
-            <div className="mb-6 p-4 bg-primary/5 rounded-lg">
-              <h3 className="text-lg font-medium mb-2">
-                {t("selectedTimeSlot")}
-              </h3>
-              {loadingTimeSlot ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                  <span>{t("loading")}</span>
-                </div>
-              ) : timeSlotDetails ? (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <span className="font-medium">{timeSlotDetails.date}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-primary" />
-                    <span dir="ltr">
-                      {timeSlotDetails.timeFrom.slice(0, 5)} -{" "}
-                      {timeSlotDetails.timeTo.slice(0, 5)}
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-sm">{t("timeSlotSelected")}</p>
-              )}
-            </div>
+          {/* Time Slot Selection */}
+          {selectedItem && (
+            <CartTimeSlotSection brandId={selectedItem.brandId} />
           )}
 
           {/* Address and Car Selection */}
@@ -340,7 +138,7 @@ const Cart = () => {
                 disabled={isProcessingPayment}
               />
               <button
-                onClick={handleApplyDiscount}
+                onClick={applyDiscount}
                 disabled={isProcessingPayment}
                 className="px-4 py-2 bg-primary text-white rounded-lg disabled:bg-gray-300"
               >
@@ -350,45 +148,18 @@ const Cart = () => {
           </div>
 
           {/* Price Summary */}
-          <div className="space-y-3 p-4 border rounded-lg bg-gray-50">
-            <div className="flex justify-between">
-              <span className="font-medium">{t("subtotal")}</span>
-              <span>
-                {subtotal.toFixed(2)} {t("SAR")}
-              </span>
-            </div>
-
-            <div className="flex justify-between">
-              <div className="flex gap-3">
-                <span>{t("discount")}</span>
-                <span>
-                  {discountType === "PERCENTAGE" ? (
-                    <span>{discountAmount}%</span>
-                  ) : (
-                    <div className="flex gap-1">
-                      <span>{discountAmount}</span>
-                      <span>{t("SAR")}</span>
-                    </div>
-                  )}
-                </span>
-              </div>
-              <span>
-                -{discountValue.toFixed(2)} {t("SAR")}
-              </span>
-            </div>
-
-            <div className="flex justify-between border-t pt-2 text-lg font-bold">
-              <span>{t("total")}</span>
-              <span className="text-primary">
-                {finalTotal.toFixed(2)} {t("SAR")}
-              </span>
-            </div>
-          </div>
+          <CheckoutSummary
+            subtotal={subtotal}
+            discountAmount={discountAmount}
+            discountType={discountType}
+            discountValue={discountValue}
+            finalTotal={finalTotal}
+          />
 
           {/* Confirm Booking Button */}
           <div className="mt-6 flex justify-end">
             <button
-              onClick={handlePayment}
+              onClick={processPayment}
               disabled={
                 !selectionConfirmed || isProcessingPayment || !selectedSlotId
               }

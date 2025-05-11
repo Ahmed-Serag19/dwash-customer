@@ -204,7 +204,7 @@ const BookingModal = ({ service, onClose, onSuccess }: BookingModalProps) => {
             {slotsLoading ? (
               <div className="flex justify-center items-center py-10">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span className="ml-2">{t("loadingTimeSlots")}</span>
+                <span className="ml-2">{t("loading")}</span>
               </div>
             ) : timeSlots.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
