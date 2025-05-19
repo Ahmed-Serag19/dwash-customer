@@ -24,7 +24,16 @@ const CartTimeSlotSection = ({ brandId }: CartTimeSlotSectionProps) => {
   const [isLocking, setIsLocking] = useState(false);
 
   const handleTimeSlotSelection = async (slotId: number) => {
-    setIsTimeSlotModalOpen(false);
+    if (slotId && brandId) {
+      try {
+        setIsTimeSlotModalOpen(false);
+      } catch (error) {
+        console.error("Error selecting time slot:", error);
+        toast.error(t("errorSelectingTimeSlot"));
+      }
+    } else {
+      setIsTimeSlotModalOpen(false);
+    }
   };
 
   const handleLockTimeSlot = async () => {

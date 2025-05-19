@@ -34,7 +34,7 @@ const TimeSlotSelectorModal = ({
   onSelectSlot,
   initialSelectedSlot,
 }: TimeSlotSelectorModalProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { token } = useUser();
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(

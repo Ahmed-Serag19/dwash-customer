@@ -13,6 +13,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.getItem("accessToken")
   );
   const [loading, setLoading] = useState(true);
+
   const isAuthenticated = !!user && !!token;
 
   const refreshUserData = async () => {
@@ -58,7 +59,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Failed to get user:", error);
       logout();
     } finally {
-      setLoading(false); // ✅ done either way
+      setLoading(false);
     }
   };
 
@@ -108,29 +109,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (token) {
-      getUser(); // will set loading=false inside
+      getUser();
       getCart();
       getCars();
-    } else {
-      setLoading(false); // no token = done
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (token) {
-      const loginTime = parseInt(localStorage.getItem("loginTime") || "0", 10);
-      const currentTime = Date.now();
-      const sessionDuration = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
-
-      if (currentTime - loginTime >= sessionDuration) {
-        logout();
-      } else {
-        const logoutTimer = setTimeout(() => {
-          logout();
-        }, sessionDuration - (currentTime - loginTime));
-
-        return () => clearTimeout(logoutTimer);
-      }
     } else {
       setLoading(false);
     }
@@ -149,7 +130,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         cars,
         getCars,
         refreshUserData,
-        loading, // ✅ return it
+        loading,
       }}
     >
       {children}

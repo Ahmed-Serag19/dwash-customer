@@ -1,5 +1,7 @@
 // Interface for Freelancer (Service Provider)
 export interface Freelancer {
+  cityNameAr: string;
+  cityNameEn: string;
   brandId: number;
   brandNameAr: string;
   brandNameEn: string;

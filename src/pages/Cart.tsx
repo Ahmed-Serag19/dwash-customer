@@ -1,5 +1,8 @@
 "use client";
 
+import type React from "react";
+
+import { useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { useCart } from "@/context/CartContext";
 import CartCard from "@/components/cart/cart-card";
@@ -11,6 +14,7 @@ import { toast } from "react-toastify";
 import SelectionCard from "@/components/cart/selection-card";
 import { Loader2, ShoppingCart } from "lucide-react";
 import CartTimeSlotSection from "@/components/cart/cart-time-slot-section";
+import TermsAndConditionsModal from "@/components/cart/terms-and-conditions-modal";
 
 const Cart = () => {
   const { cart, getCart, token } = useUser();
@@ -31,6 +35,9 @@ const Cart = () => {
     resetSelection,
     selectedItem,
   } = useCart();
+
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   // Calculate subtotal for the selected item
   const subtotal = selectedItem
@@ -80,6 +87,11 @@ const Cart = () => {
       console.error("Error deleting item:", error);
       toast.error(t("errorRemovingItem"));
     }
+  };
+
+  const openTermsModal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsTermsModalOpen(true);
   };
 
   return (
@@ -156,15 +168,42 @@ const Cart = () => {
             finalTotal={finalTotal}
           />
 
+          {/* Terms and Conditions Checkbox */}
+          <div className="mt-6 flex items-start gap-2">
+            <input
+              type="checkbox"
+              id="terms-checkbox"
+              checked={termsAgreed}
+              onChange={(e) => setTermsAgreed(e.target.checked)}
+              className="mt-1"
+            />
+            <label htmlFor="terms-checkbox" className="text-sm">
+              {t("agreeToTerms")}{" "}
+              <a
+                href="#"
+                onClick={openTermsModal}
+                className="text-primary hover:underline"
+              >
+                {t("termsAndConditions")}
+              </a>
+            </label>
+          </div>
+
           {/* Confirm Booking Button */}
-          <div className="mt-6 flex justify-end">
+          <div className="mt-6 flex justify-start">
             <button
               onClick={processPayment}
               disabled={
-                !selectionConfirmed || isProcessingPayment || !selectedSlotId
+                !selectionConfirmed ||
+                isProcessingPayment ||
+                !selectedSlotId ||
+                !termsAgreed
               }
               className={`px-6 py-2 text-white font-semibold rounded-lg ${
-                !selectionConfirmed || isProcessingPayment || !selectedSlotId
+                !selectionConfirmed ||
+                isProcessingPayment ||
+                !selectedSlotId ||
+                !termsAgreed
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-primary hover:bg-primary/90"
               }`}
@@ -181,6 +220,12 @@ const Cart = () => {
           </div>
         </div>
       )}
+
+      {/* Terms and Conditions Modal */}
+      <TermsAndConditionsModal
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
+      />
     </div>
   );
 };

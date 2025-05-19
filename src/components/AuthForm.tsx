@@ -49,7 +49,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ isRegister }) => {
       );
 
       if (response.data.success) {
-        console.log(response);
         toast.success(t("otpSent"));
         setPhoneNumber(data.phoneNumber);
         setIsOTP(true);

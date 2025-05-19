@@ -29,6 +29,7 @@ interface CartItem {
 }
 
 interface CartContextType {
+  successDeletedCartItem: number;
   selectedInvoiceId: number | null;
   selectedSlotId: number | null;
   selectedAddressId: number | null;
@@ -54,6 +55,7 @@ interface CartContextType {
   processPayment: () => Promise<void>;
   isProcessingPayment: boolean;
   addToCart: (serviceId: number, extraServices: number[]) => Promise<boolean>;
+  setSuccessDeletedCartItem: (invoiceId: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -63,7 +65,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { t } = useTranslation();
   const { token, cart, getCart } = useUser();
-
+  //State for the deleted cart item after success payment
+  const [successDeletedCartItem, setSuccessDeletedCartItem] = useState(0);
   // State for selected item
   const [selectedInvoiceId, setSelectedInvoiceId] = useState<number | null>(
     null
@@ -395,8 +398,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
       if (response.data.success) {
+        setSuccessDeletedCartItem(selectedInvoiceId);
         // Reset state
         resetSelection();
 
@@ -422,6 +425,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <CartContext.Provider
       value={{
+        setSuccessDeletedCartItem,
         selectedInvoiceId,
         selectedSlotId,
         selectedAddressId,
@@ -447,6 +451,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         processPayment,
         isProcessingPayment,
         addToCart,
+        successDeletedCartItem,
       }}
     >
       {children}

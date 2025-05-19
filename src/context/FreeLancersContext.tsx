@@ -36,7 +36,7 @@ export const FreelancersProvider: React.FC<FreelancersProviderProps> = ({
   children,
 }) => {
   const [freelancers, setFreelancers] = useState<Freelancer[]>([]);
-  const [size, setSize] = useState(3); // Initial size is 3
+  const [size, setSize] = useState(6); // Initial size is 3
 
   const fetchFreelancers = async (size: number) => {
     try {

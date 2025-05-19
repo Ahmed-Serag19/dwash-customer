@@ -229,4 +229,49 @@ export const en = {
   timeSlotLocked: "Time slot locked successfully",
   slotLocked: "Time slot locked",
   change: "Change",
+  errorFetchingCities: "Failed to load cities",
+  noCitiesFound: "No cities available",
+  noServiceProvidersInCity: "No services available in this city",
+  noServiceProvidersFound: "No service providers found",
+  clearFilter: "Clear Filter",
+  termsAndConditions: "Terms and Conditions",
+  agreeToTerms: "I agree to the",
+
+  // Terms and Conditions Section
+  termsAndConditionsTitle: "Terms and Conditions - D-Wash",
+  termRemovalResponsibility:
+    "The responsibility for removing and reinstalling additional accessories in the vehicle, such as child seats, cameras, curtains, and other accessories, falls on the customer.",
+  termNoLiability:
+    "D-Wash assumes no responsibility for the loss or damage of customer's belongings that were not removed in advance, and no compensation will be provided to the customer.",
+  termDamageNotCovered:
+    "D-Wash does not cover damages not resulting from the washing process.",
+  termPhotoPermission:
+    "The washing attendant has the right to take photos of the vehicle before and after washing.",
+  termServiceRefusal:
+    "The company has the right to refuse service or app usage without providing a reason to the customer.",
+
+  // Complaint Policy Section
+  complaintPolicyTitle: "Complaint Policy",
+  complaintTimeframe:
+    "Complaints and feedback about the washing service will be accepted within 3 hours after the completion of the wash.",
+  complaintWeatherRebooking:
+    "Rebooking is not available in case of rain or dust storms, and the wash is considered complete after it is finished.",
+  complaintResponsibilityEnd:
+    "D-Wash's responsibility for the vehicle ends after the completion of the wash and communication with the customer to unlock it.",
+  complaintCustomerAccess:
+    "The washing attendant must communicate with the customer to open the vehicle, and if the customer is delayed by 15 minutes, the washing attendant has the right to wash only the exterior of the vehicle.",
+
+  // Refund Policy Section
+  refundPolicyTitle: "Refund Policy",
+  refundNoShow:
+    "The customer is not entitled to request a refund if the washing attendant arrives at the location and the customer's vehicle is not present.",
+  refundIncorrectLocation:
+    "If we arrive at an incorrect booking location, the reservation will be automatically canceled, and the customer is not entitled to request a refund.",
+
+  // Cancellation Policy Section
+  cancellationPolicyTitle: "Cancellation Policy",
+  cancellationLessThan24Hours:
+    "If the service is canceled and more than 2 hours but less than 23 hours remain until the reservation, 20% of the reservation value will be deducted.",
+  cancellationLessThan2Hours:
+    "If the cancellation is made less than 2 hours before the reservation time, the full amount will be deducted.",
 };

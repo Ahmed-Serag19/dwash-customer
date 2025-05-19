@@ -231,5 +231,48 @@ export const ar = {
   lockTimeSlot: "تأكيد حجز الوقت",
   timeSlotLocked: "تم حجز الوقت بنجاح",
   slotLocked: "تم حجز الوقت",
-  change:"تغيير"
+  change: "تغيير",
+  errorFetchingCities: "فشل في تحميل المدن",
+  noCitiesFound: "لا توجد مدن متاحة",
+  noServiceProvidersInCity: "لا توجد خدمات متاحة في هذه المدينة",
+  noServiceProvidersFound: "لم يتم العثور على مقدمي خدمة",
+  clearFilter: "مسح الفلتر",
+  termsAndConditions: "الشروط والأحكام",
+  agreeToTerms: "أوافق على",
+
+  // Terms and Conditions Section
+  termsAndConditionsTitle: "الشروط والأحكام - دي واش",
+  termRemovalResponsibility:
+    "تقع مسؤولية إزالة وإعادة الملحقات الإضافية في السيارة مثل مقاعد الأطفال والكاميرات والستائر وغيرها من الملحقات على العميل.",
+  termNoLiability:
+    "لا تتحمل دي واش أي مسؤولية تجاه فقدان أو تلف الممتلكات الخاصة بالعميل والتي لم يتم إزالتها مسبقاً أو تقديم أي تعويض للعميل.",
+  termDamageNotCovered: "دي واش لا تتحمل الأضرار غير الناتجة من الغسلة.",
+  termPhotoPermission: "يحق لمسؤول الغسيل التقاط صور للسيارة قبل وبعد الغسيل.",
+  termServiceRefusal:
+    "يحق للشركة رفض تقديم الخدمة أو استخدام التطبيق دون أن تبدي للعميل السبب.",
+
+  // Complaint Policy Section
+  complaintPolicyTitle: "سياسة الشكاوي",
+  complaintTimeframe:
+    "استقبال الشكاوي والملاحظات على الغسيل خلال 3 ساعات بعد الانتهاء من الغسلة.",
+  complaintWeatherRebooking:
+    "لا يتم إعادة الحجز في حال نزول الأمطار أو موجات الغبار، ويعتبر الغسيل مكتملاً بعد الانتهاء منه.",
+  complaintResponsibilityEnd:
+    "دي واش تُخلي مسؤوليتها عن السيارة بعد الانتهاء من الغسلة والتواصل مع العميل لفتحها.",
+  complaintCustomerAccess:
+    "يتعين على مسؤول الغسيل التواصل مع العميل لفتح السيارة، وفي حال تأخر العميل 15 دقيقة عن فتح السيارة يحق لمسؤول الغسيل البدء بغسيل السيارة من الخارج فقط.",
+
+  // Refund Policy Section
+  refundPolicyTitle: "سياسة الاسترجاع",
+  refundNoShow:
+    "لا يحق للعميل طلب استرجاع المبلغ في حال وصول مسؤول الغسيل للموقع وعدم وجود سيارة العميل.",
+  refundIncorrectLocation:
+    "في حال وصولنا لموقع حجز غير صحيح سيتم إلغاء الحجز تلقائياً ولا يحق للعميل طلب استرجاع.",
+
+  // Cancellation Policy Section
+  cancellationPolicyTitle: "سياسة الإلغاء",
+  cancellationLessThan24Hours:
+    "في حال تم إلغاء الخدمة ويبقى على الحجز أكثر من ساعتين وأقل من 23 ساعة، يتم خصم 20% من قيمة الحجز.",
+  cancellationLessThan2Hours:
+    "إذا تم الإلغاء قبل ساعتين أو أقل من وقت الحجز، يتم خصم كامل المبلغ.",
 };
