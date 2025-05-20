@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { useCart } from "@/context/CartContext";
 import CartCard from "@/components/cart/cart-card";
@@ -15,6 +15,7 @@ import SelectionCard from "@/components/cart/selection-card";
 import { Loader2, ShoppingCart } from "lucide-react";
 import CartTimeSlotSection from "@/components/cart/cart-time-slot-section";
 import TermsAndConditionsModal from "@/components/cart/terms-and-conditions-modal";
+import LoadingIndicator from "@/components/ui/loading-indicator";
 
 const Cart = () => {
   const { cart, getCart, token } = useUser();
@@ -38,7 +39,7 @@ const Cart = () => {
 
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-
+  const [paymentLoading, setPaymentLoading] = useState(false);
   // Calculate subtotal for the selected item
   const subtotal = selectedItem
     ? (selectedItem?.itemDto?.itemPrice || 0) +
@@ -94,35 +95,51 @@ const Cart = () => {
     setIsTermsModalOpen(true);
   };
 
+  useEffect(() => {
+    if (isProcessingPayment) {
+      setPaymentLoading(true);
+    } else {
+      setTimeout(() => {
+        setPaymentLoading(false);
+      }, 2500);
+    }
+  }, [isProcessingPayment]);
   return (
     <div className="container mx-auto p-6 max-w-7xl">
-      <div className="flex items-center gap-2 mb-6">
-        <ShoppingCart className="h-6 w-6 text-primary" />
-        <h1 className="text-2xl font-bold">{t("yourCart")}</h1>
-      </div>
-
-      {/* Cart Items */}
-      <div className="space-y-4 mb-8">
-        {cart && cart.length ? (
-          cart.map((item) => (
-            <CartCard
-              key={item.invoiceId}
-              item={item}
-              isSelected={selectedInvoiceId === item.invoiceId}
-              onSelect={selectItem}
-              onDelete={handleDeleteCartItem}
-            />
-          ))
-        ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-lg">
-            <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">{t("cartEmpty")}</p>
+      {paymentLoading ? (
+        <div className="min-h-screen flex justify-center items-center">
+          <LoadingIndicator message={t("loading")} />
+        </div>
+      ) : (
+        <>
+          <div className="flex items-center gap-2 mb-6">
+            <ShoppingCart className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold">{t("yourCart")}</h1>
           </div>
-        )}
-      </div>
+
+          <div className="space-y-4 mb-8">
+            {cart && cart.length ? (
+              cart.map((item) => (
+                <CartCard
+                  key={item.invoiceId}
+                  item={item}
+                  isSelected={selectedInvoiceId === item.invoiceId}
+                  onSelect={selectItem}
+                  onDelete={handleDeleteCartItem}
+                />
+              ))
+            ) : (
+              <div className="text-center py-12 bg-gray-50 rounded-lg">
+                <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">{t("cartEmpty")}</p>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Checkout Section - Only show if an item is selected */}
-      {selectedInvoiceId && selectedItem && (
+      {selectedInvoiceId && selectedItem && !paymentLoading && (
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mt-6">
           <h2 className="text-xl font-semibold mb-6">{t("checkout")}</h2>
 
@@ -192,7 +209,10 @@ const Cart = () => {
           {/* Confirm Booking Button */}
           <div className="mt-6 flex justify-start">
             <button
-              onClick={processPayment}
+              onClick={(e) => {
+                e.currentTarget.disabled = true;
+                processPayment();
+              }}
               disabled={
                 !selectionConfirmed ||
                 isProcessingPayment ||

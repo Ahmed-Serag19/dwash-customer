@@ -3,7 +3,7 @@ interface LoadingIndicatorProps {
 }
 
 const LoadingIndicator = ({ message }: LoadingIndicatorProps) => {
-  return <p className="text-center text-lg">{message}</p>;
+  return <p className="text-center text-lg ">{message}</p>;
 };
 
 export default LoadingIndicator;

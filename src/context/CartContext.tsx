@@ -356,6 +356,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Process payment
   const processPayment = async () => {
+    // Prevent multiple submissions
+    if (isProcessingPayment) {
+      return;
+    }
+
     if (!selectedInvoiceId) {
       toast.error(t("selectItemFirst"));
       return;
@@ -371,20 +376,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    // Lock the time slot before proceeding with payment if not already locked
-    if (!isSlotLocked) {
-      const slotLocked = await lockTimeSlot(selectedSlotId);
-      if (!slotLocked) {
-        toast.error(t("timeSlotNoLongerAvailable"));
-        return;
-      }
-      setIsSlotLocked(true);
-      localStorage.setItem("isSlotLocked", "true");
-    }
-
+    // Set processing state immediately
     setIsProcessingPayment(true);
 
     try {
+      // Lock the time slot before proceeding with payment if not already locked
+      if (!isSlotLocked) {
+        const slotLocked = await lockTimeSlot(selectedSlotId);
+        if (!slotLocked) {
+          toast.error(t("timeSlotNoLongerAvailable"));
+          setIsProcessingPayment(false);
+          return;
+        }
+        setIsSlotLocked(true);
+        localStorage.setItem("isSlotLocked", "true");
+      }
+
+      // Add a small delay to ensure UI updates before proceeding
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Proceed with payment
       const response = await axios.post(
         apiEndpoints.makePayment,
@@ -398,6 +408,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       if (response.data.success) {
         setSuccessDeletedCartItem(selectedInvoiceId);
         // Reset state
@@ -418,6 +429,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       toast.error(t("paymentFailed"));
       console.error("Payment error:", error);
     } finally {
+      // In case the redirect doesn't happen, ensure we reset the processing state
       setIsProcessingPayment(false);
     }
   };
