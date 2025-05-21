@@ -197,3 +197,40 @@ export interface TimeSlot {
   username: string | null;
   mobile: string | null;
 }
+export interface OrderCardProps {
+  order: {
+    reservationDate: any;
+    reviewed: boolean;
+    invoiceId: number;
+    brandNameAr: string;
+    brandNameEn: string;
+    userPhoneNumber: string | null;
+    fromTime: string | null;
+    timeTo: string | null;
+    statusName: string;
+    itemDto: {
+      itemNameAr: string;
+      itemNameEn: string;
+      serviceTypeAr: string;
+      serviceTypeEn: string;
+      itemPrice: number;
+      itemExtraDtos?: Array<{
+        itemExtraNameAr: string;
+        itemExtraNameEn: string;
+        itemExtraPrice: number;
+      }>;
+    };
+    totalAmount: number;
+    request: {
+      statusName: string;
+      id: number;
+    };
+  };
+  isClosed: boolean;
+  onCancel?: () => void;
+  onAddReview?: (
+    requestId: number,
+    appraisal: number,
+    description: string
+  ) => void;
+}

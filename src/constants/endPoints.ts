@@ -1,4 +1,4 @@
-const baseUrl = "https://api.stg.2025.dwash.cood2.dussur.sa/api";
+export const baseUrl = "https://api.stg.2025.dwash.cood2.dussur.sa/api";
 
 export const apiEndpoints = {
   LoginInitiate: (number: string | null, language: string | null) =>

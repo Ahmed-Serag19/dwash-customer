@@ -9,4 +9,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    // This will replace process.env with an empty object at build time
+    // which prevents errors with process.env access
+    "process.env": {},
+    // Add global to window
+    global: "window",
+  },
 });

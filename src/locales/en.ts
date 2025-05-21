@@ -274,4 +274,9 @@ export const en = {
     "If the service is canceled and more than 2 hours but less than 23 hours remain until the reservation, 20% of the reservation value will be deducted.",
   cancellationLessThan2Hours:
     "If the cancellation is made less than 2 hours before the reservation time, the full amount will be deducted.",
+  chatWithFreelancer: "Chat with Service Provider",
+  chatWith: "Chat with",
+  connecting: "Connecting",
+  noMessages: "No messages yet. Start the conversation!",
+  typeMessage: "Type your message here...",
 };
