@@ -98,7 +98,7 @@ const ChatModal: React.FC<ChatModalProps> = ({
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t flex items-center">
+        <div className="p-4 border-t flex items-center" dir="ltr">
           <textarea
             rows={2}
             className="flex-1 border rounded-l-lg p-2 focus:outline-none"
@@ -124,7 +124,7 @@ const ChatModal: React.FC<ChatModalProps> = ({
               setDraft("");
             }}
             disabled={!draft.trim() || status !== "connected" || !subscribed}
-            className={`px-4 rounded-r-lg ${
+            className={`px-4 rounded-r-lg h-full ${
               !draft.trim() || status !== "connected" || !subscribed
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-blue-600 text-white"

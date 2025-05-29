@@ -71,8 +71,8 @@ const AddressForm = ({
         toast.success(t("locationDetermined"));
         setLoadingLocation(false);
       },
-      (error) => {
-        console.log(error);
+      (_) => {
+        // console.log(error);
         toast.error(t("locationFailed"));
         setLoadingLocation(false);
       }

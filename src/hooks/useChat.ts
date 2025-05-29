@@ -68,7 +68,7 @@ export function useChat(requestId: number) {
 
     const client = new Client({
       brokerURL: wsUrl,
-      debug: (msg) => console.log("STOMP ▶", msg),
+      // debug: (msg) => console.log("STOMP ▶", msg),
       reconnectDelay: 5000,
       heartbeatIncoming: 0,
       heartbeatOutgoing: 0,
@@ -110,7 +110,6 @@ export function useChat(requestId: number) {
       },
 
       onWebSocketClose: () => {
-        console.log("WebSocket closed");
         setStatus("disconnected");
       },
     });

@@ -42,8 +42,7 @@ export const useProfileForm = (user: any) => {
         toast.success(t("locationDetermined"));
         setLoadingLocation(false);
       },
-      (error) => {
-        console.log(error);
+      (_) => {
         toast.error(t("locationFailed"));
         setLoadingLocation(false);
       }

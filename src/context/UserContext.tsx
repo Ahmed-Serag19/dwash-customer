@@ -51,7 +51,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       if (response.data.success) {
         setUser(response.data.content);
         setToken(storedToken);
-        console.log(response.data.content);
       } else {
         console.error("Error fetching user:", response.data.messageEn);
         logout();
