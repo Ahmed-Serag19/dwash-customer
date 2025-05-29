@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 
 import { useEffect, useState } from "react";
@@ -16,9 +14,10 @@ import { Loader2, ShoppingCart } from "lucide-react";
 import CartTimeSlotSection from "@/components/cart/cart-time-slot-section";
 import TermsAndConditionsModal from "@/components/cart/terms-and-conditions-modal";
 import LoadingIndicator from "@/components/ui/loading-indicator";
+import CompleteProfileModal from "@/components/profile/complete-profile-modal";
 
 const Cart = () => {
-  const { cart, getCart, token } = useUser();
+  const { cart, getCart, token, user } = useUser();
   const { t } = useTranslation();
   const {
     selectedInvoiceId,
@@ -59,6 +58,15 @@ const Cart = () => {
       : 0;
 
   const finalTotal = subtotal - discountValue;
+  const isProfileIncomplete = !user?.email || (!user?.nameEn && !user?.nameAr);
+
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  useEffect(() => {
+    if (user && (!user.email || (!user.nameEn && !user.nameAr))) {
+      setShowProfileModal(true);
+    }
+  }, [user]);
 
   const handleSelectionConfirmed = (addressId: number, carId: number) => {
     selectAddressAndCar(addressId, carId);
@@ -106,6 +114,10 @@ const Cart = () => {
   }, [isProcessingPayment]);
   return (
     <div className="container mx-auto p-6 max-w-7xl">
+      <CompleteProfileModal
+        open={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+      />
       {paymentLoading ? (
         <div className="min-h-screen flex justify-center items-center">
           <LoadingIndicator message={t("loading")} />
@@ -214,6 +226,7 @@ const Cart = () => {
                 processPayment();
               }}
               disabled={
+                isProfileIncomplete ||
                 !selectionConfirmed ||
                 isProcessingPayment ||
                 !selectedSlotId ||

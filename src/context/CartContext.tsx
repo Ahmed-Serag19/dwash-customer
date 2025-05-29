@@ -420,13 +420,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
           toast.success(t("paymentSuccessful"));
           // Remove the item from cart after successful payment
           await getCart();
-          window.location.href = "/orders";
+          window.location.href = "/payment-success";
         }
       } else {
         toast.error(t("paymentFailed"));
       }
     } catch (error) {
       toast.error(t("paymentFailed"));
+      window.location.href = "/payment-failed";
       console.error("Payment error:", error);
     } finally {
       // In case the redirect doesn't happen, ensure we reset the processing state

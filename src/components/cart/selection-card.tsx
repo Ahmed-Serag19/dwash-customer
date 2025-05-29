@@ -229,7 +229,7 @@ const SelectionCard = ({ onSelectionConfirmed }: SelectionCardProps) => {
                 className="mt-2"
                 onClick={() => {
                   // Navigate to car management page
-                  navigate("/cars");
+                  navigate("/my-cars");
                 }}
               >
                 {t("addNewCar")}
