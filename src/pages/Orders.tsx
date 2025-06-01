@@ -53,6 +53,7 @@ const Orders: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [isCancelLoading, setIsCancelLoading] = useState(false);
   const token = localStorage.getItem("accessToken");
 
   const pageSize = 8;
@@ -142,6 +143,7 @@ const Orders: React.FC = () => {
   }, [activeTab, currentPage]);
 
   const handleCancelOrder = async (orderId: number) => {
+    setIsCancelLoading(true);
     try {
       const response = await axios.put(
         apiEndpoints.cancelOrder(orderId),
@@ -154,6 +156,7 @@ const Orders: React.FC = () => {
         }
       );
       if (response.data.success) {
+        setIsCancelLoading(false);
         toast.success(t("orderCancelled"));
         fetchOrders("current", currentPage);
       } else {
@@ -302,6 +305,7 @@ const Orders: React.FC = () => {
       {/* Cancel Order Modal */}
       {selectedOrderId && (
         <CancelOrderModal
+          isCancelLoading={isCancelLoading}
           isOpen={!!selectedOrderId}
           onClose={() => setSelectedOrderId(null)}
           onConfirm={() => handleCancelOrder(selectedOrderId)}

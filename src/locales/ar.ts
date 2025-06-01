@@ -280,4 +280,5 @@ export const ar = {
   connecting: "جاري الاتصال",
   noMessages: "لا توجد رسائل بعد. ابدأ المحادثة!",
   typeMessage: "اكتب رسالتك هنا...",
+  orderCancelled: "تم إلغاء الطلب بنجاح",
 };

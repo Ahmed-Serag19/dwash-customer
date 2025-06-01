@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface CancelOrderModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isCancelLoading: boolean;
 }
 
 const CancelOrderModal: React.FC<CancelOrderModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
+  isCancelLoading,
 }) => {
   if (!isOpen) return null;
+
   const { t } = useTranslation();
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -25,6 +28,7 @@ const CancelOrderModal: React.FC<CancelOrderModalProps> = ({
           </button>
           <button
             onClick={onConfirm}
+            disabled={isCancelLoading}
             className="bg-red-500 text-white w-16 py-1 rounded"
           >
             {t("yes")}

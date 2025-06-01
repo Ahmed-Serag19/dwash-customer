@@ -279,4 +279,5 @@ export const en = {
   connecting: "Connecting",
   noMessages: "No messages yet. Start the conversation!",
   typeMessage: "Type your message here...",
+  orderCancelled: "Order Cancelled",
 };
