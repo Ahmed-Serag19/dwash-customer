@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import LoadingIndicator from "./ui/loading-indicator";
 
 interface CancelOrderModalProps {
   isOpen: boolean;
@@ -31,7 +32,11 @@ const CancelOrderModal: React.FC<CancelOrderModalProps> = ({
             disabled={isCancelLoading}
             className="bg-red-500 text-white w-16 py-1 rounded"
           >
-            {t("yes")}
+            {isCancelLoading ? (
+              <LoadingIndicator message={t("loading")} />
+            ) : (
+              t("yes")
+            )}
           </button>
         </div>
       </div>

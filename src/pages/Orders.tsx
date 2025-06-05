@@ -156,7 +156,6 @@ const Orders: React.FC = () => {
         }
       );
       if (response.data.success) {
-        setIsCancelLoading(false);
         toast.success(t("orderCancelled"));
         fetchOrders("current", currentPage);
       } else {
@@ -168,6 +167,7 @@ const Orders: React.FC = () => {
       }
     } finally {
       setSelectedOrderId(null);
+      setIsCancelLoading(false);
     }
   };
 
