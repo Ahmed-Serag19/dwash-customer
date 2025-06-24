@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import type { Service } from "@/interfaces";
 import { useTranslation } from "react-i18next";

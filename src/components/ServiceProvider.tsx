@@ -79,9 +79,13 @@ const ServiceProvider: React.FC = () => {
     <main>
       <div className="object-cover w-full relative">
         <img
-          src={BgLogo}
+          src={
+            freelancer?.brandBackgroundImage === null
+              ? BgLogo
+              : `http://161.97.122.116${freelancer?.brandBackgroundImage}`
+          }
           alt="service provider logo"
-          className="object-cover w-full "
+          className="object-cover w-full h-96 md:h-[600px] xl:h-[750px] object-top"
         />
         <div className="absolute inset-0 bg-stone-800 opacity-50"></div>
 

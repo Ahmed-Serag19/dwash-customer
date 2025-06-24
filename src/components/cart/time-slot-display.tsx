@@ -1,5 +1,3 @@
-"use client";
-
 import { useTranslation } from "react-i18next";
 import { Calendar, Clock, Loader2 } from "lucide-react";
 import type { TimeSlot } from "@/interfaces";

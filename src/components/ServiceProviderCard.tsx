@@ -24,7 +24,11 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
     >
       <div className="rounded-lg ">
         <img
-          src={ServiceProviderImage}
+          src={
+            freelancer?.brandLogo === null
+              ? ServiceProviderImage
+              : `http://161.97.122.116${freelancer.brandLogo}`
+          }
           className="w-full h-full"
           alt="service provider image"
         />
