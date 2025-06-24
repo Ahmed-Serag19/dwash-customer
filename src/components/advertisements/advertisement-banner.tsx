@@ -1,4 +1,3 @@
-import type React from "react";
 import PlaceHolderImage from "@/assets/images/bg-image.webp";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
