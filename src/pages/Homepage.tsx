@@ -1,5 +1,3 @@
-"use client";
-
 import Hero from "@/components/Hero";
 import ServiceProviders from "@/components/ServiceProviders";
 import WhatsappIcon from "@/components/WhatsappIcon";

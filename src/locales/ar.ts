@@ -281,4 +281,12 @@ export const ar = {
   noMessages: "لا توجد رسائل بعد. ابدأ المحادثة!",
   typeMessage: "اكتب رسالتك هنا...",
   orderCancelled: "تم إلغاء الطلب بنجاح",
+  viewByDate: "عرض حسب التاريخ",
+  viewAll: "عرض الكل",
+  selectDate: "اختر التاريخ",
+  selectDateToViewSlots: "اختر تاريخًا لعرض الفترات الزمنية المتاحة",
+  timeSlotSelected: "تم اختيار الفترة الزمنية",
+  pleaseSelectTimeSlot: "يرجى اختيار الفترة الزمنية",
+  confirmTimeSlot: "تأكيد الفترة الزمنية",
+  availableSlots: "فترات متاحة",
 };

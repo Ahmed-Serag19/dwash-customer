@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Calendar, Clock, Loader2 } from "lucide-react";
 import type { TimeSlot } from "@/interfaces";
+import { useTimeFormatter } from "@/utils/time-formatter";
+import { useDateFormatter } from "@/utils/date-formatter";
 
 interface TimeSlotDisplayProps {
   timeSlotDetails: TimeSlot | null;
@@ -12,6 +14,8 @@ const TimeSlotDisplay = ({
   loading,
 }: TimeSlotDisplayProps) => {
   const { t } = useTranslation();
+  const formatTimeSlot = useTimeFormatter();
+  const { formatDate } = useDateFormatter();
 
   if (loading) {
     return (
@@ -30,13 +34,12 @@ const TimeSlotDisplay = ({
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <Calendar className="h-4 w-4 text-primary" />
-        <span className="font-medium">{timeSlotDetails.date}</span>
+        <span className="font-medium">{formatDate(timeSlotDetails.date)}</span>
       </div>
       <div className="flex items-center gap-2">
         <Clock className="h-4 w-4 text-primary" />
         <span dir="ltr">
-          {timeSlotDetails.timeFrom.slice(0, 5)} -{" "}
-          {timeSlotDetails.timeTo.slice(0, 5)}
+          {formatTimeSlot(timeSlotDetails.timeFrom, timeSlotDetails.timeTo)}
         </span>
       </div>
     </div>

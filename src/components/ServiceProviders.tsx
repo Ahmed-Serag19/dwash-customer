@@ -98,8 +98,8 @@ const ServiceProviders: React.FC = () => {
     };
   }, []);
 
-  // Determine which freelancers to display and how many
   const displayedFreelancers = selectedCity ? filteredFreelancers : freelancers;
+
   const displayCount = Math.min(size, displayedFreelancers.length);
 
   return (

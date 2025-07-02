@@ -280,4 +280,12 @@ export const en = {
   noMessages: "No messages yet. Start the conversation!",
   typeMessage: "Type your message here...",
   orderCancelled: "Order Cancelled",
+  viewByDate: "View by Date",
+  viewAll: "View All",
+  selectDate: "Select Date",
+  selectDateToViewSlots: "Select a date to view available time slots",
+  timeSlotSelected: "Time slot selected",
+  pleaseSelectTimeSlot: "Please select a time slot",
+  confirmTimeSlot: "Confirm Time Slot",
+  availableSlots: "Available Slots",
 };
