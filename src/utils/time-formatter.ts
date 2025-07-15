@@ -54,13 +54,14 @@ export const formatTimeSlot = (
 
   if (language === "ar") {
     const fromTimeArabic = toArabicNumerals(fromConverted.time);
-    const toTimeArabic = toArabicNumerals(toConverted.time);
+    // const toTimeArabic = toArabicNumerals(toConverted.time);
     const fromPeriodArabic = fromConverted.period === "AM" ? "ص" : "م";
-    const toPeriodArabic = toConverted.period === "AM" ? "ص" : "م";
+    // const toPeriodArabic = toConverted.period === "AM" ? "ص" : "م";
 
-    return `${fromTimeArabic} ${fromPeriodArabic} - ${toTimeArabic} ${toPeriodArabic}`;
+    // return `الساعة ${fromTimeArabic} ${fromPeriodArabic} - الى ${toTimeArabic} ${toPeriodArabic}`;
+    return `الساعة ${fromTimeArabic} ${fromPeriodArabic} `;
   } else {
-    return `${fromConverted.time} ${fromConverted.period} - ${toConverted.time} ${toConverted.period}`;
+    return `From ${fromConverted.time} ${fromConverted.period} - to ${toConverted.time} ${toConverted.period}`;
   }
 };
 
