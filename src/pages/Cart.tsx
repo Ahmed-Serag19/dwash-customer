@@ -45,7 +45,7 @@ const Cart = () => {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentMethodId, setPaymentMethodId] = useState(2); // 2 = Card, 3 = Apple Pay
-  const [applePaySupported, setApplePaySupported] = useState(true);
+  const [applePaySupported, setApplePaySupported] = useState(false);
   // Calculate subtotal for the selected item
   const subtotal = selectedItem
     ? (selectedItem?.itemDto?.itemPrice || 0) +
@@ -215,22 +215,11 @@ const Cart = () => {
             </div>
           </div>
 
-          {/* Price Summary */}
-          <CheckoutSummary
-            subtotal={subtotal}
-            discountAmount={discountAmount}
-            discountType={discountType}
-            discountValue={discountValue}
-            finalTotal={finalTotal}
-          />
-
           {/* Payment Method Selection */}
-          {/* {applePaySupported && ( */}
-          <>
-            {console.log("Apple Pay Supported, rendering radio buttons")}
-            <div className="my-6">
+          {applePaySupported && (
+            <div className="mb-6">
               <h3 className="text-lg font-medium mb-4">{t("paymentMethod")}</h3>
-              <div className="flex gap-4 flex-col sm:flex-row">
+              <div className="flex gap-4">
                 <label className="flex items-center gap-2">
                   <input
                     type="radio"
@@ -253,8 +242,16 @@ const Cart = () => {
                 </label>
               </div>
             </div>
-          </>
-          {/* // )} */}
+          )}
+
+          {/* Price Summary */}
+          <CheckoutSummary
+            subtotal={subtotal}
+            discountAmount={discountAmount}
+            discountType={discountType}
+            discountValue={discountValue}
+            finalTotal={finalTotal}
+          />
 
           {/* Terms and Conditions Checkbox */}
           <div className="mt-6 flex items-start gap-2">
