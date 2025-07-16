@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Calendar, Clock, Loader2 } from "lucide-react";
 import type { TimeSlot } from "@/interfaces";
-import { useTimeFormatter } from "@/utils/time-formatter";
 import { useDateFormatter } from "@/utils/date-formatter";
 
 interface TimeSlotDisplayProps {
@@ -14,7 +13,6 @@ const TimeSlotDisplay = ({
   loading,
 }: TimeSlotDisplayProps) => {
   const { t, i18n } = useTranslation();
-  const formatTimeSlot = useTimeFormatter();
   const { formatDate } = useDateFormatter();
 
   // Helper: Format hour only, with :00, and Arabic support
