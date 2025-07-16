@@ -5,6 +5,7 @@ import StarRating from "./StarRating";
 import ChatButton from "./chat/chat-button";
 import ChatModal from "./chat/chat-modal";
 import { OrderCardProps } from "@/interfaces";
+import { useDateFormatter } from "@/utils/date-formatter";
 const OrderCard: React.FC<OrderCardProps> = ({
   order,
   isClosed,
@@ -37,8 +38,47 @@ const OrderCard: React.FC<OrderCardProps> = ({
   const [appraisal, setAppraisal] = useState(0);
   const [description, setDescription] = useState("");
 
+  const { formatDate } = useDateFormatter();
+
   // Safely handle itemExtraDtos (default to an empty array if null/undefined)
   const extras = itemExtraDtos ?? [];
+
+  // Helper: Format hour only, with :00, and Arabic support
+  const formatHourOnly = (timeFrom: string) => {
+    if (!timeFrom) return "";
+    const [hourStr] = timeFrom.split(":");
+    let hour = parseInt(hourStr, 10);
+    let period = "AM";
+    if (hour === 0) {
+      hour = 12;
+      period = "AM";
+    } else if (hour === 12) {
+      period = "PM";
+    } else if (hour > 12) {
+      hour = hour - 12;
+      period = "PM";
+    }
+    if (i18n.language === "ar") {
+      const arabicNumerals: { [key: string]: string } = {
+        "0": "٠",
+        "1": "١",
+        "2": "٢",
+        "3": "٣",
+        "4": "٤",
+        "5": "٥",
+        "6": "٦",
+        "7": "٧",
+        "8": "٨",
+        "9": "٩",
+      };
+      const toArabicNumerals = (str: string): string =>
+        str.replace(/[0-9]/g, (digit) => arabicNumerals[digit] || digit);
+      const hourArabic = toArabicNumerals(hour.toString());
+      const periodArabic = period === "AM" ? "ص" : "م";
+      return `الساعة ${hourArabic}:٠٠ ${periodArabic}`;
+    }
+    return `${hour}:00 ${period}`;
+  };
 
   const handleAddReview = () => {
     if (onAddReview) {
@@ -120,13 +160,13 @@ const OrderCard: React.FC<OrderCardProps> = ({
       {!isClosed && fromTime && timeTo && (
         <p>
           <span className="font-semibold text-primary">{t("time")}:</span>{" "}
-          {fromTime} - {timeTo}
+          {formatHourOnly(fromTime)}
         </p>
       )}
       {order.reservationDate && (
         <p>
           <span className="font-semibold text-primary">{t("date")}:</span>{" "}
-          {order.reservationDate}
+          {formatDate(order.reservationDate)}
         </p>
       )}
 

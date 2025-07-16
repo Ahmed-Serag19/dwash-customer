@@ -19,21 +19,21 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
   };
   return (
     <main
-      className="flex flex-col max-w-md justify-center items-center relative self-center hover:cursor-pointer hover:shadow-lg transition-all duration-300 rounded-lg"
+      className="flex flex-col w-full max-w-xs min-h-[420px] h-full justify-between items-center relative self-center hover:cursor-pointer hover:shadow-lg transition-all duration-300 rounded-lg bg-white"
       onClick={toSp}
     >
-      <div className="rounded-lg ">
+      <div className="rounded-lg w-full aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-100">
         <img
           src={
             freelancer?.brandLogo === null
               ? ServiceProviderImage
               : `http://161.97.122.116${freelancer.brandLogo}`
           }
-          className="w-full h-full"
+          className="object-cover w-full h-full"
           alt="service provider image"
         />
       </div>
-      <div className="pt-5 px-3 w-full">
+      <div className="pt-5 px-3 w-full flex-1 flex flex-col justify-between">
         <div className="flex justify-between ">
           <h1 className="xl:text-2xl font-semibold sm:text-xl text-2xl max-sm:text-xl">
             {i18n.language === "en"
@@ -48,7 +48,7 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
           </div>
         </div>
         <div className="py-5 text-stone-800 font-[500] text-[16px] ">
-          <p className="min-h-20">
+          <p className="min-h-20 line-clamp-2 break-words">
             {i18n.language === "en"
               ? freelancer.brandDescriptionsEn || t("noDescription")
               : freelancer.brandDescriptionsAr || t("noDescription")}

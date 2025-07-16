@@ -22,6 +22,11 @@ const ChatModal: React.FC<ChatModalProps> = ({
   const { messages, status, error, subscribed, sendMessage, retry } =
     useChat(requestId);
 
+  // Debug: log messages array
+  useEffect(() => {
+    console.log("Chat messages for requestId", requestId, messages);
+  }, [messages, requestId]);
+
   const [draft, setDraft] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
