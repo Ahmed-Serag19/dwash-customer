@@ -50,7 +50,7 @@ interface CartContextType {
   confirmSelection: () => void;
   resetSelection: () => void;
   lockTimeSlot: (slotId: number) => Promise<boolean>;
-  processPayment: () => Promise<void>;
+  processPayment: (paymentMethodId?: number) => Promise<void>;
   isProcessingPayment: boolean;
   addToCart: (serviceId: number, extraServices: number[]) => Promise<boolean>;
   setSuccessDeletedCartItem: (invoiceId: number) => void;
@@ -353,7 +353,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   // Process payment
-  const processPayment = async () => {
+  const processPayment = async (paymentMethodId: number = 2) => {
     // Prevent multiple submissions
     if (isProcessingPayment) {
       return;
@@ -397,7 +397,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await axios.post(
         apiEndpoints.makePayment,
         {
-          paymentMethodId: 2,
+          paymentMethodId,
           invoiceId: selectedInvoiceId,
           slotId: selectedSlotId,
           discountCode: discountCode || null,

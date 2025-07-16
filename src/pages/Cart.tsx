@@ -16,6 +16,11 @@ import TermsAndConditionsModal from "@/components/cart/terms-and-conditions-moda
 import LoadingIndicator from "@/components/ui/loading-indicator";
 import CompleteProfileModal from "@/components/profile/complete-profile-modal";
 
+// @ts-ignore
+interface Window {
+  ApplePaySession?: any;
+}
+
 const Cart = () => {
   const { cart, getCart, token, user } = useUser();
   const { t } = useTranslation();
@@ -39,6 +44,8 @@ const Cart = () => {
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentMethodId, setPaymentMethodId] = useState(2); // 2 = Card, 3 = Apple Pay
+  const [applePaySupported, setApplePaySupported] = useState(true);
   // Calculate subtotal for the selected item
   const subtotal = selectedItem
     ? (selectedItem?.itemDto?.itemPrice || 0) +
@@ -67,6 +74,26 @@ const Cart = () => {
       setShowProfileModal(true);
     }
   }, [user]);
+
+  // Detect Apple Pay support
+  useEffect(() => {
+    const isApplePayCapable = () => {
+      // Check for ApplePaySession and canMakePayments
+      // Also check for Safari/iOS/macOS user agent for extra safety
+      const isAppleDevice =
+        /Mac|iPhone|iPod|iPad/.test(navigator.platform) ||
+        (/AppleWebKit/.test(navigator.userAgent) &&
+          /Mobile\//.test(navigator.userAgent));
+      return (
+        typeof window !== "undefined" &&
+        (window as any).ApplePaySession &&
+        (window as any).ApplePaySession.canMakePayments &&
+        (window as any).ApplePaySession.canMakePayments() &&
+        isAppleDevice
+      );
+    };
+    setApplePaySupported(isApplePayCapable());
+  }, []);
 
   const handleSelectionConfirmed = (addressId: number, carId: number) => {
     selectAddressAndCar(addressId, carId);
@@ -197,6 +224,38 @@ const Cart = () => {
             finalTotal={finalTotal}
           />
 
+          {/* Payment Method Selection */}
+          {/* {applePaySupported && ( */}
+          <>
+            {console.log("Apple Pay Supported, rendering radio buttons")}
+            <div className="my-6">
+              <h3 className="text-lg font-medium mb-4">{t("paymentMethod")}</h3>
+              <div className="flex gap-4 flex-col sm:flex-row">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value={2}
+                    checked={paymentMethodId === 2}
+                    onChange={() => setPaymentMethodId(2)}
+                  />
+                  {t("payByCard")}
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value={3}
+                    checked={paymentMethodId === 3}
+                    onChange={() => setPaymentMethodId(3)}
+                  />
+                  {t("payByApplePay")}
+                </label>
+              </div>
+            </div>
+          </>
+          {/* // )} */}
+
           {/* Terms and Conditions Checkbox */}
           <div className="mt-6 flex items-start gap-2">
             <input
@@ -223,7 +282,7 @@ const Cart = () => {
             <button
               onClick={(e) => {
                 e.currentTarget.disabled = true;
-                processPayment();
+                processPayment(paymentMethodId);
               }}
               disabled={
                 isProfileIncomplete ||

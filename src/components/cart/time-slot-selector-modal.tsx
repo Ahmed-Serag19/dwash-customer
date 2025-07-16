@@ -36,7 +36,7 @@ const TimeSlotSelectorModal = ({
   onSelectSlot,
   initialSelectedSlot,
 }: TimeSlotSelectorModalProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { token } = useUser();
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(
@@ -66,22 +66,63 @@ const TimeSlotSelectorModal = ({
     return groups;
   }, [timeSlots]);
 
-  const availableDates = useMemo(() => {
-    return Object.keys(groupedTimeSlots)
-      .filter((date) =>
-        groupedTimeSlots[date].some((slot) => slot.reserved === 0)
-      )
-      .sort();
+  // Helper: Get hour from time string (e.g., '11:12' -> '11')
+  const getHour = (time: string) => time.split(":")[0];
+
+  // Filter: Only show the first available slot per hour
+  const filterFirstSlotPerHour = (slots: TimeSlot[]) => {
+    const seenHours = new Set<string>();
+    return slots.filter((slot) => {
+      const hour = getHour(slot.timeFrom);
+      if (seenHours.has(hour)) return false;
+      seenHours.add(hour);
+      return true;
+    });
+  };
+
+  // Memoized: Grouped and filtered time slots by date
+  const groupedFilteredTimeSlots = useMemo(() => {
+    const groups: { [key: string]: TimeSlot[] } = {};
+    Object.entries(groupedTimeSlots).forEach(([date, slots]) => {
+      groups[date] = filterFirstSlotPerHour(
+        slots.filter((slot) => slot.reserved === 0)
+      );
+    });
+    return groups;
   }, [groupedTimeSlots]);
 
+  // Memoized: All filtered slots (for 'all' view)
+  const allFilteredSlots = useMemo(() => {
+    return filterFirstSlotPerHour(
+      timeSlots.filter((slot) => slot.reserved === 0)
+    );
+  }, [timeSlots]);
+
+  // Memoized: Display slots based on view mode
   const displayTimeSlots = useMemo(() => {
     if (viewMode === "all") {
-      return timeSlots;
-    } else if (selectedDate && groupedTimeSlots[selectedDate]) {
-      return groupedTimeSlots[selectedDate];
+      return allFilteredSlots;
+    } else if (selectedDate && groupedFilteredTimeSlots[selectedDate]) {
+      return groupedFilteredTimeSlots[selectedDate];
     }
     return [];
-  }, [viewMode, selectedDate, timeSlots, groupedTimeSlots]);
+  }, [viewMode, selectedDate, allFilteredSlots, groupedFilteredTimeSlots]);
+
+  // Memoized: Available dates (with at least one available hour)
+  const availableDates = useMemo(() => {
+    return Object.keys(groupedFilteredTimeSlots)
+      .filter((date) => groupedFilteredTimeSlots[date].length > 0)
+      .sort();
+  }, [groupedFilteredTimeSlots]);
+
+  // Memoized: Count of available slots per date (unique hours)
+  const availableSlotsCountByDate = useMemo(() => {
+    const counts: { [key: string]: number } = {};
+    Object.entries(groupedFilteredTimeSlots).forEach(([date, slots]) => {
+      counts[date] = slots.length;
+    });
+    return counts;
+  }, [groupedFilteredTimeSlots]);
 
   useEffect(() => {
     if (isOpen && token && brandId) {
@@ -158,6 +199,43 @@ const TimeSlotSelectorModal = ({
     onClose();
   };
 
+  // Patch: Always show :00 and 12-hour format for display, with Arabic support
+  const formatHourOnly = (timeFrom: string) => {
+    const [hourStr] = timeFrom.split(":");
+    let hour = parseInt(hourStr, 10);
+    let period = "AM";
+    if (hour === 0) {
+      hour = 12;
+      period = "AM";
+    } else if (hour === 12) {
+      period = "PM";
+    } else if (hour > 12) {
+      hour = hour - 12;
+      period = "PM";
+    }
+    if (i18n.language === "ar") {
+      // Arabic numerals and period
+      const arabicNumerals: { [key: string]: string } = {
+        "0": "٠",
+        "1": "١",
+        "2": "٢",
+        "3": "٣",
+        "4": "٤",
+        "5": "٥",
+        "6": "٦",
+        "7": "٧",
+        "8": "٨",
+        "9": "٩",
+      };
+      const toArabicNumerals = (str: string): string =>
+        str.replace(/[0-9]/g, (digit) => arabicNumerals[digit] || digit);
+      const hourArabic = toArabicNumerals(hour.toString());
+      const periodArabic = period === "AM" ? "ص" : "م";
+      return `الساعة ${hourArabic}:٠٠ ${periodArabic}`;
+    }
+    return `${hour}:00 ${period}`;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
@@ -185,7 +263,7 @@ const TimeSlotSelectorModal = ({
                     availableDates={availableDates}
                     selectedDate={selectedDate}
                     onDateSelect={handleDateSelection}
-                    groupedTimeSlots={groupedTimeSlots}
+                    groupedTimeSlots={groupedFilteredTimeSlots}
                   />
 
                   <div className="flex-1 overflow-y-auto mt-4">
@@ -207,7 +285,7 @@ const TimeSlotSelectorModal = ({
                             <div className="flex items-center gap-2">
                               <Clock className="h-4 w-4 text-primary" />
                               <span dir="ltr">
-                                {formatTimeSlot(slot.timeFrom, slot.timeTo)}
+                                {formatHourOnly(slot.timeFrom)}
                               </span>
                             </div>
                             {slot.reserved === 1 && (
@@ -247,9 +325,7 @@ const TimeSlotSelectorModal = ({
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4 text-primary" />
-                          <span dir="ltr">
-                            {formatTimeSlot(slot.timeFrom, slot.timeTo)}
-                          </span>
+                          <span dir="ltr">{formatHourOnly(slot.timeFrom)}</span>
                         </div>
                         {slot.reserved === 1 && (
                           <div className="mt-2 text-xs text-red-500 font-medium">

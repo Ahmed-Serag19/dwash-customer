@@ -288,4 +288,7 @@ export const en = {
   pleaseSelectTimeSlot: "Please select a time slot",
   confirmTimeSlot: "Confirm Time Slot",
   availableSlots: "Available Slots",
+  paymentMethod: "Payment Method",
+  payByCard: "Pay by Card",
+  payByApplePay: "Pay by Apple Pay",
 };

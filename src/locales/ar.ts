@@ -289,4 +289,7 @@ export const ar = {
   pleaseSelectTimeSlot: "يرجى اختيار الفترة الزمنية",
   confirmTimeSlot: "تأكيد الفترة الزمنية",
   availableSlots: "فترات متاحة",
+  paymentMethod: "طريقة الدفع",
+  payByCard: "الدفع بالبطاقة",
+  payByApplePay: "الدفع عبر Apple Pay",
 };
